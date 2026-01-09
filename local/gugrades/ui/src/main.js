@@ -8,6 +8,7 @@ import { plugin, defaultConfig } from '@formkit/vue';
 import { Modal } from '@kouts/vue-modal';
 import { createPinia } from 'pinia';
 import { usePopulateTrees } from '../src/js/setuptrees.js';
+import { usePreload } from '../src/js/preload.js';
 import '../src/assets/VueModal.css';
 import '../src/assets/MyGrades.css';
 
@@ -46,6 +47,9 @@ const pinia = createPinia();
 
 // Trees.
 const populatetrees = usePopulateTrees();
+
+// Preload
+const preload = usePreload();
 
 ensureGUIsSet(timeout)
 .then(() => {
@@ -86,6 +90,9 @@ ensureGUIsSet(timeout)
 
     // Populate activity trees.
     populatetrees.populate();
+
+    // Preload aggregation recalculations.
+    preload.recalculate();
 
 });
 
