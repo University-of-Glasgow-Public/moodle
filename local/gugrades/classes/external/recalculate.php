@@ -43,6 +43,7 @@ class recalculate extends external_api {
         return new external_function_parameters([
             'courseid' => new external_value(PARAM_INT, 'Course ID'),
             'gradecategoryid' => new external_value(PARAM_INT, 'Grade category id'),
+            'userid' => new external_value(PARAM_INT, 'Optional user ID', VALUE_DEFAULT, 0),
         ]);
     }
 
@@ -50,8 +51,9 @@ class recalculate extends external_api {
      * Execute function
      * @param int $courseid
      * @param int $gradecategoryid
+     * @param int $userid
      */
-    public static function execute($courseid, $gradecategoryid) {
+    public static function execute($courseid, $gradecategoryid, $userid = 0) {
         global $DB;
 
         \local_gugrades\development::increase_debugging();
@@ -60,6 +62,7 @@ class recalculate extends external_api {
         $params = self::validate_parameters(self::execute_parameters(), [
             'courseid' => $courseid,
             'gradecategoryid' => $gradecategoryid,
+            'userid' => $userid,
         ]);
 
         // More security.
@@ -69,6 +72,7 @@ class recalculate extends external_api {
         \local_gugrades\api::recalculate(
             $courseid,
             $gradecategoryid,
+            $userid,
         );
 
         return [];

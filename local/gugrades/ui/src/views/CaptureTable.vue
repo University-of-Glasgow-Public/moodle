@@ -115,6 +115,7 @@
                             :other="editother"
                             :notes="editnotes"
                             :gradeitemid="itemid"
+                            :categoryid="categoryid"
                             :gradetype="editgradetype"
                             :usescale="editusescale"
                             :scalemenu="editscalemenu"
@@ -133,6 +134,7 @@
                             v-if="!ineditcellmode"
                             :item="item"
                             :itemid="itemid"
+                            :categoryid="categoryid"
                             :userid="parseInt(item.id)"
                             :name="item.displayname"
                             :itemname="itemname"
@@ -198,6 +200,7 @@
     const users = ref([]);
     const userids = ref([]);
     const itemid = ref(0);
+    const categoryid = ref(0);
     const groupid = ref(0);
     const mstrings = inject('mstrings');
     const totalrows = ref(0);
@@ -388,6 +391,7 @@
     function selecteditemid(itemgroup) {
         itemid.value = itemgroup.itemid;
         groupid.value = itemgroup.groupid;
+        categoryid.value = itemgroup.categoryid;
 
         if (itemid.value == 0) {
             reset_page();

@@ -37,6 +37,7 @@
         emits('selecteditemid', {
             itemid: itemid.value,
             groupid: groupid.value,
+            categoryid: level1category.value,
         });
     }
 
@@ -48,6 +49,7 @@
         emits('selecteditemid', {
             itemid: itemid.value,
             groupid: groupid.value,
+            categoryid: level1category.value,
         });
     }
 
@@ -59,6 +61,7 @@
         emits('selecteditemid', {
             itemid: itemid.value,
             groupid: groupid.value,
+            categoryid: level1category.value,
         });
     }
 </script>

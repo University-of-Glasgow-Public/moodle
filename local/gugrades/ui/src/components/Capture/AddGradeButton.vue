@@ -165,6 +165,7 @@
     const props = defineProps({
         userid: Number,
         itemid: Number,
+        selectedcategoryid: Number,
         categoryid: Number,
         itemname: String,
         name: String,
@@ -232,6 +233,28 @@
     }
 
     /**
+     * Request recalculate single user. 
+     * Note: no need to wait for response
+     */
+    function recalculate_user() {
+        const GU = window.GU;
+        const courseid = GU.courseid;
+        const fetchMany = GU.fetchMany;
+        
+        fetchMany([{
+            methodname: 'local_gugrades_recalculate',
+            args: {
+                courseid: courseid,
+                gradecategoryid: props.selectedcategoryid,
+                userid: props.userid,
+            }
+        }])[0]
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    /**
      * Process form submission
      */
     function submit_form() {
@@ -268,6 +291,8 @@
             } else {
                 showaddgrademodal.value = false;
             }
+
+            recalculate_user();
         })
         .catch((error) => {
             window.console.error(error);
@@ -336,6 +361,7 @@
         }])[0]
         .then(() => {
             emit('gradeadded');
+            recalculate_user();
             toast.success(mstrings.gradeadded);
         })
         .catch((error) => {

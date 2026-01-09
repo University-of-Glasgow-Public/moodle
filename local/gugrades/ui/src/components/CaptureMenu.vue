@@ -4,7 +4,7 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <ImportUserGradeButton v-if="props.awaitingcapture && !props.converted && caneditgrades" :itemid="props.itemid" :userid="props.userid" @imported="grade_added()"></ImportUserGradeButton>
-            <AddGradeButton v-if="caneditgrades" :itemid="props.itemid" :userid="props.userid" :name="props.name" :itemname="props.itemname" @gradeadded = "grade_added()"></AddGradeButton>
+            <AddGradeButton v-if="caneditgrades" :itemid="props.itemid" :selectedcategoryid="props.categoryid" :userid="props.userid" :name="props.name" :itemname="props.itemname" @gradeadded = "grade_added()"></AddGradeButton>
             <HistoryButton :userid="props.userid" :itemid="props.itemid" :name="props.name" :itemname="props.itemname"></HistoryButton>
             <HideShowButton v-if="caneditgrades" :gradehidden="props.gradehidden" :itemid="props.itemid" :userid="props.userid" @changed="grade_added()"></HideShowButton>
         </div>
@@ -22,6 +22,7 @@
         userid: Number,
         item: Object,
         itemid: Number,
+        categoryid: Number,
         itemname: String,
         name: String,
         awaitingcapture: Boolean,

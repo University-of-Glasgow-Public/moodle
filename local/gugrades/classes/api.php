@@ -1344,9 +1344,9 @@ class api {
         }
 
         // Re-aggregate this user
-        if ($aggregationsupported) {
-            \local_gugrades\aggregation::aggregate_user_helper($courseid, $mapping->get_gradecategoryid(), $userid);
-        }
+        //if ($aggregationsupported) {
+        //    \local_gugrades\aggregation::aggregate_user_helper($courseid, $mapping->get_gradecategoryid(), $userid);
+        //}
 
     }
 
@@ -2431,20 +2431,27 @@ class api {
      * Recalculate aggregation
      * @param int $courseid
      * @param int $gradecategoryid
+     * @param int $userid
      */
-    public static function recalculate(int $courseid, int $gradecategoryid) {
+    public static function recalculate(int $courseid, int $gradecategoryid, $userid = 0) {
 
-        // Clear cache items for this course.
-        \local_gugrades\aggregation::invalidate_cache($courseid);
+        // Re-aggregate single user
+        if ($userid) {
+            \local_gugrades\aggregation::aggregate_user_helper($courseid, $gradecategoryid, $userid);
+        } else {
 
-        // Get all the students.
-        $users = \local_gugrades\aggregation::get_users($courseid, $gradecategoryid, '', '', 0);
+            // Clear cache items for this course.
+            \local_gugrades\aggregation::invalidate_cache($courseid);
 
-        // Get the level 1 parent category.
-        $level1id = \local_gugrades\grades::get_level_one_parent($gradecategoryid);
+            // Get all the students.
+            $users = \local_gugrades\aggregation::get_users($courseid, $gradecategoryid, '', '', 0);
 
-        // Run over users running aggregation
-        \local_gugrades\aggregation::aggregate($courseid, $level1id, $users);
+            // Get the level 1 parent category.
+            $level1id = \local_gugrades\grades::get_level_one_parent($gradecategoryid);
+
+            // Run over users running aggregation
+            \local_gugrades\aggregation::aggregate($courseid, $level1id, $users);
+        }
     }
 
     /**

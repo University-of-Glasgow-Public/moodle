@@ -49,6 +49,7 @@
     const props = defineProps({
         item: Object,
         gradeitemid: Number,
+        categoryid: Number,
         column: String,
         columnid: Number,
         other: String,
@@ -137,6 +138,28 @@
     }
 
     /**
+     * Request recalculate single user. 
+     * Note: no need to wait for response
+     */
+    function recalculate_user(userid) {
+        const GU = window.GU;
+        const courseid = GU.courseid;
+        const fetchMany = GU.fetchMany;
+        
+        fetchMany([{
+            methodname: 'local_gugrades_recalculate',
+            args: {
+                courseid: courseid,
+                gradecategoryid: props.categoryid,
+                userid: userid,
+            }
+        }])[0]
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    /**
      * When this component closes, save the data
      */
     onBeforeUnmount(() => {
@@ -174,7 +197,7 @@
             }
         }])[0]
         .then(() => {
-            //emits('gradewritten');
+            recalculate_user(userid);
         })
         .catch((error) => {
             window.console.error(error);
