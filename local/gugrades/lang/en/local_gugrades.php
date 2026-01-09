@@ -81,6 +81,7 @@ $string['categoryremoveoverride'] = 'Category grade is overridden. Click \'Remov
 $string['checkall'] = 'Check all';
 $string['checknone'] = 'Check none';
 $string['childerror'] = 'One or more sub-categories could not be aggregated preventing further aggregation.';
+$string['cleanuptask'] = 'Cleanup task(s) for MyGrades';
 $string['close'] = 'Close';
 $string['comment'] = 'Comment';
 $string['completed'] = 'Completed';

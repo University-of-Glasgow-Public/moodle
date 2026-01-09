@@ -15,21 +15,37 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version file.
+ * Cleanup database tables
  *
  * @package    local_gugrades
- * @copyright  2022
- * @author     Howard Miller
+ * @copyright  2026 Howard Miller
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace local_gugrades\task;
 
-$plugin->version      = 2026010901;
-$plugin->requires     = 2024100700; // Moodle 4.5.
-$plugin->component    = 'local_gugrades';
+class cleanup extends \core\task\scheduled_task {
 
-$plugin->maturity     = MATURITY_BETA;
+    public function get_name() {
+        // Shown in admin screens
+        return get_string('cleanuptask', 'local_gugrades');
+    }
 
-$plugin->release      = '0.3 Beta';
+    /**
+     * Cleanup
+     */
+    public function execute() {
+        global $DB;
 
+        // Delete unused intermediate category grades after 6 months
+        $cutoff = time() - (183 * 86400);
+
+        $select = 'gradetype="CATEGORY"
+            AND RAWGRADE IS NULL
+            AND audittimecreated < :cutoff';
+        $select = 'audittimecreated < :cutoff';
+        $DB->delete_records_select('local_gugrades_grade', $select, ['cutoff' => $cutoff]);
+
+        return true;
+    }
+}
