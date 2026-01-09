@@ -92,7 +92,7 @@
                         </div>
                         <div v-if="!header.infocol && showweights">{{ header.weight }}%</div>
                         <div v-if="header.gradetype">{{ header.gradetype }} <span v-if="!header.isscale">({{ header.grademax }})</span></div>
-                        <div v-if="header.resititem" class="badge badge-pill badge-info">{{ mstrings.resitselected }}</div>
+                        <div v-if="header.resititem" class="badge badge-pill badge-success">{{ mstrings.resitselected }}</div>
                     </div>
                     <div class="py-1" v-if="header.strategy">
                         <i>{{ header.strategy }}</i> 
