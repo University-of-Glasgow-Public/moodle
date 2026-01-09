@@ -4,7 +4,7 @@
             &nbsp;<i class="fa fa-ellipsis-v fa-lg ml-1" aria-hidden="true" ></i>&nbsp;
         </a>
         <div v-if="props.categoryid == 0" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <AddGradeButton v-if="caneditgrades" :itemid="props.itemid" :userid="props.userid" :name="props.name" :itemname="props.itemname" :released="props.released" @gradeadded = "grade_added()"></AddGradeButton>
+            <AddGradeButton v-if="caneditgrades" :itemid="props.itemid" :selectedcategoryid="props.selectedcategoryid" :userid="props.userid" :name="props.name" :itemname="props.itemname" :released="props.released" @gradeadded = "grade_added()"></AddGradeButton>
             <HistoryButton :userid="props.userid" :itemid="props.itemid" :name="props.name" :itemname="props.itemname"></HistoryButton>
             <HideShowButton v-if="caneditgrades" :gradehidden="props.gradehidden" :itemid="props.itemid" :userid="props.userid" @changed="grade_added()"></HideShowButton>
         </div>
@@ -12,6 +12,7 @@
             <AddGradeButton
                 v-if="caneditgrades"
                 :itemid="props.itemid"
+                :selectedcategoryid="props.selectedcategoryid"
                 :categoryid="props.categoryid"
                 :userid="props.userid"
                 :name="props.name"
@@ -39,6 +40,7 @@
         item: Object,
         itemid: Number,
         categoryid: Number,
+        selectedcategoryid: Number,
         itemname: String,
         name: String,
         awaitingcapture: Boolean,

@@ -135,6 +135,7 @@
                     v-if="item[header.value].available"
                     :itemid = "header.gradeitemid"
                     :categoryid = "header.categoryid"
+                    :selectedcategoryid = "level1category"
                     :userid = "item.id"
                     :gradehidden = "item[header.value].hidden"
                     :overridden = "item[header.value].overridden"
@@ -198,7 +199,7 @@
                         <OverrideGrade
                             :toplevel="toplevel"
                             :itemid = "gradeitemid"
-                            :categoryid = "categoryid"
+                            :selectedcategoryid = "level1category"
                             :userid = "item.id"
                             :gradehidden = "false"
                             :overridden = "item.overridden"
