@@ -33,6 +33,7 @@
     import ConfigError from '@/components/ConfigError.vue';
     import PleaseWait from '@/components/PleaseWait.vue';
     import { useActivityTreeStore } from '../stores/activitytree.js';
+    import { usePopulateTrees } from '../js/setuptrees.js';
     
     const categoryid = ref(0);
     const activitytree = ref();
@@ -120,6 +121,9 @@
             debug.value = error;
         });
         configuringresits.value = false;
+
+        const populatetrees = usePopulateTrees();
+        populatetrees.populate();
     }
 
     /**
