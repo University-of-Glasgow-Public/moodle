@@ -311,7 +311,7 @@ class api {
 
             // Progress.
             $progress = 100 * $count / $numberoflines;
-            \local_gugrades\progress::record($courseid, 0, 'csvimport', $progress);
+            \local_gugrades\progress::record($courseid, 0, 'csvimport', intval($progress));
             $count++;
 
             // We just need the idnumber, so must have at least two entries.
@@ -888,7 +888,7 @@ class api {
                 // ...but it'll be close enough.
                 // This took a lot of thinking about. I'll leave it as an exercise for those who follow me :)
                 $progress = floor((100 * $iitems / $itemcount) + (100 * $iusers / $itemcount / $usercount));
-                \local_gugrades\progress::record($courseid, 0, 'import', $progress);
+                \local_gugrades\progress::record($courseid, 0, 'import', intval($progress));
             }
 
             $iitems++;
@@ -1344,9 +1344,9 @@ class api {
         }
 
         // Re-aggregate this user
-        //if ($aggregationsupported) {
-        //    \local_gugrades\aggregation::aggregate_user_helper($courseid, $mapping->get_gradecategoryid(), $userid);
-        //}
+        if ($aggregationsupported) {
+            \local_gugrades\aggregation::aggregate_user_helper($courseid, $mapping->get_gradecategoryid(), $userid);
+        }
 
     }
 

@@ -95,7 +95,7 @@ final class MGU_1002_test extends \local_gugrades\external\gugrades_aggregation_
         $this->apply_admingrade('Item 2', $this->student->id, 'INTERRUPTIONOFSTUDIES');
 
         // Get aggregation page for total.
-        $page = get_aggregation_page::execute($this->course->id, $this->gradecatsummative->id, '', '', 0, false);
+        $page = get_aggregation_page::execute($this->course->id, $this->gradecatsummative->id, '', '', 0, true);
         $page = external_api::clean_returnvalue(
             get_aggregation_page::execute_returns(),
             $page
@@ -138,7 +138,7 @@ final class MGU_1002_test extends \local_gugrades\external\gugrades_aggregation_
         $this->apply_admingrade('Item 4', $this->student->id, 'DEFERRED');
 
         // Get aggregation page for total.
-        $page = get_aggregation_page::execute($this->course->id, $this->gradecatsummative->id, '', '', 0, false);
+        $page = get_aggregation_page::execute($this->course->id, $this->gradecatsummative->id, '', '', 0, true);
         $page = external_api::clean_returnvalue(
             get_aggregation_page::execute_returns(),
             $page
@@ -181,7 +181,7 @@ final class MGU_1002_test extends \local_gugrades\external\gugrades_aggregation_
         $this->apply_admingrade('Item 4', $this->student->id, 'GOODCAUSE_FO');
 
         // Get aggregation page for total.
-        $page = get_aggregation_page::execute($this->course->id, $this->gradecatsummative->id, '', '', 0, false);
+        $page = get_aggregation_page::execute($this->course->id, $this->gradecatsummative->id, '', '', 0, true);
         $page = external_api::clean_returnvalue(
             get_aggregation_page::execute_returns(),
             $page
@@ -224,7 +224,7 @@ final class MGU_1002_test extends \local_gugrades\external\gugrades_aggregation_
         $this->apply_admingrade('Item 4', $this->student->id, 'NOSUBMISSION');
 
         // Get aggregation page for total.
-        $page = get_aggregation_page::execute($this->course->id, $this->gradecatsummative->id, '', '', 0, false);
+        $page = get_aggregation_page::execute($this->course->id, $this->gradecatsummative->id, '', '', 0, true);
         $page = external_api::clean_returnvalue(
             get_aggregation_page::execute_returns(),
             $page

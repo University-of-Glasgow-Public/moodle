@@ -1616,7 +1616,7 @@ class aggregation {
             // Progress.
             $progress = 100 * $count / $numberofusers;
             $count++;
-            \local_gugrades\progress::record($courseid, 0, 'aggregate', $progress);
+            \local_gugrades\progress::record($courseid, 0, 'aggregate', intval($progress));
 
             // Invalidate any stored data.
             self::invalidate_aggdata($courseid, $gradecategoryid, $user->id);
