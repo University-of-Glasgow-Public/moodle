@@ -1,0 +1,165 @@
+div#qtype_formulas_mathjax_display {
+    background-color: #eef;
+    border: 1px solid #88c;
+    margin-left: 0;
+    margin-top: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px;
+    position: absolute;
+    width: 150px;
+    z-index: 1;
+}
+
+div[id^='fitem_id_postunit_'] #qtype_formulas_mathjax_display {
+    margin-top: 30px;
+    margin-left: 10px;
+}
+
+.que.formulas .formulas_unit {
+    display: inline-block;
+    margin: 0 0 0 0;
+    width: 55px;
+}
+
+.que.formulas .formulas_number {
+    display: inline-block;
+    margin: 0 0 0 0;
+    width: 55px;
+}
+
+.que.formulas .formulas_number_unit {
+    display: inline-block;
+    margin: 0 0 0 0;
+    width: 80px;
+}
+
+.que.formulas .formulas_numeric {
+    display: inline-block;
+    margin: 0 0 0 0;
+    width: 100px;
+}
+
+.que.formulas .formulas_numeric_unit {
+    display: inline-block;
+    margin: 0 0 0 0;
+    width: 200px;
+}
+
+.que.formulas .formulas_numerical_formula {
+    display: inline-block;
+    margin: 0 0 0 0;
+    width: 200px;
+}
+
+.que.formulas .formulas_numerical_formula_unit {
+    display: inline-block;
+    margin: 0 0 0 0;
+    width: 300px;
+}
+
+.que.formulas .formulas_algebraic_formula {
+    display: inline-block;
+    margin: 0 0 0 0;
+    width: 200px;
+}
+
+.que.formulas .formulation .formulaspart {
+    display: block;
+    margin: 0 0 1.2em 0;
+    padding-bottom: 0;
+}
+
+.que.formulas .formulation .formulas_menu {
+    display: inline;
+    margin: 0 0 1.2em 0;
+    padding-bottom: 0;
+}
+
+.que.formulas .multichoice_answer div.r0,
+.que.formulas .multichoice_answer div.r1 {
+    padding: 0.3em 0 0.3em 25px;
+    text-indent: -25px;
+}
+
+.que.formulas .formulas_mark {
+    display: inline;
+}
+
+.que.formulas .formulas_grade {
+    font-size: 0.8em;
+}
+
+.que.formulas .formulation .formulaspartfeedback,
+.que.formulas .formulation .formulaspartcorrectanswer,
+.que.formulas .formulation .formulaslocalfeedback {
+    padding-top: 6px;
+}
+
+.que.formulas .formulation .formulaspartoutcome {
+    background: #fff3bf;
+    color: black;
+    margin: 0.2em -0.2em 0.5em;
+    padding: 0.2em;
+}
+
+.que.formulas .formulation .formulaspartfeedback .correct,
+.que.formulas .formulation .formulaspartfeedback .partiallycorrect,
+.que.formulas .formulation .formulaspartfeedback .incorrect {
+    background: transparent;
+}
+
+.que .formulation .formulas-select {
+    display: inline-block;
+}
+
+/* Styles for the editing form. */
+body#page-question-type-formulas .formulas_correctness_show {
+    display: inline;
+}
+
+body#page-question-type-formulas .formulas_input_info_outer {
+    display: inline;
+    position: absolute;
+    z-index: 2;
+}
+
+body#page-question-type-formulas .formulas_input_info {
+    background-color: #eef;
+    left: 0;
+    position: absolute;
+    top: 1.94em;
+    width: 150px;
+}
+
+body#page-question-type-formulas .formulas_input_info_title {
+    padding: 2px;
+}
+
+body#page-question-type-formulas .formulas_input_info_interpretation {
+    border: 1px solid #88c;
+    padding: 2px;
+}
+
+body#page-question-type-formulas .formulas_input_info_interpretation_incorrect {
+    border: 1px solid #88c;
+    color: #bbb;
+    padding: 2px;
+}
+
+/* Form rows normally have 1rem of bottom margin. However, if the form field's ID is answer_xxx,
+   that margin will be forced to 0 for nicer rendering in the multichoice qtype's edit form. We
+   now have to force the margin again to get it back. */
+/* stylelint-disable declaration-no-important  */
+body#page-question-type-formulas div[id^="fitem_id_answer_"].mb-3 {
+    margin-bottom: 1rem !important;
+}
+/* stylelint-enable declaration-no-important  */
+
+/* RTL hacks */
+#page-question-type-formulas #id_varsrandom,
+#page-question-type-formulas #id_varsglobal {
+    direction: ltr;
+    height: 80px;
+    text-align: left;
+}
