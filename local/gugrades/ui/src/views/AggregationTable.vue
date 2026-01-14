@@ -200,6 +200,7 @@
                             :toplevel="toplevel"
                             :itemid = "gradeitemid"
                             :selectedcategoryid = "level1category"
+                            :categoryid = "categoryid"
                             :userid = "item.id"
                             :gradehidden = "false"
                             :overridden = "item.overridden"
