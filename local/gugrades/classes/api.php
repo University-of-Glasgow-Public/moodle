@@ -35,6 +35,16 @@ require_once(dirname(__FILE__) . '/constants.php');
 class api {
 
     /**
+     * Extend time limit and clear sessions
+     * This allows processes to run forever and stops Moodle blocking because the session is active
+     * Be careful that you don't actually *need* the session (you can't change $_SESSION)
+     */
+    public static function more_time() {
+        set_time_limit(0);
+        \core\session\manager::write_close();
+    }
+
+    /**
      * Get activities
      * @param int $courseid
      * @param int $categoryid
@@ -42,6 +52,8 @@ class api {
      * @return object List of activities/subcategories in
      */
     public static function get_activities(int $courseid, int $categoryid, bool $detailed = false) {
+
+        self::more_time();
 
         $error = '';
 
@@ -70,6 +82,8 @@ class api {
         string $firstname, string $lastname, int $groupid, bool $viewfullnames) {
 
         global $USER;
+
+        self::more_time();
 
         //xhprof_enable(XHPROF_FLAGS_NO_BUILTINS);
 
@@ -831,7 +845,7 @@ class api {
         global $DB;
 
         // This could legitimately take forever
-        set_time_limit(0);
+        self::more_time();
 
         // Check!
         list($recursiveavailable, $recursivematch, $allgradesvalid) = \local_gugrades\grades::recursive_import_match($gradeitemid);
@@ -1231,6 +1245,8 @@ class api {
         ) {
 
         global $DB;
+
+        self::more_time();
 
         // Can we aggregate?
         [$aggregationsupported, $unsupportedscales] = \local_gugrades\grades::are_all_grades_supported($courseid, $gradeitemid);
@@ -1687,6 +1703,8 @@ class api {
     public static function release_grades(int $courseid, int $gradeitemid, int $groupid, bool $revert) {
         global $DB;
 
+        self::more_time();
+
         // Get list of users.
         $activity = \local_gugrades\users::activity_factory($gradeitemid, $courseid, $groupid);
         $users = $activity->get_users();
@@ -1997,7 +2015,7 @@ class api {
         global $CFG, $USER;
 
         // I know :(
-        set_time_limit(0);
+        self::more_time();
 
         // Is aggregation supported (at all)?
         $gradeitemid = \local_gugrades\grades::get_gradeitemid_from_gradecategoryid($gradecategoryid);
@@ -2435,6 +2453,8 @@ class api {
      */
     public static function recalculate(int $courseid, int $gradecategoryid, $userid = 0) {
 
+        self::more_time();
+
         // Re-aggregate single user
         if ($userid) {
             \local_gugrades\aggregation::aggregate_user_helper($courseid, $gradecategoryid, $userid);
@@ -2588,6 +2608,8 @@ class api {
      */
     public static function get_image_urls(int $courseid, array $images) {
         global $PAGE, $OUTPUT;
+
+        self::more_time();
 
         $context = \context_course::instance($courseid);
         $PAGE->set_context($context);
