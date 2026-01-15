@@ -1448,7 +1448,7 @@ class aggregation {
                 $provisional = $usercapture->get_provisional();
 
                 // MGU-1293: Additional check for null grade which counts as missing grade.
-                if ($provisional && !is_null($provisional->convertedgrade)) {
+                if ($provisional && !is_null($provisional->convertedgrade) && !($provisional->rawgrade == -1)) {
                     $item = (object)[
                         'itemid' => $child->itemid,
                         'iscategory' => false,
