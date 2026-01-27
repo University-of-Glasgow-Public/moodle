@@ -467,8 +467,9 @@ class aggregation {
 
         // Get the grade item corresponding to this category.
         $gcat = $DB->get_record('grade_categories', ['id' => $gradecategoryid], '*', MUST_EXIST);
-        $gradecatitem = $DB->get_record('grade_items',
-            ['itemtype' => 'category', 'iteminstance' => $gradecategoryid], '*', MUST_EXIST);
+        $gradecatitem = \local_gugrades\grades::get_gradeitem_from_gradecategoryid($gradecategoryid);
+        //$gradecatitem = $DB->get_record('grade_items',
+        //    ['itemtype' => 'category', 'iteminstance' => $gradecategoryid], '*', MUST_EXIST);
 
         $fields = [];
         $items = [];
@@ -593,9 +594,10 @@ class aggregation {
 
         $gcat = $DB->get_record('grade_categories', ['id' => $gradecategoryid], '*', MUST_EXIST);
 
-        // Get the grad eitem corresponding to this category.
-        $gradecatitem = $DB->get_record('grade_items',
-            ['itemtype' => 'category', 'iteminstance' => $gradecategoryid], '*', MUST_EXIST);
+        // Get the grad item corresponding to this category.
+        $gradecatitem = \local_gugrades\grades::get_gradeitem_from_gradecategoryid($gradecategoryid);
+        //$gradecatitem = $DB->get_record('grade_items',
+        //    ['itemtype' => 'category', 'iteminstance' => $gradecategoryid], '*', MUST_EXIST);
 
         // Debugging stuff.
         $userhelpercount = 0;
@@ -825,8 +827,9 @@ class aggregation {
 
         // Get the category and corresponding instance.
         $gcat = $DB->get_record('grade_categories', ['id' => $gradecategoryid], '*', MUST_EXIST);
-        $gradeitem = $DB->get_record('grade_items',
-            ['iteminstance' => $gradecategoryid, 'itemtype' => 'category'], '*', MUST_EXIST);
+        $gradeitem = \local_gugrades\grades::get_gradeitem_from_gradecategoryid($gradecategoryid);
+        //$gradeitem = $DB->get_record('grade_items',
+        //    ['iteminstance' => $gradecategoryid, 'itemtype' => 'category'], '*', MUST_EXIST);
         if (\local_gugrades\grades::is_gradeitem_grade_type_none($gradeitem)) {
             throw new \moodle_exception('Trying to open category with gradetype of none. grade_item id = ' . $gradeitem->id);
         }
@@ -916,8 +919,9 @@ class aggregation {
         global $DB;
 
         // The cache uses the corresponding grade item id.
-        $gradeitem = $DB->get_record('grade_items',
-            ['iteminstance' => $gradecategoryid, 'itemtype' => 'category'], '*', MUST_EXIST);
+        $gradeitem = \local_gugrades\grades::get_gradeitem_from_gradecategoryid($gradecategoryid);
+        //$gradeitem = $DB->get_record('grade_items',
+        //    ['iteminstance' => $gradecategoryid, 'itemtype' => 'category'], '*', MUST_EXIST);
 
         // Get cache instance.
         $cache = \cache::make('local_gugrades', 'gradeitems');

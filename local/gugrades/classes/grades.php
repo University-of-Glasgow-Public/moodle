@@ -131,7 +131,12 @@ class grades {
         global $DB;
 
         // If there's no associated grade_item (which probably isn't good), just assume it's no grade.
-        if (!$gradeitem = $DB->get_record('grade_items', ['iteminstance' => $gradecategory->id, 'itemtype' => 'category'])) {
+        // MGU-1392: Make sure we're hitting indexes so this isn't slow
+        $sql = "SELECT * FROM {grade_items}
+            WHERE iteminstance = :iteminstance
+            AND itemtype = 'category'
+            AND itemmodule IS NULL";
+        if (!$gradeitem = $DB->get_record_sql($sql, ['iteminstance' => $gradecategory->id])) {
             return true;
         }
 
@@ -306,15 +311,30 @@ class grades {
         return true;
     }
 
+    /* Get the gradeitem given the gradecategoryid
+     * @param int $gradecategoryid
+     * @return object
+     */
+    public static function get_gradeitem_from_gradecategoryid(int $gradecategoryid) {
+        global $DB;
+
+        // MGU-1392: Make sure properly indexed.
+        $sql = "SELECT * FROM {grade_items}
+            WHERE itemtype = 'category'
+            AND iteminstance = :iteminstance
+            AND itemmodule IS NULL";
+        $gradeitem = $DB->get_record_sql($sql, ['iteminstance' => $gradecategoryid], '*', MUST_EXIST);
+
+        return $gradeitem;
+    }
+
     /**
      * Get the gradeitemid given the gradecategoryid
      * @param int $gradecategoryid
      * @return int
      */
     public static function get_gradeitemid_from_gradecategoryid(int $gradecategoryid) {
-        global $DB;
-
-        $gradeitem = $DB->get_record('grade_items', ['itemtype' => 'category', 'iteminstance' => $gradecategoryid], '*', MUST_EXIST);
+        $gradeitem = self::get_gradeitem_from_gradecategoryid($gradecategoryid);
 
         return $gradeitem->id;
     }
