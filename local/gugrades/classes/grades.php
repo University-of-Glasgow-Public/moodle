@@ -1845,7 +1845,8 @@ class grades {
         // Get possible gradeitemids against points/not points flag.
         $sql = "SELECT DISTINCT gradeitemid, points FROM {local_gugrades_grade}
             WHERE courseid = :courseid
-            AND gradetype <> 'CATEGORY'";
+            AND gradetype <> 'CATEGORY'
+            AND iscurrent = 1";
         $items = $DB->get_records_sql($sql, ['courseid' => $courseid]);
 
         $erroritems = [];
