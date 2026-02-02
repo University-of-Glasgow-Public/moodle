@@ -1878,7 +1878,7 @@ class grades {
         $grades = $DB->get_records_sql($sql, ['courseid' => $courseid]);
 
         foreach ($grades as $grade) {
-            $gradeitem = self::get_gradeitem($item->gradeitemid);
+            $gradeitem = self::get_gradeitem($grade->gradeitemid);
 
             if ($grade->maxgrade > $gradeitem->grademax) {
                 $erroritems[] = [
