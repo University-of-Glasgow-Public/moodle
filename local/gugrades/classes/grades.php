@@ -1860,7 +1860,29 @@ class grades {
             if ($gradeispoints != $item->points) {
                 $erroritems[] = [
                     'gradeitemid' => $item->gradeitemid,
-                    'itemname' => $gradeitem->itemname,
+                    'itemname' => $gradeitem->itemname . ' (grade type)',
+                ];
+            }
+        }
+
+        // Check for out of range grades. 
+        $sql = "SELECT DISTINCT gradeitemid, max(rawgrade) AS maxgrade FROM {local_gugrades_grade}
+            WHERE courseid = :courseid
+            AND rawgrade IS NOT NULL
+            AND gradetype <> 'CATEGORY'
+            AND gradetype <> 'CONVERTED'
+            AND gradetype <> 'RELEASED'
+            AND iscurrent = 1
+            GROUP BY gradeitemid";
+        $grades = $DB->get_records_sql($sql, ['courseid' => $courseid]);
+
+        foreach ($grades as $grade) {
+            $gradeitem = self::get_gradeitem($item->gradeitemid);
+
+            if ($grade->maxgrade > $gradeitem->grademax) {
+                $erroritems[] = [
+                    'gradeitemid' => $item->gradeitemid,
+                    'itemname' => $gradeitem->itemname . ' (maximum grade)',
                 ];
             }
         }
