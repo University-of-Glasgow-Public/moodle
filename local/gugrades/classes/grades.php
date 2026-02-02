@@ -1833,6 +1833,18 @@ class grades {
     }
 
     /**
+     * Check for any FIRST grades
+     * @param int $courseid
+     * @param int $gradeitemid
+     * @return bool
+     */
+    public static function any_first(int $courseid, int $gradeitemid) {
+        global $DB;
+
+        return $DB->record_exists('local_gugrades_grade', ['courseid' => $courseid, 'gradeitemid' => $gradeitemid, 'gradetype' => 'FIRST']);
+    }
+
+    /**
      * MGU-1394
      * Check if any gugrades_grade no longer match gradetype
      * in Moodle's grade_item tables.
@@ -1853,6 +1865,11 @@ class grades {
 
         $erroritems = [];
         foreach ($items as $item) {
+
+            // If there are first grades then check is irrelevant.
+            if (self::any_first($courseid, $item->gradeitemid)) {
+                continue;
+            }
 
             // If this gradeitem is converted then we can't do check
             if (\local_gugrades\conversion::is_conversion_applied($courseid, $item->gradeitemid)) {
@@ -1884,6 +1901,11 @@ class grades {
         $grades = $DB->get_records_sql($sql, ['courseid' => $courseid]);
 
         foreach ($grades as $grade) {
+
+            // If there are first grades then check is irrelevant.
+            if (self::any_first($courseid, $grade->gradeitemid)) {
+                continue;
+            }
             $gradeitem = self::get_gradeitem($grade->gradeitemid);
 
             if ($grade->maxgrade > $gradeitem->grademax) {
