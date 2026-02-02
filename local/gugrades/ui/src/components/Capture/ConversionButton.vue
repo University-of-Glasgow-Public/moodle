@@ -9,50 +9,60 @@
 
         <PleaseWait v-if="waiting"></PleaseWait>
 
-        <!-- Show the selected map name (if there is one)-->
-        <p v-if="mapname" class="mb-2">
-            {{ mstrings.selectedmap }}: <b>{{ mapname }}</b>
-        </p>
-
-        <!--  If no map is currently selected, show the selection dialogue -->
-        <div v-if="!selection">
-
-            <!-- if there are no grades then don't try to convert -->
-            <div v-if="!anygrades" class="alert alert-warning">
-                {{ mstrings.nogradestoconvert }}
-                <button class="btn btn-warning" @click="showselectmodal = false">{{ mstrings.cancel }}</button>
-            </div>
-
-            <div v-if="anygrades">
-                <div v-if="nomaps && loaded" class="alert alert-warning">
-                    {{ mstrings.nomaps }}
-                </div>
-
-                <div v-else class="alert alert-warning">
-                    {{ mstrings.noimportafterconversion }}
-                </div>
-
-                <EasyDataTable v-if="!nomaps && loaded" :items="maps" :headers="headers" :hide-footer="true">
-                    <template #item-select="item">
-                        <input type="radio" :value="item.id" v-model="mapid"/>
-                    </template>
-                </EasyDataTable>
-
-                <div>
-                    <button class="btn btn-primary mr-1" @click="save_clicked" :disabled="mapid == 0">{{ mstrings.save }}</button>
-                    <button class="btn btn-warning" @click="showselectmodal = false">{{ mstrings.cancel }}</button>
-                </div>
-            </div>
+        <div v-if="showmismatch">
+            <div class="alert alert-warning">{{ mstrings.conversionmismatch }}</div>
+            <button class="btn btn-primary mr-1" @click="save_clicked" :disabled="mapid == 0">{{ mstrings.yes }}</button>
+            <button class="btn btn-warning" @click="showselectmodal = false">{{ mstrings.cancel }}</button>
         </div>
 
-        <!-- if a map is selected then show warning message and option to remove -->
-        <div v-if="selection">
-            <div class="alert alert-danger">
-                {{ mstrings.conversionremovewarning }}
+
+        <div v-if="!showmismatch">
+
+            <!-- Show the selected map name (if there is one)-->
+            <p v-if="mapname" class="mb-2">
+                {{ mstrings.selectedmap }}: <b>{{ mapname }}</b>
+            </p>
+
+            <!--  If no map is currently selected, show the selection dialogue -->
+            <div v-if="!selection">
+
+                <!-- if there are no grades then don't try to convert -->
+                <div v-if="!anygrades" class="alert alert-warning">
+                    {{ mstrings.nogradestoconvert }}
+                    <button class="btn btn-warning" @click="showselectmodal = false">{{ mstrings.cancel }}</button>
+                </div>
+
+                <div v-if="anygrades">
+                    <div v-if="nomaps && loaded" class="alert alert-warning">
+                        {{ mstrings.nomaps }}
+                    </div>
+
+                    <div v-else class="alert alert-warning">
+                        {{ mstrings.noimportafterconversion }}
+                    </div>
+
+                    <EasyDataTable v-if="!nomaps && loaded" :items="maps" :headers="headers" :hide-footer="true">
+                        <template #item-select="item">
+                            <input type="radio" :value="item.id" v-model="mapid"/>
+                        </template>
+                    </EasyDataTable>
+
+                    <div>
+                        <button class="btn btn-primary mr-1" @click="save_clicked" :disabled="mapid == 0">{{ mstrings.save }}</button>
+                        <button class="btn btn-warning" @click="showselectmodal = false">{{ mstrings.cancel }}</button>
+                    </div>
+                </div>
             </div>
-            <div class="mt-1 mb-4">
-                <button class="btn btn-danger rounded mr-1" @click="remove_clicked">{{ mstrings.remove }}</button>
-                <button class="btn btn-warning" @click="showselectmodal = false">{{ mstrings.cancel }}</button>
+
+            <!-- if a map is selected then show warning message and option to remove -->
+            <div v-if="selection">
+                <div class="alert alert-danger">
+                    {{ mstrings.conversionremovewarning }}
+                </div>
+                <div class="mt-1 mb-4">
+                    <button class="btn btn-danger rounded mr-1" @click="remove_clicked">{{ mstrings.remove }}</button>
+                    <button class="btn btn-warning" @click="showselectmodal = false">{{ mstrings.cancel }}</button>
+                </div>
             </div>
         </div>
     </VueModal>
@@ -75,6 +85,8 @@
     const mapname = ref('');
     const debug = ref({});
     const waiting = ref(false);
+    const gradeitem = ref(null);
+    const showmismatch = ref(false);
 
     const toast = useToast();
 
@@ -150,18 +162,67 @@
     }
 
     /**
+     * Get grade item/
+     */
+    function get_grade_item() {
+        const GU = window.GU;
+        const courseid = GU.courseid;
+        const fetchMany = GU.fetchMany;     
+        
+        fetchMany([{
+            methodname: 'local_gugrades_get_grade_item',
+            args: {
+                itemid: props.itemid,
+            }
+        }])[0]
+        .then(result => {
+            gradeitem.value = result;
+        })
+        .catch((error) => {
+            window.console.error(error);
+            showselectmodal.value = false;
+            debug.value = error;
+        });
+    }
+
+    /**
      * Conversion button has been clicked
      */
     function conversion_clicked() {
+        get_grade_item();
         get_maps();
         get_selected();
         showselectmodal.value = true;
+        showmismatch.value = false;
+    }
+
+    /**
+     * MGU-1391
+     * Check for max grades mismatch
+     */
+    function is_mismatch() {
+
+        // Get map data
+        const map = maps.value.find(m => m.id == mapid.value);
+
+        // Get maximum grade for grade item
+        const grademax = gradeitem.value.grademax;
+
+        return grademax != map.maxgrade;
     }
 
     /**
      * Save button has been clicked
      */
     function save_clicked() {
+
+        // mismatch
+        if (is_mismatch() && !showmismatch.value) {
+            showmismatch.value = true;
+
+            return;
+        }
+
         const GU = window.GU;
         const courseid = GU.courseid;
         const fetchMany = GU.fetchMany;
