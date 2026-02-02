@@ -1846,6 +1846,8 @@ class grades {
         $sql = "SELECT DISTINCT gradeitemid, points FROM {local_gugrades_grade}
             WHERE courseid = :courseid
             AND gradetype <> 'CATEGORY'
+            AND gradetype <> 'CONVERTED'
+            AND gradetype <> 'RELEASED'
             AND iscurrent = 1";
         $items = $DB->get_records_sql($sql, ['courseid' => $courseid]);
 
