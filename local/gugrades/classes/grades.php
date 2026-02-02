@@ -1853,6 +1853,12 @@ class grades {
 
         $erroritems = [];
         foreach ($items as $item) {
+
+            // If this gradeitem is converted then we can't do check
+            if (\local_gugrades\conversion::is_conversion_applied($courseid, $item->gradeitemid)) {
+                continue;
+            }
+
             $gradeitem = self::get_gradeitem($item->gradeitemid);
 
             // If scaleid in gradeitem is null then it's points
