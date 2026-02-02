@@ -1856,8 +1856,9 @@ class grades {
             $gradeitem = self::get_gradeitem($item->gradeitemid);
 
             // If scaleid in gradeitem is null then it's points
+            // However, forget it if exactly 22 points (special case)
             $gradeispoints = empty($gradeitem->scaleid);
-            if ($gradeispoints != $item->points) {
+            if (($gradeispoints != $item->points) && ($gradeitem->grademax != 22)) {
                 $erroritems[] = [
                     'gradeitemid' => $item->gradeitemid,
                     'itemname' => $gradeitem->itemname . ' (grade type)',
