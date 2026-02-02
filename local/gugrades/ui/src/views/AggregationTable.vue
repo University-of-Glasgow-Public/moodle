@@ -208,6 +208,7 @@
                             :name = "item.displayname"
                             :showweights = "showweights"
                             :released = "false"
+                            :caneditgrades = "caneditgrades"
                             @gradeadded = "grade_changed(item.id)"
                         ></OverrideGrade>
                     </div>

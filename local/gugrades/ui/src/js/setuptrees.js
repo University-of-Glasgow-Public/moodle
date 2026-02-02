@@ -23,7 +23,8 @@ export function usePopulateTrees() {
         .then(result => {
             const activitytree = useActivityTreeStore();
             let promises = []; 
-            result.forEach(cat => {
+            const categories = result.categories;
+            categories.forEach(cat => {
                 const catid = cat.id;
 
                 promises.push(

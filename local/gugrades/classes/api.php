@@ -521,7 +521,12 @@ class api {
             ];
         }
 
-        return $results;
+        $erroritems = \local_gugrades\grades::check_grade_type_integrity($courseid);
+
+        return [
+            'categories' => $results,
+            'erroritems' => $erroritems,
+        ];
     }
 
     /**

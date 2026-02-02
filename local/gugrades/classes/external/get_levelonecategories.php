@@ -67,12 +67,20 @@ class get_levelonecategories extends external_api {
      * @return external_multiple_structure
      */
     public static function execute_returns() {
-        return new external_multiple_structure(
-            new external_single_structure([
-                'id' => new external_value(PARAM_INT, 'Grade category id'),
-                'fullname' => new external_value(PARAM_TEXT, 'Grade category name'),
-            ])
-        );
+        return new external_single_structure([
+            'categories' => new external_multiple_structure(
+                new external_single_structure([
+                    'id' => new external_value(PARAM_INT, 'Grade category id'),
+                    'fullname' => new external_value(PARAM_TEXT, 'Grade category name'),
+                ])
+            ),
+            'erroritems' => new external_multiple_structure(
+                new external_single_structure([
+                    'gradeitemid' => new external_value(PARAM_INT, 'Grade item id'),
+                    'itemname' => new external_value(PARAM_TEXT, 'Grade item name'),
+                ])
+            ),
+        ]);
     }
 
 }

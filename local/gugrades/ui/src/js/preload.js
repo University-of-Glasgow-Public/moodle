@@ -18,7 +18,8 @@ export function usePreload() {
             }
         }])[0]
         .then(result => {
-            result.forEach(cat => {
+            const categories = result.categories;
+            categories.forEach(cat => {
                 const catid = cat.id;
                 const fullname = cat.fullname.toLowerCase();
 

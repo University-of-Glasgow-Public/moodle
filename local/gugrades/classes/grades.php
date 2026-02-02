@@ -1832,4 +1832,37 @@ class grades {
         return $grademax;
     }
 
+    /**
+     * MGU-1394
+     * Check if any gugrades_grade no longer match gradetype
+     * in Moodle's grade_item tables.
+     * @param int $courseid
+     */
+    public static function check_grade_type_integrity(int $courseid) {
+        global $DB;
+
+        // We only store points or not points but that will do. 
+        // Get possible gradeitemids against points/not points flag.
+        $sql = "SELECT DISTINCT gradeitemid, points FROM {local_gugrades_grade}
+            WHERE courseid = :courseid
+            AND gradetype <> 'CATEGORY'";
+        $items = $DB->get_records_sql($sql, ['courseid' => $courseid]);
+
+        $erroritems = [];
+        foreach ($items as $item) {
+            $gradeitem = self::get_gradeitem($item->gradeitemid);
+
+            // If scaleid in gradeitem is null then it's points
+            $gradeispoints = empty($gradeitem->scaleid);
+            if ($gradeispoints != $item->points) {
+                $erroritems[] = [
+                    'gradeitemid' => $item->gradeitemid,
+                    'itemname' => $gradeitem->itemname,
+                ];
+            }
+        }
+
+        return $erroritems;
+    }
+
 }

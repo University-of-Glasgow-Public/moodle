@@ -45,11 +45,13 @@ final class get_levelonecategories_test extends \local_gugrades\external\gugrade
      */
     public function test_categories_returned(): void {
 
-        $categories = get_levelonecategories::execute($this->course->id);
-        $categories = external_api::clean_returnvalue(
+        $l1categories = get_levelonecategories::execute($this->course->id);
+        $l1categories = external_api::clean_returnvalue(
             get_levelonecategories::execute_returns(),
-            $categories
+            $l1categories
         );
+
+        $categories = $l1categories['categories'];
 
         // Check data is correct.
         // Formative has no items, so will not be included.
