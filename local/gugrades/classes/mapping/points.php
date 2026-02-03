@@ -47,6 +47,21 @@ class points extends base {
     }
 
     /**
+     * Validate the CSV grade
+     * It should be within grademin and grademax otherwise we'll reject it
+     * This is because (I think) the old GCAT can write an invalid 0 into assign_grade / grade_grade
+     * @param float $grade
+     * @return bool
+     */
+    public function validate_csv(float $grade) {
+
+        // No offset for points grades.
+        $grademin = $this->gradeitem->grademin;
+        $grademax = $this->gradeitem->grademax;
+        return ($grade >= $grademin) && ($grade <= $grademax);
+    }
+
+    /**
      * Does this represent Schedule A/B or neither
      * Return A, B or empty string
      */
