@@ -213,6 +213,9 @@ abstract class base {
                 $grade = $this->items[$csvgrade];
             }
         } else {
+            if (!is_numeric($csvgrade)) {
+                return [false, 0];
+            }
             $grade = floatval(trim($csvgrade));
         }
         if (!$this->validate_csv($grade)) {
