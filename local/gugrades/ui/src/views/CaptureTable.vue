@@ -79,6 +79,7 @@
                     :filter-options="table_filter"
                     @xxupdate-page-items="pagination_clicked()"
                     ref="dataTable"
+                    :rows-items="[25,50,100,250]"
                     hide-footer
                     >
 

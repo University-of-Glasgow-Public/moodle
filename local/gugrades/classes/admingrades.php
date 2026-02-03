@@ -355,4 +355,34 @@ class admingrades {
         return $admingrades;
     }
 
+    /**
+     * Get admingrades formatted for CSV Import
+     * The valid code is the key => internal code (e.g. NOSUBMISSION)
+     * @param int $level
+     * @return array
+     */
+    public static function get_admingrades_csv(int $level) {
+
+        $defaults = self::defaults();
+        $admingrades = [];
+
+        foreach ($defaults as $name => $default) {
+
+            // Has to be in items list.
+            if (!self::flag_set($default, 'items')) {
+                continue;
+            }
+
+            // If we're at level 1 then level2 items are not included.
+            if (($level == 1) && self::flag_set($default, 'level2')) {
+                continue;
+            }
+
+            [$displaygrade, $description] = self::get_displaygrade_from_name($name);
+            $admingrades[$displaygrade] = $name;
+        }
+
+        return $admingrades;
+    }
+
 }

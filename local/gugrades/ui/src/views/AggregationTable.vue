@@ -71,6 +71,7 @@
             :items="users"
             :headers="headers"
             :filter-options="table_filter"
+            :rows-items="[25,50,100,250]"
             ref="dataTable"
             hide-footer
         >

@@ -261,6 +261,13 @@ class api {
     public static function csv_upload(int $courseid, int $gradeitemid, int $groupid,
         bool $testrun, string $reason, string $other, string $csv) {
 
+        // Get correct level for this category.
+        $gradecategoryid = \local_gugrades\grades::get_gradecategoryid_from_gradeitemid($gradeitemid);
+        $level = \local_gugrades\grades::get_category_level($gradecategoryid);
+
+        // Get admingrades valid for this level.
+        $admingrades = \local_gugrades\admingrades::get_admingrades_csv($level);
+
         // Can we aggregate?
         [$aggregationsupported, $unsupportedscales] = \local_gugrades\grades::are_all_grades_supported($courseid, $gradeitemid);
 
@@ -357,22 +364,33 @@ class api {
             }
             $user = $idusers[$idnumber];
 
-            // Check if valid grade.
-            if ($grade != '') {
-                list($gradevalid, $gradevalue) = $mapping->csv_value($grade);
-                if (!$gradevalid) {
-                    $testrunline['error'] = get_string('csvgradeinvalid', 'local_gugrades');
-                    $errors['csvgradeinvalid']++;
-                    $testrunlines[] = $testrunline;
-                    $errorcount++;
-                    continue;
-                }
-                $testrunline['gradevalue'] = $gradevalue;
+            // Is grade a (valid) admingrade.
+            $admingrade = '';
+            $agkey = trim($grade);
+            if (array_key_exists($agkey, $admingrades)) {
+                $admingrade = $admingrades[$agkey];
+                $gradevalue = 0;
+                $testrunline['gradevalue'] = 0;
                 $testrunline['state'] = 1;
             } else {
-                $testrunline['error'] = get_string('csvnograde', 'local_gugrades'); // Warning.
-                $testrunlines[] = $testrunline;
-                continue;
+
+                // Check if valid grade.
+                if ($grade != '') {
+                    list($gradevalid, $gradevalue) = $mapping->csv_value($grade);
+                    if (!$gradevalid) {
+                        $testrunline['error'] = get_string('csvgradeinvalid', 'local_gugrades');
+                        $errors['csvgradeinvalid']++;
+                        $testrunlines[] = $testrunline;
+                        $errorcount++;
+                        continue;
+                    }
+                    $testrunline['gradevalue'] = $gradevalue;
+                    $testrunline['state'] = 1;
+                } else {
+                    $testrunline['error'] = get_string('csvnograde', 'local_gugrades'); // Warning.
+                    $testrunlines[] = $testrunline;
+                    continue;
+                }
             }
 
             $testrunlines[] = $testrunline;
