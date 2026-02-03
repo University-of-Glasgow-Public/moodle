@@ -19,6 +19,14 @@ export function usePreload() {
         }])[0]
         .then(result => {
             const categories = result.categories;
+            const erroritems = result.erroritems;
+
+            // If there are erroritems, no point continuing
+            if (erroritems.length != 0) {
+                console.log('Errors found in get_levelonecategories. Aborting preload');
+                return;
+            }
+
             categories.forEach(cat => {
                 const catid = cat.id;
                 const fullname = cat.fullname.toLowerCase();
