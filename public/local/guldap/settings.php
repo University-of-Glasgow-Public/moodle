@@ -119,8 +119,8 @@ if ($hassiteconfig) {
             new lang_string('searchsub_help', 'local_guldap'), 0 , $yesno));   
             
     // Dereference aliases.
-    define('LDAP_DEREF_NEVER', '');
-    define('LDAP_DEREF_ALWAYS', '');
+    defined('LDAP_DEREF_NEVER') or define('LDAP_DEREF_NEVER', '');
+    defined('LDAP_DEREF_ALWAYS') or define('LDAP_DEREF_ALWAYS', '');
     $optderef = [
         LDAP_DEREF_NEVER => new lang_string('no'),
         LDAP_DEREF_ALWAYS => new lang_string('yes'),
