@@ -43,11 +43,16 @@ if ($hassiteconfig) {
         get_string('settingssectiondefaultsdescription', 'auth_outage') . $description
     ));
 
-    $settings->add(new admin_setting_configcheckbox(
+    $settings->add(new admin_setting_configselect(
         'auth_outage/default_autostart',
         get_string('defaultoutageautostart', 'auth_outage'),
         get_string('defaultoutageautostartdescription', 'auth_outage'),
-        $defaults['default_autostart']
+        '0',
+        [
+            '0' => get_string('autostartoff', 'auth_outage'),
+            '1' => get_string('autostarton', 'auth_outage'),
+            '2' => get_string('autostartforcedoff', 'auth_outage'),
+        ]
     ));
 
     $settings->add(new admin_setting_configduration(
@@ -78,6 +83,16 @@ if ($hassiteconfig) {
         $defaults['default_title'],
         PARAM_TEXT
     ));
+    $settings->add(
+        new admin_setting_configtext(
+            'auth_outage/default_metadata',
+            get_string('defaultmetadata', 'auth_outage'),
+            get_string('defaultmetadatadescription', 'auth_outage'),
+            '',
+            PARAM_TEXT
+        )
+    );
+
     $settings->add(new admin_setting_configtextarea(
         'auth_outage/default_description',
         get_string('defaultdescription', 'auth_outage'),

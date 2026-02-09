@@ -48,8 +48,10 @@ class edit extends moodleform {
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
 
-        $mform->addElement('checkbox', 'autostart', get_string('autostart', 'auth_outage'));
-        $mform->addHelpButton('autostart', 'autostart', 'auth_outage');
+        if (get_config('auth_outage', 'default_autostart') !== '2') {
+            $mform->addElement('checkbox', 'autostart', get_string('autostart', 'auth_outage'));
+            $mform->addHelpButton('autostart', 'autostart', 'auth_outage');
+        }
 
         $mform->addElement('duration', 'warningduration', get_string('warningduration', 'auth_outage'));
         $mform->addHelpButton('warningduration', 'warningduration', 'auth_outage');
@@ -87,6 +89,10 @@ class edit extends moodleform {
         $mform->setType('accesskey', PARAM_TEXT);
         $mform->disabledIf('accesskey', 'useaccesskey');
         $mform->addHelpButton('accesskey', 'accesskey', 'auth_outage');
+
+        $mform->addElement('text', 'metadata', get_string('metadata', 'auth_outage'));
+        $mform->setType('metadata', PARAM_TEXT);
+        $mform->addHelpButton('metadata', 'metadata', 'auth_outage');
 
         $this->add_action_buttons();
     }
@@ -142,6 +148,7 @@ class edit extends moodleform {
             'title' => $data->title,
             'description' => $data->description['text'],
             'accesskey' => $data->useaccesskey ? $data->accesskey : null,
+            'metadata' => $data->metadata ?? null,
         ];
         return new outage($outagedata);
     }
@@ -167,6 +174,7 @@ class edit extends moodleform {
                 'description' => ['text' => $outage->description, 'format' => '1'],
                 'accesskey' => $outage->accesskey,
                 'useaccesskey' => !empty($outage->accesskey),
+                'metadata' => $outage->metadata,
             ]);
 
             // If the default_autostart is configured in config, then force autostart to be the default value.
