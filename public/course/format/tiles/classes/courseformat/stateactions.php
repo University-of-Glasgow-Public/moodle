@@ -29,7 +29,6 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class stateactions extends stateactions_base {
-
     /**
      * Highlight course section.
      *
@@ -41,14 +40,18 @@ class stateactions extends stateactions_base {
      */
     public function section_highlight(
         stateupdates $updates,
-        stdClass     $course,
-        array        $ids = [],
-        ?int         $targetsectionid = null,
-        ?int         $targetcmid = null
+        stdClass $course,
+        array $ids = [],
+        ?int $targetsectionid = null,
+        ?int $targetcmid = null
     ): void {
         $actions = new stateactions_topics();
         $actions->section_highlight(
-            $updates, $course, $ids, $targetsectionid, $targetcmid
+            $updates,
+            $course,
+            $ids,
+            $targetsectionid,
+            $targetcmid
         );
     }
 
@@ -70,7 +73,11 @@ class stateactions extends stateactions_base {
     ): void {
         $actions = new stateactions_topics();
         $actions->section_unhighlight(
-            $updates, $course, $ids, $targetsectionid, $targetcmid
+            $updates,
+            $course,
+            $ids,
+            $targetsectionid,
+            $targetcmid
         );
     }
 }

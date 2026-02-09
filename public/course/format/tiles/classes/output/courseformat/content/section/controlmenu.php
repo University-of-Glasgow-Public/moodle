@@ -39,7 +39,6 @@ use core\output\pix_icon;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class controlmenu extends controlmenu_topics {
-
     /** @var course_format the course format class */
     protected $format;
 

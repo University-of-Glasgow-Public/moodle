@@ -749,3 +749,12 @@ Other
 5.1.0.0 (2025100900)
 ====================
 - Moodle 5.1 compatibility
+
+5.1.0.1 (2025120170)
+=====================
+- Issue 91 Mathjax not loading in labels (on section re-open)
+
+5.1.0.2 (2026012570)
+=====================
+- Fix subtile completion not responding section zero
+- Code format clean up
