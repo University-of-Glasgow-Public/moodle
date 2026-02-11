@@ -1,0 +1,3 @@
+[submodule "local/gugrades"]
+	path = local/gugrades
+	url = git@github.com:University-of-Glasgow-Public/moodle-local_gugrades.git
