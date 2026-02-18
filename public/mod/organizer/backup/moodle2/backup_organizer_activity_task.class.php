@@ -35,7 +35,6 @@ require_once($CFG->dirroot . '/mod/organizer/backup/moodle2/backup_organizer_ste
  * complete backup of the activity
  */
 class backup_organizer_activity_task extends backup_activity_task {
-
     /**
      * Define (add) particular settings this activity can have
      */
@@ -54,6 +53,9 @@ class backup_organizer_activity_task extends backup_activity_task {
     /**
      * Code the transformations to perform in the activity in
      * order to get transportable (encoded) links
+     *
+     * @param string $content
+     * @return array|string|string[]|null
      */
     public static function encode_content_links($content) {
         global $CFG;

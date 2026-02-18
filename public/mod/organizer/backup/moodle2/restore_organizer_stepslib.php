@@ -41,13 +41,16 @@ class restore_organizer_activity_structure_step extends restore_activity_structu
 
         $userinfo = $this->get_setting_value('userinfo');
         if ($userinfo) {
-            $paths[] = new restore_path_element('appointment',
+            $paths[] = new restore_path_element(
+                'appointment',
                 '/activity/organizer/slots/slot/appointments/appointment'
             );
-            $paths[] = new restore_path_element('trainer',
+            $paths[] = new restore_path_element(
+                'trainer',
                 '/activity/organizer/slots/slot/trainers/trainer'
             );
-            $paths[] = new restore_path_element('queue',
+            $paths[] = new restore_path_element(
+                'queue',
                 '/activity/organizer/slots/slot/queues/queue'
             );
         }
@@ -81,7 +84,7 @@ class restore_organizer_activity_structure_step extends restore_activity_structu
 
     /**
      * process slotdata for restore
-     * @param  $data
+     * @param object $data
      * @throws dml_exception
      * @throws restore_step_exception
      */
@@ -104,7 +107,7 @@ class restore_organizer_activity_structure_step extends restore_activity_structu
     /**
      * process appointment data for restore
      * Only restore appointments if user is enrolled with right to register in new course or there is a group id
-     * @param $data
+     * @param object $data
      * @throws base_step_exception
      * @throws dml_exception
      * @throws restore_step_exception

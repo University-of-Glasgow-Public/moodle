@@ -1,6 +1,16 @@
 CHANGELOG
 =========
 
+5.1.0 (2025-11-12)
+------------------
+* Moodle 5.1 compatible version
+* [BUG] #8668 - Fix slot print with fullname 
+
+5.0.0 (2025-06-08)
+------------------
+* [FIXED] PR #151 fixed division by zero error
+* Moodle 5.0 compatible version
+
 4.5.1 (2025-03-06)
 ------------------
 * [FIXED] Error message after deactivating "hide calendar" instance option
