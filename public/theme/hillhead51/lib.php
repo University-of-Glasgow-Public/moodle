@@ -22,3 +22,40 @@
  * @copyright  2026 University of Glasgow
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+/**
+ * Theme functions.
+ *
+ * @package    theme_hillhead51
+ * @author     Greg Pedder <greg.pedder@glasgow.ac.uk>
+ * @copyright  2026 University of Glasgow
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+function theme_hillhead51_get_main_scss_content($theme) {
+
+    global $CFG;
+    $scss = '';
+    $sheets = ['config'];
+
+    // These scss files should declare default values for "variables" that will be used by Moodle...
+    foreach ($sheets as $sheet) {
+        $scss .= file_get_contents($CFG->dirroot . '/theme/hillhead51/scss/'.$sheet.'.scss');
+    }
+
+    // ...now append the main scss file style rules...
+    $scss .= theme_boost_get_main_scss_content($theme);
+
+    $sheets = ['hillhead51', 'accessibility', 'login'];
+
+    // ...these scss files should declare more specific css "rules"...
+    foreach ($sheets as $sheet) {
+        $scss .= file_get_contents($CFG->dirroot . '/theme/hillhead51/scss/'.$sheet.'.scss');
+    }
+
+    // ...finally append the "preset" scss "vars" and "rules" from the settings,
+    // which will override the ones used in the Moodle and Bootstrap SCSS files...
+    $filename = !empty($theme->settings->preset) ? $theme->settings->preset : 'blue.scss';
+    $scss .= file_get_contents($CFG->dirroot . '/theme/hillhead51/scss/'.$filename);
+
+    return $scss;
+}
