@@ -15,7 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * UofG version file for the plugin.
+ * Controls how the Systemwide Notifications are handled.
+ *
+ * These notifications are configured in admin/settings.php as part of the theme
+ * and display across all Moodle pages, unless dismissed by the user.
  *
  * @package    theme_hillhead51
  * @author     Greg Pedder <greg.pedder@glasgow.ac.uk>
@@ -23,13 +26,15 @@
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+require_once('../../config.php');
 
-$plugin->version   = 2026022600;
-$plugin->requires  = 2025100600;         // Requires Moodle version 5.1 or greater.
-$plugin->component = 'theme_hillhead51';
-$plugin->dependencies = [
-    'theme_boost' => '2017111300',
-];
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release  = '0.1 Alpha';
+$notificationhash = required_param('h', PARAM_RAW);
+
+require_login();
+
+if (!isset($_SESSION['SESSION']->hillhead_notifications)) {
+    $_SESSION['SESSION']->hillhead_notifications = [];
+}
+$_SESSION['SESSION']->hillhead_notifications[$notificationhash] = 1;
+
+header('Location: '.$_SERVER['HTTP_REFERER']);

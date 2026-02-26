@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * UofG version file for the plugin.
+ * A login page layout for the UofG Hillhead 5.1 theme
  *
  * @package    theme_hillhead51
  * @author     Greg Pedder <greg.pedder@glasgow.ac.uk>
@@ -25,11 +25,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026022600;
-$plugin->requires  = 2025100600;         // Requires Moodle version 5.1 or greater.
-$plugin->component = 'theme_hillhead51';
-$plugin->dependencies = [
-    'theme_boost' => '2017111300',
+$bodyattributes = $OUTPUT->body_attributes();
+
+$templatecontext = [
+    'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
+    'output' => $OUTPUT,
+    'bodyattributes' => $bodyattributes,
+    'loginintro' => get_config('theme_hillhead51', 'login_intro')
 ];
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release  = '0.1 Alpha';
+
+echo $OUTPUT->render_from_template('theme_hillhead51/login', $templatecontext);

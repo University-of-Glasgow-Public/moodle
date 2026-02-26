@@ -28,119 +28,119 @@
 defined('MOODLE_INTERNAL') || die();
 
 $extrascripts = '';
-$themehillhead40stripstyles = '';
-$themehillhead40font = get_user_preferences('theme_hillhead40_font');
+$themehillhead51stripstyles = '';
+$themehillhead51font = get_user_preferences('theme_hillhead51_font');
 
-switch($themehillhead40font) {
+switch($themehillhead51font) {
     case 'modern':
-        $extraclasses[] = 'hillhead40-font-modern';
+        $extraclasses[] = 'hillhead51-font-modern';
         break;
     case 'classic':
-        $extraclasses[] = 'hillhead40-font-classic';
+        $extraclasses[] = 'hillhead51-font-classic';
         break;
     case 'comic':
-        $extraclasses[] = 'hillhead40-font-comic';
+        $extraclasses[] = 'hillhead51-font-comic';
         break;
     case 'mono':
-        $extraclasses[] = 'hillhead40-font-mono';
+        $extraclasses[] = 'hillhead51-font-mono';
         break;
     case 'dyslexic':
-        $extraclasses[] = 'hillhead40-font-dyslexic';
+        $extraclasses[] = 'hillhead51-font-dyslexic';
         break;
 }
 
-$themehillhead40size = get_user_preferences('theme_hillhead40_size');
+$themehillhead51size = get_user_preferences('theme_hillhead51_size');
 
-switch($themehillhead40size) {
+switch($themehillhead51size) {
     case '120':
-        $extraclasses[] = 'hillhead40-size-120';
+        $extraclasses[] = 'hillhead51-size-120';
         break;
     case '140':
-        $extraclasses[] = 'hillhead40-size-140';
+        $extraclasses[] = 'hillhead51-size-140';
         break;
     case '160':
-        $extraclasses[] = 'hillhead40-size-160';
+        $extraclasses[] = 'hillhead51-size-160';
         break;
     case '180':
-        $extraclasses[] = 'hillhead40-size-180';
+        $extraclasses[] = 'hillhead51-size-180';
         break;
 }
 
-$themehillhead40contrast = get_user_preferences('theme_hillhead40_contrast');
+$themehillhead51contrast = get_user_preferences('theme_hillhead51_contrast');
 
-switch($themehillhead40contrast) {
+switch($themehillhead51contrast) {
     case 'night':
-        $extraclasses[] = 'hillhead40-night';
+        $extraclasses[] = 'hillhead51-night';
         break;
     case 'by':
-        $extraclasses[] = 'hillhead40-contrast';
-        $extraclasses[] = 'hillhead40-contrast-by';
+        $extraclasses[] = 'hillhead51-contrast';
+        $extraclasses[] = 'hillhead51-contrast-by';
         break;
     case 'yb':
-        $extraclasses[] = 'hillhead40-contrast';
-        $extraclasses[] = 'hillhead40-contrast-yb';
+        $extraclasses[] = 'hillhead51-contrast';
+        $extraclasses[] = 'hillhead51-contrast-yb';
         break;
     case 'wg':
-        $extraclasses[] = 'hillhead40-contrast';
-        $extraclasses[] = 'hillhead40-contrast-wg';
+        $extraclasses[] = 'hillhead51-contrast';
+        $extraclasses[] = 'hillhead51-contrast-wg';
         break;
     case 'bb':
-        $extraclasses[] = 'hillhead40-contrast';
-        $extraclasses[] = 'hillhead40-contrast-bb';
+        $extraclasses[] = 'hillhead51-contrast';
+        $extraclasses[] = 'hillhead51-contrast-bb';
         break;
     case 'br':
-        $extraclasses[] = 'hillhead40-contrast';
-        $extraclasses[] = 'hillhead40-contrast-br';
+        $extraclasses[] = 'hillhead51-contrast';
+        $extraclasses[] = 'hillhead51-contrast-br';
         break;
     case 'bw':
-        $extraclasses[] = 'hillhead40-contrast';
-        $extraclasses[] = 'hillhead40-contrast-bw';
+        $extraclasses[] = 'hillhead51-contrast';
+        $extraclasses[] = 'hillhead51-contrast-bw';
         break;
     case 'wb':
-        $extraclasses[] = 'hillhead40-contrast';
-        $extraclasses[] = 'hillhead40-contrast-wb';
+        $extraclasses[] = 'hillhead51-contrast';
+        $extraclasses[] = 'hillhead51-contrast-wb';
         break;
 }
 
-$themehillhead40bold = get_user_preferences('theme_hillhead40_bold');
+$themehillhead51bold = get_user_preferences('theme_hillhead51_bold');
 
-switch($themehillhead40bold) {
+switch($themehillhead51bold) {
     case 'on':
-        $extraclasses[] = 'hillhead40-bold';
+        $extraclasses[] = 'hillhead51-bold';
         break;
 }
 
-$themehillhead40spacing = get_user_preferences('theme_hillhead40_spacing');
+$themehillhead51spacing = get_user_preferences('theme_hillhead51_spacing');
 
-switch($themehillhead40spacing) {
+switch($themehillhead51spacing) {
     case 'on':
-        $extraclasses[] = 'hillhead40-spacing';
+        $extraclasses[] = 'hillhead51-spacing';
         break;
 }
 
-$themehillhead40readhighlight = get_user_preferences('theme_hillhead40_readtome');
+$themehillhead51readhighlight = get_user_preferences('theme_hillhead51_readtome');
 
-switch($themehillhead40readhighlight) {
+switch($themehillhead51readhighlight) {
     case 'on':
-        $extrascripts .= '<script type="text/javascript" src="'.$CFG->wwwroot.'/theme/hillhead40/js/readtome.js"></script>';
+        $extrascripts .= '<script type="text/javascript" src="'.$CFG->wwwroot.'/theme/hillhead51/js/readtome.js"></script>';
         break;
 }
 
-$themehillhead40readalert = get_user_preferences('theme_hillhead40_readalert');
+$themehillhead51readalert = get_user_preferences('theme_hillhead51_readalert');
 
-switch ($themehillhead40readalert) {
+switch ($themehillhead51readalert) {
     case 'on':
-        $extraclasses[] = 'hillhead40-readalert';
+        $extraclasses[] = 'hillhead51-readalert';
         break;
 }
 
-if ($themehillhead40stripstyles != 'on') {
-    $themehillhead40stripstyles = get_user_preferences('theme_hillhead40_stripstyles');
+if ($themehillhead51stripstyles != 'on') {
+    $themehillhead51stripstyles = get_user_preferences('theme_hillhead51_stripstyles');
 }
 
-switch ($themehillhead40stripstyles) {
+switch ($themehillhead51stripstyles) {
     case 'on':
-        $extrascripts .= '<script type="text/javascript" src="'.$CFG->wwwroot.'/theme/hillhead40/js/stripstyles.js"></script>';
-        $extraclasses[] = 'hillhead40-stripstyles';
+        $extrascripts .= '<script type="text/javascript" src="'.$CFG->wwwroot.'/theme/hillhead51/js/stripstyles.js"></script>';
+        $extraclasses[] = 'hillhead51-stripstyles';
         break;
 }

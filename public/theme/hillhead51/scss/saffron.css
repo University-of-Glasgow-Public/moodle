@@ -1,0 +1,50 @@
+body#page-login-index {
+  background-image: none !important;
+  background-color: #f1c338 !important;
+}
+
+nav.navbar.fixed-top {
+  background-color: #f1c338 !important;
+  border-color: rgb(229.8309859155, 176.7042253521, 16.1690140845);
+}
+
+nav.navbar button.navbar-toggler {
+  background-color: rgb(229.8309859155, 176.7042253521, 16.1690140845);
+  border-color: rgb(229.8309859155, 176.7042253521, 16.1690140845);
+}
+
+#searchform-navbar {
+  background-color: #f1c338;
+}
+
+.primary-navigation .moremenu .nav-link.active, .primary-navigation .moremenu .nav-link:hover, .primary-navigation .moremenu .nav-link:visited {
+  background-color: rgb(244.3521126761, 209.3661971831, 103.6478873239);
+  border-bottom-color: rgb(229.8309859155, 176.7042253521, 16.1690140845);
+}
+
+.courseindex .courseindex-item.pageitem {
+  background-color: rgb(244.3521126761, 209.3661971831, 103.6478873239);
+}
+
+.courseindex .courseindex-item.pageitem:hover {
+  background-color: rgb(229.8309859155, 176.7042253521, 16.1690140845);
+}
+
+.gu-login .rememberpass {
+  border-top-color: white !important;
+}
+
+.btn-primary {
+  background-color: #f1c338 !important;
+  border-color: rgb(229.8309859155, 176.7042253521, 16.1690140845) !important;
+}
+
+.btn-primary:hover {
+  background-color: rgb(244.3521126761, 209.3661971831, 103.6478873239) !important;
+  border-color: rgb(229.8309859155, 176.7042253521, 16.1690140845) !important;
+}
+
+.btn-primary:active {
+  background-color: #f1c338 !important;
+  border-color: rgb(229.8309859155, 176.7042253521, 16.1690140845) !important;
+}/*# sourceMappingURL=saffron.css.map */

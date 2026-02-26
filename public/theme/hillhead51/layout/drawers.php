@@ -32,12 +32,12 @@ require_once('footerlinks.php');
 // Add block button in editing mode.
 $addblockbutton = $OUTPUT->addblockbutton();
 
+
+$courseindexopen = false;
+$blockdraweropen = false;
 if (isloggedin()) {
     $courseindexopen = (get_user_preferences('drawer-open-index', true) == true);
     $blockdraweropen = (get_user_preferences('drawer-open-block', true) == true);
-} else {
-    $courseindexopen = false;
-    $blockdraweropen = false;
 }
 
 $extraclasses = ['uses-drawers'];
@@ -103,9 +103,9 @@ $headercontent = $header->export_for_template($renderer);
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
     'output' => $OUTPUT,
+    'bodyattributes' => $bodyattributes,
     'sidepreblocks' => $blockshtml,
     'hasblocks' => $hasblocks,
-    'bodyattributes' => $bodyattributes,
     'courseindexopen' => $courseindexopen,
     'blockdraweropen' => $blockdraweropen,
     'courseindex' => $courseindex,

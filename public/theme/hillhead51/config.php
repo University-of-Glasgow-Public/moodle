@@ -40,9 +40,6 @@ $THEME->hidefromselector = false;
 $THEME->haseditswitch = true;
 $THEME->iconsystem = \core\output\icon_system::FONTAWESOME;
 $THEME->usescourseindex = true;
-
-/* 2023-05-10: TBD if My Courses option is needed or not. Uncomment if so... */
-//$THEME->removedprimarynavitems = ['courses'];
 $THEME->scss = function($theme) {
     return theme_hillhead51_get_main_scss_content($theme);
 };
