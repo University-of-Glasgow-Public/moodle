@@ -100,9 +100,9 @@
             <div id="loginerrormessage" class="alert alert-danger">{{error}}</div>
         {{/error}}
             <label for="username" class="hidden-xs-up">Username:</label>
-            <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="{{username}}" />
+            <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="{{username}}" autocomplete="username" required />
             <label for="password" class="hidden-xs-up">Password:</label>
-            <input type="password" name="password" id="password" class="form-control" placeholder="Password" />
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password" autocomplete="current-password" required />
             <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-lock"></i>&emsp;Log in with your GUID</button>
             <p class="gu-feature-link"><a href="https://password.gla.ac.uk">Forgot your password?</a></p>
             {{#rememberusername}}

@@ -79,7 +79,6 @@ $THEME->layouts = [
         'file' => 'drawers.php',
         'regions' => ['side-pre'],
         'defaultregion' => 'side-pre',
-        'options' => ['nonavbar' => true],
     ],
     // Server administration scripts.
     'admin' => [
@@ -92,14 +91,13 @@ $THEME->layouts = [
         'file' => 'drawers.php',
         'regions' => ['side-pre'],
         'defaultregion' => 'side-pre',
-        'options' => ['nonavbar' => true],
     ],
     // My dashboard page.
     'mydashboard' => [
         'file' => 'drawers.php',
         'regions' => ['side-pre'],
         'defaultregion' => 'side-pre',
-        'options' => ['nonavbar' => true, 'langmenu' => true],
+        'options' => ['langmenu' => true],
     ],
     // My public page.
     'mypublic' => [

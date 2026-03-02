@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A drawer based layout for the Hillhead 4.0 theme, inspired by Boost.
+ * A drawer based layout for the Hillhead 5.1 theme, inspired by Boost.
  *
  * @package    theme_hillhead51
  * @author     Greg Pedder <greg.pedder@glasgow.ac.uk>
@@ -31,7 +31,6 @@ require_once('footerlinks.php');
 
 // Add block button in editing mode.
 $addblockbutton = $OUTPUT->addblockbutton();
-
 
 $courseindexopen = false;
 $blockdraweropen = false;
@@ -50,6 +49,7 @@ $hasblocks = (strpos($blockshtml, 'data-block=') !== false || !empty($addblockbu
 if (!$hasblocks) {
     $blockdraweropen = false;
 }
+
 $courseindex = core_course_drawer();
 if (!$courseindex) {
     $courseindexopen = false;

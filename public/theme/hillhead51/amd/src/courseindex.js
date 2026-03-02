@@ -26,8 +26,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import * as Log from 'core/log';
-
 const Selectors = {
     COURSE_INDEX: '[aria-controls^="courseindexcollapse"]:not([aria-controls="courseindexcollapse0"])'
 };
@@ -35,8 +33,9 @@ const Selectors = {
 const CourseIndex = (coursindexcollapsed) => {
     let params = (new URL(location.href)).searchParams;
     let courseindexcollapsed = coursindexcollapsed;
+
     if (params.get('id') > 1 && courseindexcollapsed) {
-        waitForElement(Selectors.COURSE_INDEX, params.get('id'));
+        waitForElement(Selectors.COURSE_INDEX);
     }
 
     return;
@@ -44,12 +43,10 @@ const CourseIndex = (coursindexcollapsed) => {
 
 /**
  * @param {HTMLElement} selector
- * @param {int} selectorId
  * @param {int} timeout
  * @returns {Promise<*|null>}
  */
-async function waitForElement(selector, selectorId, timeout = 15000) {
-    Log.debug('waitForElement called...');
+async function waitForElement(selector, timeout = 15000) {
     const start = Date.now();
 
     while (Date.now() - start < timeout) {
