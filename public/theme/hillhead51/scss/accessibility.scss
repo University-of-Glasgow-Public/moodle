@@ -113,7 +113,10 @@ body.hillhead51-spacing * {
   .navbar-light .navbar-nav .nav-link,
   .navbar-light .navbar-nav .nav-link:hover,
   .navbar-light .navbar-nav .nav-link:active,
-  .input-group .mr-2 {
+  .input-group .mr-2,
+  .navbar-nav>div, 
+  .editmode-switch-form,
+  .text-center p-2 {
     color: $foreground !important;
   }
 
