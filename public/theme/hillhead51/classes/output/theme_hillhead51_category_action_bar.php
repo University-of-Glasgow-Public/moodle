@@ -63,16 +63,16 @@ class theme_hillhead51_category_action_bar extends \core_course\output\category_
             if (has_capability('moodle/course:create', $context)) {
                 $params = [
                     'category' => $this->category->id ?: $CFG->defaultrequestcategory,
-                    'returnto' => $this->category->id ? 'category' : 'topcat'
+                    'returnto' => $this->category->id ? 'category' : 'topcat',
                 ];
 
                 $options[0] = [
                     'url' => new moodle_url('/course/edit.php', $params),
-                    'string' => get_string('addnewcourse')
+                    'string' => get_string('addnewcourse'),
                 ];
                 $options[1] = [
                     'url' => new moodle_url('/local/template/index.php', $params),
-                    'string' => get_string('addnewcourseviatemplate', 'local_template')
+                    'string' => get_string('addnewcourseviatemplate', 'local_template'),
                 ];
             }
 
@@ -86,17 +86,17 @@ class theme_hillhead51_category_action_bar extends \core_course\output\category_
 
                     $options[4] = [
                         'url' => new moodle_url('/course/request.php', $params),
-                        'string' => get_string('requestcourse')
+                        'string' => get_string('requestcourse'),
                     ];
                 }
 
                 // Display the manage pending requests option.
                 if (has_capability('moodle/site:approvecourse', $context)) {
-                    $disabled = !$DB->record_exists('course_request', array());
+                    $disabled = !$DB->record_exists('course_request', []);
                     if (!$disabled) {
                         $options[5] = [
                             'url' => new moodle_url('/course/pending.php'),
-                            'string' => get_string('coursespending')
+                            'string' => get_string('coursespending'),
                         ];
                     }
                 }
@@ -107,14 +107,14 @@ class theme_hillhead51_category_action_bar extends \core_course\output\category_
             // Add 'Manage' button if user has permissions to edit this category.
             $options[3] = [
                 'url' => new moodle_url('/course/management.php', ['categoryid' => $this->category->id]),
-                'string' => get_string('managecourses')
+                'string' => get_string('managecourses'),
             ];
 
             if ($this->category->has_manage_capability()) {
-                $addsubcaturl = new moodle_url('/course/editcategory.php', array('parent' => $this->category->id));
+                $addsubcaturl = new moodle_url('/course/editcategory.php', ['parent' => $this->category->id]);
                 $options[2] = [
                     'url' => $addsubcaturl,
-                    'string' => get_string('addsubcategory')
+                    'string' => get_string('addsubcategory'),
                 ];
             }
         }
@@ -122,7 +122,7 @@ class theme_hillhead51_category_action_bar extends \core_course\output\category_
         // We have stored the options in a predefined order. Sort it based on index and return.
         if (isset($options)) {
 
-            // TODO: Original contains a bug (using sort does not: "Sort it based on index".
+            // FIX: Original contains a bug (using sort does not: "Sort it based on index".
             ksort($options);
             return ['options' => $options];
         }

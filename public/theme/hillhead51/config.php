@@ -115,5 +115,5 @@ $THEME->layouts = [
         'file' => 'drawers.php',
         'regions' => ['side-pre'],
         'defaultregion' => 'side-pre',
-    ]
+    ],
 ];

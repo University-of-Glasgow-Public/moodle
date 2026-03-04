@@ -122,7 +122,7 @@ $templatecontext = [
     'headercontent' => $headercontent,
     'addblockbutton' => $addblockbutton,
     'footerlinks' => $footerlinktext,
-    'extrascripts' => $extrascripts
+    'extrascripts' => $extrascripts,
 ];
 
 // As this file seems to handle most of the layouts,

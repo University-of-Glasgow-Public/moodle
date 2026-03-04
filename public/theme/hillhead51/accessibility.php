@@ -41,7 +41,7 @@ $allowedpreferences = [
     'theme_hillhead51_stripstyles'    => true,
     'theme_hillhead51_size'           => true,
     'theme_hillhead51_readtome'       => true,
-    'theme_hillhead51_readalert'      => true
+    'theme_hillhead51_readalert'      => true,
 ];
 
 if (array_key_exists($setting, $allowedpreferences)) {

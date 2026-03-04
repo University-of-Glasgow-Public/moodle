@@ -31,7 +31,7 @@ $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
     'output' => $OUTPUT,
     'bodyattributes' => $bodyattributes,
-    'loginintro' => get_config('theme_hillhead51', 'login_intro')
+    'loginintro' => get_config('theme_hillhead51', 'login_intro'),
 ];
 
 echo $OUTPUT->render_from_template('theme_hillhead51/login', $templatecontext);

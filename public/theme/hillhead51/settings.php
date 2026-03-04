@@ -108,12 +108,12 @@ if ($ADMIN->fulltree) {
     $title = get_string('hillhead_student_course_alert', $currenttheme);
     $description = get_string('hillhead_student_course_alert_desc',
         $currenttheme);
-    $choices = Array(
+    $choices = [
         'enabled' => get_string('hillhead_student_course_alert_on',
             $currenttheme),
         'disabled' => get_string('hillhead_student_course_alert_off',
-            $currenttheme)
-    );
+            $currenttheme),
+    ];
     $default = 'disabled';
     $setting = new admin_setting_configselect($name, $title, $description,
         $default, $choices);
@@ -138,12 +138,12 @@ if ($ADMIN->fulltree) {
     $title = get_string('hillhead_old_browser_alerts', $currenttheme);
     $description = get_string('hillhead_old_browser_alerts_desc',
         $currenttheme);
-    $choices = Array(
+    $choices = [
         'enabled' => get_string('hillhead_old_browser_alerts_on',
             $currenttheme),
         'disabled' => get_string('hillhead_old_browser_alerts_off',
-            $currenttheme)
-    );
+            $currenttheme),
+    ];
     $default = 'disabled';
     $setting = new admin_setting_configselect($name, $title, $description,
         $default, $choices);
@@ -154,7 +154,7 @@ if ($ADMIN->fulltree) {
     $title = get_string('hillhead_notification_type', $currenttheme);
     $description = get_string('hillhead_notification_type_desc',
         $currenttheme);
-    $choices = Array(
+    $choices = [
         'alert-none' => get_string('hillhead_notification_none',
             $currenttheme),
         'alert-danger' => get_string('hillhead_notification_danger',
@@ -164,8 +164,8 @@ if ($ADMIN->fulltree) {
         'alert-success' => get_string('hillhead_notification_success',
             $currenttheme),
         'alert-info' => get_string('hillhead_notification_info',
-            $currenttheme)
-    );
+            $currenttheme),
+    ];
     $default = 'alert-none';
     $setting = new admin_setting_configselect($name, $title, $description,
         $default, $choices);

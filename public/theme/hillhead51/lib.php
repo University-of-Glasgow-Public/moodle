@@ -14,8 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
- * Theme functions.
+ * Main lib file. This will be deprecated eventually.
  *
  * @package    theme_hillhead51
  * @author     Greg Pedder <greg.pedder@glasgow.ac.uk>

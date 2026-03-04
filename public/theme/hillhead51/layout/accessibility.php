@@ -33,14 +33,14 @@ $colouroptions = [
         'v' => 'clear',
         'c' => 'hh-acc-th-de',
         't' => 'University Light',
-        'i' => 'fa-sun-o'
+        'i' => 'fa-sun-o',
     ],
     [
         'o' => 'theme_hillhead51_contrast',
         'v' => 'night',
         'c' => 'hh-acc-th-nt',
         't' => 'University Dark',
-        'i' => 'fa-moon-o'
+        'i' => 'fa-moon-o',
     ],
 ];
 $accessiblecolouroptions = [
@@ -49,50 +49,50 @@ $accessiblecolouroptions = [
         'v' => 'wb',
         'c' => 'hh-acc-th-wb',
         't' => 'White on Black Theme',
-        'i' => 'fa-low-vision'
+        'i' => 'fa-low-vision',
     ],
     [
         'o' => 'theme_hillhead51_contrast',
         'v' => 'yb',
         'c' => 'hh-acc-th-yb',
         't' => 'Yellow on Black Theme',
-        'i' => 'fa-low-vision'
+        'i' => 'fa-low-vision',
     ],
     [
         'o' => 'theme_hillhead51_contrast',
         'v' => 'by',
         'c' => 'hh-acc-th-by',
         't' => 'Black on Yellow Theme',
-        'i' => 'fa-low-vision'
+        'i' => 'fa-low-vision',
     ],
     [
         'o' => 'theme_hillhead51_contrast',
         'v' => 'wg',
         'c' => 'hh-acc-th-wg',
         't' => 'White on Grey Theme',
-        'i' => 'fa-low-vision'
+        'i' => 'fa-low-vision',
     ],
     [
         'o' => 'theme_hillhead51_contrast',
         'v' => 'br',
         'c' => 'hh-acc-th-br',
         't' => 'Black on Red Theme',
-        'i' => 'fa-low-vision'
+        'i' => 'fa-low-vision',
     ],
     [
         'o' => 'theme_hillhead51_contrast',
         'v' => 'bb',
         'c' => 'hh-acc-th-bb',
         't' => 'Black on Blue Theme',
-        'i' => 'fa-low-vision'
+        'i' => 'fa-low-vision',
     ],
     [
         'o' => 'theme_hillhead51_contrast',
         'v' => 'bw',
         'c' => 'hh-acc-th-bw',
         't' => 'Black on White Theme',
-        'i' => 'fa-low-vision'
-    ]
+        'i' => 'fa-low-vision',
+    ],
 ];
 
 $fontoptions = [
@@ -101,43 +101,43 @@ $fontoptions = [
         'v' => 'clear',
         'c' => 'hh-acc-ft-de',
         't' => 'Default Font',
-        'i' => 'fa-font'
+        'i' => 'fa-font',
     ],
     [
         'o' => 'theme_hillhead51_font',
         'v' => 'modern',
         'c' => 'hh-acc-ft-mo',
         't' => 'Modern Font',
-        'i' => 'fa-font'
+        'i' => 'fa-font',
     ],
     [
         'o' => 'theme_hillhead51_font',
         'v' => 'classic',
         'c' => 'hh-acc-ft-cl',
         't' => 'Classic Font',
-        'i' => 'fa-font'
+        'i' => 'fa-font',
     ],
     [
         'o' => 'theme_hillhead51_font',
         'v' => 'comic',
         'c' => 'hh-acc-ft-co',
         't' => 'Comic Font',
-        'i' => 'fa-font'
+        'i' => 'fa-font',
     ],
     [
         'o' => 'theme_hillhead51_font',
         'v' => 'mono',
         'c' => 'hh-acc-ft-mn',
         't' => 'Monospace Font',
-        'i' => 'fa-font'
+        'i' => 'fa-font',
     ],
     [
         'o' => 'theme_hillhead51_font',
         'v' => 'dyslexic',
         'c' => 'hh-acc-ft-dx',
         't' => 'Dyslexia Friendly Font',
-        'i' => 'fa-font'
-    ]
+        'i' => 'fa-font',
+    ],
 ];
 
 if ($themehillhead51bold == 'on') {
@@ -147,8 +147,8 @@ if ($themehillhead51bold == 'on') {
             'v' => 'clear',
             'c' => 'hh-acc-fb-of',
             't' => 'Turn Bold Text Off',
-            'i' => 'fa-bold'
-        ]
+            'i' => 'fa-bold',
+        ],
     ];
 } else {
     $boldoptions = [
@@ -157,8 +157,8 @@ if ($themehillhead51bold == 'on') {
             'v' => 'on',
             'c' => 'hh-acc-fb-on',
             't' => 'Turn Bold Text On',
-            'i' => 'fa-bold'
-        ]
+            'i' => 'fa-bold',
+        ],
     ];
 }
 
@@ -169,8 +169,8 @@ if ($themehillhead51spacing == 'on') {
             'v' => 'clear',
             'c' => 'hh-acc-sp-of',
             't' => 'Less Space Between Lines',
-            'i' => 'fa-align-justify'
-        ]
+            'i' => 'fa-align-justify',
+        ],
     ];
 } else {
     $spacingoptions = [
@@ -179,8 +179,8 @@ if ($themehillhead51spacing == 'on') {
             'v' => 'on',
             'c' => 'hh-acc-sp-on',
             't' => 'More Space Between Lines',
-            'i' => 'fa-align-justify'
-        ]
+            'i' => 'fa-align-justify',
+        ],
     ];
 }
 
@@ -190,36 +190,36 @@ $sizeoptions = [
         'v' => 'clear',
         'c' => 'hh-acc-fs-10',
         't' => 'Default Text',
-        'i' => 'fa-text-height'
+        'i' => 'fa-text-height',
     ],
     [
         'o' => 'theme_hillhead51_size',
         'v' => '120',
         'c' => 'hh-acc-fs-12',
         't' => 'Large Text',
-        'i' => 'fa-text-height'
+        'i' => 'fa-text-height',
     ],
     [
         'o' => 'theme_hillhead51_size',
         'v' => '140',
         'c' => 'hh-acc-fs-14',
         't' => 'Huge Text',
-        'i' => 'fa-text-height'
+        'i' => 'fa-text-height',
     ],
     [
         'o' => 'theme_hillhead51_size',
         'v' => '160',
         'c' => 'hh-acc-fs-16',
         't' => 'Massive Text',
-        'i' => 'fa-text-height'
+        'i' => 'fa-text-height',
     ],
     [
         'o' => 'theme_hillhead51_size',
         'v' => '180',
         'c' => 'hh-acc-fs-18',
         't' => 'Giant Text',
-        'i' => 'fa-text-height'
-    ]
+        'i' => 'fa-text-height',
+    ],
 ];
 
 if ($themehillhead51readhighlight == 'on') {
@@ -229,8 +229,8 @@ if ($themehillhead51readhighlight == 'on') {
             'v' => 'clear',
             'c' => 'hh-acc-sp-of',
             't' => 'Turn Off Read-To-Me',
-            'i' => 'fa-headphones'
-        ]
+            'i' => 'fa-headphones',
+        ],
     ];
 } else {
     $readhighlightoptions = [
@@ -239,8 +239,8 @@ if ($themehillhead51readhighlight == 'on') {
             'v' => 'on',
             'c' => 'hh-acc-sp-on',
             't' => 'Turn On Read-To-Me',
-            'i' => 'fa-headphones'
-        ]
+            'i' => 'fa-headphones',
+        ],
     ];
 }
 
@@ -251,8 +251,8 @@ if ($themehillhead51stripstyles == 'on') {
             'v' => 'clear',
             'c' => 'hh-acc-ss-of',
             't' => 'Show Custom Fonts &amp; Colours',
-            'i' => 'fa-minus-square'
-        ]
+            'i' => 'fa-minus-square',
+        ],
     ];
 } else {
     $stripstyleoptions = [
@@ -261,8 +261,8 @@ if ($themehillhead51stripstyles == 'on') {
             'v' => 'on',
             'c' => 'hh-acc-ss-of',
             't' => 'Don\'t Show Custom Fonts &amp; Colours',
-            'i' => 'fa-plus-square'
-        ]
+            'i' => 'fa-plus-square',
+        ],
     ];
 }
 

@@ -77,14 +77,14 @@ if ($hillheadoldbrowseralerts == 'enabled') {
         'windows-xp' => '/(Windows NT 5.1)|(Windows XP)/',
         'firefox-1-51' => '/Firefox\/([0-9]|[1-4][0-9]|5[0-1])\b/',
         'safari-1-7' => '/(?=.*?AppleWebKit\/([0-9][0-9]|[0-5][0-9][0-9]|600)\b)(?!.*?Chrome\/).*/',
-        'ie-5-10' => '/MSIE ([5-9]|10)\b/'
+        'ie-5-10' => '/MSIE ([5-9]|10)\b/',
     ];
 
     $friendlynames = [
         'windows-xp' => 'Windows XP',
         'firefox-1-51' => 'an old version of Firefox',
         'safari-1-7' => 'an old version of Safari',
-        'ie-5-10' => 'an old version of Internet Explorer'
+        'ie-5-10' => 'an old version of Internet Explorer',
     ];
 
     $flags = [];
