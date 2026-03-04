@@ -22,9 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-class text_filter extends moodle_text_filter {
+namespace filter_echo360;
+class text_filter extends \core_filters\text_filter {
 
     // Echo360 LTI Launch URL filter installation path and filter needle.
     const FILTER_PATH = '/filter/echo360/lti_launch.php';
