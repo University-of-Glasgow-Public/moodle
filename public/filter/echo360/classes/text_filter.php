@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class filter_echo360 extends moodle_text_filter {
+class text_filter extends moodle_text_filter {
 
     // Echo360 LTI Launch URL filter installation path and filter needle.
     const FILTER_PATH = '/filter/echo360/lti_launch.php';
