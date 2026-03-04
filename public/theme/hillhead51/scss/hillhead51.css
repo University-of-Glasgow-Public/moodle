@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/** Hillhead 5.1 **/
+/* Hillhead 5.1 */
 h1 {
   font-size: 1.5rem;
   color: #344374;
@@ -56,8 +56,12 @@ nav.navbar a.navbar-brand {
   background-color: #011451;
 }
 
-.primary-navigation > nav > ul > li > a.nav-link, .navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:active, .input-group .mr-2 {
+.primary-navigation > nav > ul > li > a.nav-link, .navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:active, .input-group .mr-2, .navbar-nav > div {
   color: #fff !important;
+}
+
+:root, [data-bs-theme=light] {
+  --bs-emphasis-color-rgb: #fff !important;
 }
 
 #user-menu-toggle {
