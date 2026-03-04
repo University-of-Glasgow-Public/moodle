@@ -14,27 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace format_grid\courseformat;
+
+use format_topics\courseformat\stateactions as stateactions_base;
+
 /**
- * Grid Format.
+ * Contains the core course state actions specific to the grid format.
  *
  * @package    format_grid
- * @copyright  &copy; 2017-onwards G J Barnard based upon work done by Marina Glancy.
+ * @copyright  2022 Ferran Recio <ferran@moodle.com>
+ * @copyright  &copy; 2022 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @author     Based on code originally written by Paul Krix and Julian Ridden.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-// List of observers.
-$observers = [
-    [
-        'eventname' => '\core\event\course_content_deleted',
-        'callback' => '\format_grid\observer::course_content_deleted',
-    ],
-    [
-        'eventname' => '\core\event\course_restored',
-        'callback' => '\format_grid\observer::course_restored',
-    ],
-];
+class stateactions extends stateactions_base {
+}
