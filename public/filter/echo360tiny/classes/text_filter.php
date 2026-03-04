@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class filter_echo360tiny extends moodle_text_filter {
+class text_filter extends moodle_text_filter {
 
     // Echo360 Tiny LTI Launch URL filter installation path and filter needle.
     const FILTER_PATH = '/filter/echo360tiny/lti_launch.php';
