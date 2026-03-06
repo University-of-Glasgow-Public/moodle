@@ -68,12 +68,6 @@ nav.navbar a.navbar-brand {
   color: #fff;
 }
 
-#page-course-view-topics:not(.path-user) #region-main, #page-course-view-weeks:not(.path-user) #region-main {
-  background: transparent;
-  border: none;
-  padding: 0;
-}
-
 .primary-navigation .moremenu .nav-link.active, .primary-navigation .moremenu .nav-link:hover, .primary-navigation .moremenu .nav-link:visited, .btn-primary:hover {
   background-color: rgb(1.6219512195, 32.4390243902, 131.3780487805);
   border-bottom-color: rgb(0.3780487805, 7.5609756098, 30.6219512195);
@@ -154,12 +148,12 @@ nav.navbar a.navbar-brand {
   text-decoration: underline;
 }
 
-.course-section .summarytext img {
-  border-radius: 0rem;
-}
-
 .drawer-toggles .drawer-toggler .btn {
   padding: 20px;
   background-color: #cce6ea;
   color: #00434e;
+}
+
+.content-item-container .context-link {
+  color: #344374;
 }/*# sourceMappingURL=hillhead51.css.map */

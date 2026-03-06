@@ -357,11 +357,11 @@ body.hillhead51-night #nav-drawer a {
   color: #C4D6EE;
 }
 
-body.hillhead51-night #nav-drawer h2 {
+body.hillhead51-night #nav-drawer h2, body.hillhead51-night .message-app .btn-link {
   color: #789bca;
 }
 
-body.hillhead51-night h1:not(page-header-headings), body.hillhead51-night h2, body.hillhead51-night h3:not(body.hillhead51-night .que), body.hillhead51-night h4, body.hillhead51-night h5, body.hillhead51-night h6 {
+body.hillhead51-night h1:not(page-header-headings), body.hillhead51-night h2, body.hillhead51-night h3:not(body.hillhead51-night .que), body.hillhead51-night h4, body.hillhead51-night h5, body.hillhead51-night h6, body.hillhead51-night .message-app a, body.hillhead51-night .message-app .btn-linkeff1f3 {
   color: #617591;
 }
 
@@ -582,7 +582,7 @@ body.hillhead51-night a.close, body.hillhead51-night button.close {
   color: #fff !important;
 }
 
-body.hillhead51-night .breadcrumb-item + .breadcrumb-item::before {
+body.hillhead51-night .breadcrumb-item + .breadcrumb-item::before, body.hillhead51-night .popover-region-seeall-text {
   color: #274163;
 }
 
@@ -613,7 +613,7 @@ body.hillhead51-night table {
   color: #c4d6ee;
 }
 
-body.hillhead51-night .btn-primary, .navitem .btn-primary {
+body.hillhead51-night .btn-primary, body.hillhead51-night .navitem .btn-primary {
   background-color: #406BAF !important;
   border-color: #243C62 !important;
   color: white !important;
@@ -854,6 +854,11 @@ body.hillhead51-night.path-mod-quiz #mod_quiz_navblock .qnbutton, body.hillhead5
 
 body.hillhead51-night img {
   filter: brightness(.8) contrast(1.2);
+}
+
+body.hillhead51-night .content-item-container.unread {
+  margin: 0;
+  background-color: #274163;
 }
 
 @media (prefers-color-scheme: dark) {
