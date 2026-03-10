@@ -798,7 +798,7 @@ body.hillhead51-night .secondary-navigation .navigation {
   border-bottom-color: #274163 !important;
 }
 
-body.hillhead51-night nav .navbar-nav li.nav-item a.nav-link, body.hillhead51-night .secondary-navigation .more-nav .nav-item a.active {
+body.hillhead51-night nav .navbar-nav li.nav-item a.nav-link, body.hillhead51-night .secondary-navigation .more-nav .nav-item a.active, body.hillhead51-night .empty-message {
   color: #95B7E6 !important;
 }
 
