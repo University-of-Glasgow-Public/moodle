@@ -41,6 +41,8 @@ var ECHO_ICON = 'echoIcon';
 var ADD_MESSAGE_HANDLER = {};
 var EDITOR_INSTANCE = {};
 
+document.CALLBACKS = {}
+
 Y.namespace('M.atto_echo360attoplugin').Button = Y.Base.create(
     'button', Y.M.editor_atto.EditorPlugin, [], {
 
@@ -49,13 +51,24 @@ Y.namespace('M.atto_echo360attoplugin').Button = Y.Base.create(
          *
          * @method Initializer
          */
-        initializer: function () {
+        initializer: function (args) {
             // If we don't have the capability to view then give up.
             if (this.get('disabled')) {
                 // It may not be disabled because of an error.
                 this.get('error') && console.error(this.get('error'));
                 return;
             }
+
+            // Helper function to generate unique resourceLinkId for callback
+            this._createResourceLinkId = (function (base) {
+                return function () {
+                    return base + '_' + (new Date()).getTime();
+                };
+            }(args.resourcebase));
+
+            // Moodle Course object reference
+            this._course = args.course;
+
             EDITOR_ID = this.editor._yuid;
             // The button will display the Dialogue modal.
             this.addButton({
@@ -79,6 +92,7 @@ Y.namespace('M.atto_echo360attoplugin').Button = Y.Base.create(
         _doOpen: function (e) {
             e.preventDefault();
             this._resetEditorInstance();
+
             // Show the Dialogue modal and add an event listener for messages sent from the iframe.
             EDITOR_INSTANCE = {
                 host: this.get('host'),
@@ -91,76 +105,145 @@ Y.namespace('M.atto_echo360attoplugin').Button = Y.Base.create(
                 })
             };
             EDITOR_INSTANCE.dialogue.show();
-            if(!ADD_MESSAGE_HANDLER[EDITOR_ID]) {
-                window.addEventListener(
-                    'message', function (e) {
-                        e.stopPropagation();
-                        return this._receiveMessage(e);
-                    }.bind(this), true
-                );
-            }
-            ADD_MESSAGE_HANDLER[EDITOR_ID] = true;
-            // Request LTI configuration.
-            var result = Y.io(M.cfg.wwwroot + '/lib/editor/atto/plugins/echo360attoplugin/ajax.php', {
-                context: this,
-                method: 'post',
-                data: {
-                    sesskey: M.cfg.sesskey,
-                    contextcourseid: echo360_context_course_id,
-                    pagetype: moodle_page_type
-                },
-                timeout: 5000,
-                on: {
-                    complete: function(id, response) {
-                        if (response.status === 200) {
-                            var echo360LibraryId = 'echo360-library-' + EDITOR_ID;
-                            // Clear existing library from dialogue for subsequent click refresh.
-                            var echo360Library = document.getElementById(echo360LibraryId);
-                            if (echo360Library != null) {
-                                echo360Library.parentNode.removeChild(echo360Library);
-                            }
-                            // Configure the LTI authentication form to target the iframe on submit.
-                            var ltiConfiguration = JSON.parse(response.responseText);
-                            var echo360FormId = 'echo360-form-' + EDITOR_ID;
-                            var form = document.createElement('form');
-                            form.setAttribute('method', 'post');
-                            form.setAttribute('id', echo360FormId);
-                            form.setAttribute('target', echo360LibraryId);
-                            form.setAttribute('hidden', 'true');
-                            form.action = ltiConfiguration.launch_url;
-                            for (var property in ltiConfiguration) {
-                                if (ltiConfiguration.hasOwnProperty(property)) {
-                                    var input = document.createElement('input');
-                                    input.setAttribute('type', 'text');
-                                    input.setAttribute('value', ltiConfiguration[property]);
-                                    input.id = input.name = property;
-                                    form.appendChild(input);
-                                }
-                            }
-                            // The form must be part of the DOM before you can submit it.
-                            document.body.appendChild(form);
-                            // Construct iframe for embed library request.
-                            var iframe = document.createElement('iframe');
-                            iframe.id = echo360LibraryId;
-                            iframe.name = echo360LibraryId;
-                            iframe.setAttribute('height', '500px');
-                            iframe.setAttribute('width', '100%');
-                            // Dialogue modal must be showing in order to append the iframe properly.
-                            // It will happen so fast that the end user will not see it.
-                            var dialogue = this.getDialogue();
-                            dialogue.render();
-                            // Append the iframe to the Dialogue modal, submit the form, then remove it.
-                            dialogue.bodyNode.appendChild(iframe);
-                            form.submit();
-                            form.parentNode.removeChild(form);
-                        } else if (response.status == 404) {
-                            var dialogue = this.getDialogue();
-                            dialogue.render();
-                            dialogue.bodyNode.appendChild(response.responseText);
+
+            // Check LTI configuration.
+            if (lti1p3configured) {   // LTI 1.3
+                var resourceLinkId = this._createResourceLinkId(); // for callback reference
+                var courseId = this._course.id;
+
+                // LtiDeepLinkingResponse callback listener
+                document.CALLBACKS['f' + resourceLinkId] = function (contentitemsdata) {
+                    EDITOR_INSTANCE.dialogue.hide();
+                    EDITOR_INSTANCE.editor.focus();
+                    if (!contentitemsdata) {
+                        return;
+                    }
+
+                    var html = "";
+                    var contentitems = JSON.parse(contentitemsdata);
+                    for (var i = 0; i < contentitems['@graph'].length; i++) {
+                        var contentitem = contentitems['@graph'][i];
+                        var placement = contentitem['placementAdvice'];
+                        var lti_version = "1.3.0";
+
+                        if (placement != undefined && placement['presentationDocumentTarget'] == "iframe") {
+                            var width = (placement['displayWidth'] != "") ? placement['displayWidth'] : "640";
+                            var height = (placement['displayHeight'] != "") ? placement['displayHeight'] : "420";
+
+                            html += '<p><a href="'
+                                + echo360_filter_lti_launch_url
+                                + "?url=" + encodeURIComponent(contentitem['url'])
+                                + '&cmid=' + echo360_context_module_id
+                                + "&width=" + width
+                                + "&height=" + height
+                                + '&resourcelinkid=' + resourceLinkId
+                                + '" target="_blank" >'
+                                + contentitem['title']
+                                + '</a></p>';
+                        } else {
+                            html += '<p><a href="'
+                                + echo360_filter_lti_launch_url
+                                + "?url=" + encodeURIComponent(contentitem['url'])
+                                + '&cmid=' + echo360_context_module_id
+                                + '&resourcelinkid=' + resourceLinkId
+                                + '" target="_blank" >'
+                                + contentitem['title']
+                                + '</a></p>';
                         }
                     }
+
+                    if (html !== "") {
+                        // Embedded the LTI 1.3 content to the text editor.
+                        EDITOR_INSTANCE.host.insertContentAtFocusPoint(html);
+                    }
+
+                    return;
+                };
+
+                // Display LTI 1.3 DeepLinking launch HTML within an iframe in the dialog.
+                var dialogue = this.getDialogue();
+                dialogue.set('bodyContent',
+                    '<iframe id="cv-plugin-frame" src="' + M.cfg.wwwroot + '/lib/editor/atto/plugins/echo360attoplugin/contentitem.php'
+                    + '?contextcourseid=' + echo360_context_course_id
+                    + '&pagetype=' + moodle_page_type
+                    + '&sesskey=' + M.cfg.sesskey
+                    + '&callback=f' + resourceLinkId
+                    + '" width="100%" height="500px" frameborder="0"></iframe>'
+                ).show();
+            } else {                    // LTI 1.1
+                if(!ADD_MESSAGE_HANDLER[EDITOR_ID]) {
+                    window.addEventListener(
+                        'message', function (e) {
+                            e.stopPropagation();
+                            return this._receiveMessage(e);
+                        }.bind(this), true
+                    );
                 }
-            });
+                ADD_MESSAGE_HANDLER[EDITOR_ID] = true;
+
+                Y.io(M.cfg.wwwroot + '/lib/editor/atto/plugins/echo360attoplugin/ajax.php', {
+                    context: this,
+                    method: 'post',
+                    data: {
+                        sesskey: M.cfg.sesskey,
+                        contextcourseid: echo360_context_course_id,
+                        pagetype: moodle_page_type
+                    },
+                    timeout: 5000,
+                    on: {
+                        complete: function(id, response) {
+                            if (response.status === 200) {
+                                var echo360LibraryId = 'echo360-library-' + EDITOR_ID;
+                                // Clear existing library from dialogue for subsequent click refresh.
+                                var echo360Library = document.getElementById(echo360LibraryId);
+                                if (echo360Library != null) {
+                                    echo360Library.parentNode.removeChild(echo360Library);
+                                }
+
+                                // Configure the LTI authentication form to target the iframe on submit.
+                                var ltiConfiguration = JSON.parse(response.responseText);   // Read LTI 1.1 launch request data from ajax.php
+                                var echo360FormId = 'echo360-form-' + EDITOR_ID;
+                                var form = document.createElement('form');
+                                form.setAttribute('method', 'post');
+                                form.setAttribute('id', echo360FormId);
+                                form.setAttribute('target', echo360LibraryId);
+                                form.setAttribute('hidden', 'true');
+                                form.action = ltiConfiguration.launch_url;
+                                for (var property in ltiConfiguration) {
+                                    if (ltiConfiguration.hasOwnProperty(property)) {
+                                        var input = document.createElement('input');
+                                        input.setAttribute('type', 'text');
+                                        input.setAttribute('value', ltiConfiguration[property]);
+                                        input.id = input.name = property;
+                                        form.appendChild(input);
+                                    }
+                                }
+                                // The form must be part of the DOM before you can submit it.
+                                document.body.appendChild(form);
+                                // Construct iframe for embed library request.
+                                var iframe = document.createElement('iframe');
+                                iframe.id = echo360LibraryId;
+                                iframe.name = echo360LibraryId;
+                                iframe.setAttribute('height', '500px');
+                                iframe.setAttribute('width', '100%');
+                                // Dialogue modal must be showing in order to append the iframe properly.
+                                // It will happen so fast that the end user will not see it.
+                                var dialogue = this.getDialogue();
+                                dialogue.render();
+                                // Append the iframe to the Dialogue modal, submit the form, then remove it.
+                                dialogue.bodyNode.appendChild(iframe);
+                                form.submit();
+                                form.parentNode.removeChild(form);
+                            } else if (response.status == 404) {
+                                var dialogue = this.getDialogue();
+                                dialogue.render();
+                                dialogue.bodyNode.appendChild(response.responseText);
+                            }
+                        }
+                    }
+                });
+            }
+
             this.markUpdated();
         },
 

@@ -26,15 +26,18 @@ require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once($CFG->dirroot . '/mod/lti/locallib.php');
 require_once($CFG->dirroot . '/lib/editor/atto/plugins/echo360attoplugin/LtiConfiguration.php');
 
-const ECHO360_LABEL_MOD_NAME = 'label';
-
-global $USER, $PAGE, $COURSE;
+global $USER, $PAGE, $COURSE, $SESSION;
 
 // Query string parameters.
 $url    = required_param('url', PARAM_URL);             // LTI url.
 $cmid   = required_param('cmid', PARAM_INT);            // Course module id.
 $width  = optional_param('width', null, PARAM_INT);     // IFrame width (optional to support lti_launch_url links).
 $height = optional_param('height', null, PARAM_INT);    // IFrame height (optional to support lti_launch_url links).
+$resourcelinkid = optional_param('resourcelinkid', "0", PARAM_TEXT);    // LTI resourcelinkidparam added by button and filter.
+
+const ECHO360_LABEL_MOD_NAME = 'label';
+const ECHO360ATTOPLUGIN_NAME = 'atto_echo360attoplugin';
+const ECHO360ATTOPLUGIN_VERSION = '2.0.13';
 
 if ($width != null && $height != null) {
     if ($width < 50 || $width > 3000) {
@@ -66,6 +69,16 @@ try {
                 $courseid = $refererparams['id'];
             } else if (isset($refererparams['course']) && is_numeric($refererparams['course'])) {
                 $courseid = $refererparams['course'];
+            } else {
+                $courseid = null;
+            }
+        } else if (substr(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), -strlen('section.php')) === 'section.php') {
+            parse_str(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY), $refererparams);
+
+            if (isset($refererparams['id']) && is_numeric($refererparams['id'])) {
+                $sectionid = $refererparams['id'];
+                $section = $DB->get_record('course_sections', ['id' => $sectionid], 'course');
+                $courseid = $section->course;
             } else {
                 $courseid = null;
             }
@@ -102,10 +115,90 @@ if ($width != null && $height != null) {
         'launch_presentation_height'          => $height
     );
 }
+
 $lticonfig = $lti->generate_lti_configuration($params);
+
+class CustomDeepLink {
+    /**
+     * Generate the form for initiating a login request for an LTI 1.3 message
+     *
+     * @param int            $courseid  Course ID
+     * @param int            $id        LTI instance ID
+     * @param stdClass|null  $instance  LTI instance
+     * @param stdClass       $config    Tool type configuration
+     * @param string         $messagetype   LTI message type
+     * @param string         $title     Title of content item
+     * @param string         $text      Description of content item
+     * @return string
+     */
+    public function lti_initiate_login($courseid, $id, $instance, $config, $messagetype, $title, $text,
+            $deeplinkurl, $customparams) {
+        global $SESSION;
+
+        $stdparams = lti_build_login_request($courseid, $id, $instance, $config, $messagetype);
+        $params = array_merge($stdparams, $customparams);
+
+        // To prevent multiple embeds in pages/forums inadvertently overriding
+        // or clearing each other's session checks in the launch stage in the
+        // auth.php file.
+        $SESSION->lti_message_hint_arr["{$id}"] = "{$courseid},{$config->typeid},{$id}," . base64_encode($title) . ',' .
+            base64_encode($text) . ',' . base64_encode($deeplinkurl);
+
+        $r = "<form action=\"" . $config->lti_initiatelogin .
+            "\" name=\"ltiInitiateLoginForm\" id=\"ltiInitiateLoginForm\" method=\"post\" " .
+            "encType=\"application/x-www-form-urlencoded\">\n";
+
+        foreach ($params as $key => $value) {
+            $key = htmlspecialchars($key);
+            $value = htmlspecialchars($value);
+            $r .= "  <input type=\"hidden\" name=\"{$key}\" value=\"{$value}\"/>\n";
+        }
+        $r .= "</form>\n";
+
+        $r .= "<script type=\"text/javascript\">\n" .
+            "//<![CDATA[\n" .
+            "document.ltiInitiateLoginForm.submit();\n" .
+            "//]]>\n" .
+            "</script>\n";
+
+        return $r;
+    }
+}
+
+class DeepLink {
+    public $toolurl;
+}
+
+// Read Echo360 Atto Plugin optional LTI 1.3 settings.
+$lti1p3configurationenabled = get_config(ECHO360ATTOPLUGIN_NAME, 'lti1p3configurationenabled');
+// Selected Echo360 LTI 1.3 Configuration's deployment id.
+$toolid = get_config(ECHO360ATTOPLUGIN_NAME, 'lti1p3configurationselection');
+
+if (($lti1p3configurationenabled) && (!is_null($toolid)) && ($toolid != 0)) {
+    // Retrieve LTI 1.3 external tool configuration.
+    $config = lti_get_type_type_config($toolid);
+    // Check if deep link url is same domain as LTI 1.3 config tool url.
+    $configtoolurlparts = parse_url($config->lti_toolurl);
+    $deeplinkurlparts = parse_url($url);
+    if ($config->lti_ltiversion === LTI_VERSION_1P3 && $deeplinkurlparts['host'] === $configtoolurlparts['host']) {
+        $deeplink = new DeepLink();
+        $deeplink->toolurl = $url;
+        // The svc-lti service expects only path.
+        $customparams["custom_auth_request_path"] = '/lib/editor/atto/plugins/echo360attoplugin/auth.php';
+        if (isset($SESSION->lti_initiatelogin_status)) {
+            unset($SESSION->lti_initiatelogin_status);
+        }
+        $customdeeplink = new CustomDeepLink();
+        echo $customdeeplink->lti_initiate_login($course->id, $resourcelinkid, $deeplink, $config, 'basic-lti-launch-request', '',
+            '', $deeplink->toolurl, $customparams);
+        exit;
+    }
+}
 
 // Generate LTI launch form and post details.
 $formid = 'form-' . rand(1000, 9999);
+// XSS Protection, only launch to the configured URL.
+$url = $lticonfig['launch_url'] . '?' . parse_url($url, PHP_URL_QUERY);
 echo html_writer::start_tag('html');
 echo html_writer::start_tag('body');
 echo html_writer::start_tag('form', array('id' => $formid, 'action' => $url, 'method' => 'post'));
@@ -116,4 +209,3 @@ echo html_writer::end_tag('form');
 echo html_writer::tag('script', 'document.getElementById("' . $formid . '").submit();', null);
 echo html_writer::end_tag('body');
 echo html_writer::end_tag('html');
-

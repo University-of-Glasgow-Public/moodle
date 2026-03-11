@@ -14,26 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Plugin capabilities
- *
- * @package    atto_echo360attoplugin
- * @copyright  2020 Echo360 Inc.
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-$capabilities = array(
-    'atto/echo360attoplugin:visible' => array(
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-            'coursecreator' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW,
-            'student' => CAP_ALLOW
-        )
-    )
-);
+// Renamed because Andrew Nichols keeps messing with stuff for no reason.
+$renamedclasses = [
+    'filter_echo360' => \filter_echo360\text_filter::class,
+];

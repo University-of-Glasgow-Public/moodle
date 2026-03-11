@@ -1,4 +1,7 @@
 <?php
+
+namespace filter_echo360;
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -21,9 +24,13 @@
  * @copyright  2020 Echo360 Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+if (class_exists('\core_filters\text_filter')) {
+   class_alias('\core_filters\text_filter', 'echo360_base_text_filter');
+} else {
+   class_alias('\moodle_text_filter', 'echo360_base_text_filter');
+}
 
-namespace filter_echo360;
-class text_filter extends \core_filters\text_filter {
+class text_filter extends \echo360_base_text_filter {
 
     // Echo360 LTI Launch URL filter installation path and filter needle.
     const FILTER_PATH = '/filter/echo360/lti_launch.php';
@@ -34,7 +41,7 @@ class text_filter extends \core_filters\text_filter {
      * @param $modinfos the array of mod_info where to search.
      * @return bool true if the item exists, false otherwise.
      */
-    function cm_exists($cmid, $modinfos) {
+    private function cm_exists($cmid, $modinfos) {
         foreach ($modinfos->cms as $cm) {
             if ($cmid === $cm->id) {
                 return true;
@@ -60,9 +67,31 @@ class text_filter extends \core_filters\text_filter {
 
         // Avoid placing videos on the 'View all submissions' page where there could be potentially many of them.
         if ($PAGE->pagetype == 'mod-assign-grading') {
+            $ltilinks = '%<a[\s]+[^>]*?href[\s]?=[\s]?"' .
+                preg_quote($CFG->wwwroot . self::FILTER_PATH) .
+                '.*?".*?>.*?<\/a>%';
+            if (preg_match($ltilinks, $text)) {
+              $text = preg_replace($ltilinks, '[Video]', $text);
+            }
             return $text;
         }
 
+        // Find all Echo360 Tiny Lti Links that exist in text and update their cmid value.
+        if ($cm) {
+            $cmid = $cm->id;
+            $ltilinks = '%<a[\s]+[^>]*?href[\s]?=[\s]?"' .
+                preg_quote($CFG->wwwroot . self::FILTER_PATH) .
+                '\?url=.+?&.*?cmid=\d+".*?>.*?<\/a>%';
+            if (preg_match_all($ltilinks, $text, $matches) !== false) {
+                foreach ($matches[0] as $match) {
+                    $cmidregex = '/cmid=\d+/';
+                    if (isset($match)) {
+                        $s = preg_replace($cmidregex, 'cmid='.$cmid, $match);
+                        $text = str_replace($match, $s, $text);
+                    }
+                }
+            }
+        }
         // Find all Echo360 Lti Links that exist in text and update their cmid value.
         if ($PAGE->cm) {
             $cmid = $PAGE->cm->id;
@@ -70,20 +99,23 @@ class text_filter extends \core_filters\text_filter {
                 preg_quote($CFG->wwwroot . self::FILTER_PATH) .
                 '\?url=.+?&.*?cmid=\d+".*?>.*?<\/a>%';
             if (preg_match_all($ltilinks, $text, $matches) !== false) {
-                foreach ($matches as $match) {
+                foreach ($matches[0] as $match) {
                     $cmidregex = '/cmid=\d+/';
-                    if (isset($match[0])) {
-                        $s = preg_replace($cmidregex, 'cmid='.$cmid, $match[0]);
-                        $text = str_replace($match[0], $s, $text);
+                    if (isset($match)) {
+                        $s = preg_replace($cmidregex, 'cmid='.$cmid, $match);
+                        $text = str_replace($match, $s, $text);
                     }
                 }
             }
         }
 
         // Find all Echo360 LTI Embeds that exist in text content.
+        // Order of parameters is strict.
         $searchfilters = '%<a[\s]+[^>]*?href[\s]?=[\s]?"' .
             preg_quote($CFG->wwwroot . self::FILTER_PATH) .
-            '\?url=(?<url>[^&]+?)?&(amp;)?cmid=(?<cmid>\d*)?&(amp;)?width=(?<width>\d*)?&(amp;)?height=(?<height>\d*)?".*?>'.
+            '\?url=(?<url>[^&]+?)?&(amp;)?cmid=(?<cmid>\d*)?&(amp;)?width=(?<width>\d*)?&(amp;)?height=(?<height>\d*)?'.
+            '(&amp;resourcelinkid=(?<resourcelinkid>[^&]+?))?'. // LTI 1.3 parameter optional for LIT 1.0.
+            '".*?>'.
             '(?<text>.*?)<\/a>%';
         if ($nofilterurls = preg_match_all($searchfilters, $text, $result)) {
             // Decode URLs in text content to make <A HREF> regex pattern replacement with <IFRAME> easier.
@@ -95,7 +127,7 @@ class text_filter extends \core_filters\text_filter {
                     $cmid = $PAGE->cm->id;
                 } else {
                     $modinfos = get_fast_modinfo($PAGE->course);
-                    // make sure the cmid exists in this course. It might not exist within
+                    // Make sure the cmid exists in this course. It might not exist within
                     // the course if the course was cloned, and a cloned link contains the
                     // cmid from a previous course, and we cannot update its value
                     // from $PAGE->cm->id because we're in a non-module page, like the
@@ -106,12 +138,17 @@ class text_filter extends \core_filters\text_filter {
                         $cmid = 0;
                     }
                 }
-
+                if (strlen($result['resourcelinkid'][$i]) > 1) {
+                    $resourcelinkidparam = '&resourcelinkid=' . $result['resourcelinkid'][$i];
+                } else {
+                    $resourcelinkidparam = '';
+                }
                 $searchfilter = '~<a[\s]+[^>]*?href[\s]?=[\s]?"' .
                     preg_quote($CFG->wwwroot . self::FILTER_PATH) .
                     '\?url=' . preg_quote($result['url'][$i]) . '*(.*?)[\"\']*.*?>([^<]+|.*?)?<\/a>~';
                 $replacement = '<div class="echo360-iframe"><iframe src="' . $CFG->wwwroot . self::FILTER_PATH .
                     '?url=' .     $result['url'][$i] .
+                    $resourcelinkidparam .
                     '&cmid=' .    $cmid .
                     '&width=' .   $result['width'][$i] .
                     '&height=' .  $result['height'][$i] . '" '.
@@ -119,6 +156,7 @@ class text_filter extends \core_filters\text_filter {
                     'height="' .  $result['height'][$i] . '" ' .
                     'frameborder="0" allowfullscreen="allowfullscreen" ' .
                     'webkitallowfullscreen="webkitallowfullscreen" ' .
+                    'loading="lazy" ' .
                     'mozallowfullscreen="mozallowfullscreen">' .
                 '</iframe></div>';
                 $filteredtext = preg_replace($searchfilter, $replacement, $filteredtext, 1);

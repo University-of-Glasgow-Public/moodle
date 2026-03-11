@@ -28,6 +28,46 @@ $ADMIN->add('editoratto', new admin_category('atto_echo360attoplugin', new lang_
 
 $settings = new admin_settingpage('atto_echo360attoplugin_settings', new lang_string('settings', 'atto_echo360attoplugin'));
 if ($ADMIN->fulltree) {
+    require_once($CFG->dirroot . '/mod/lti/lib.php');
+    require_once($CFG->dirroot . '/mod/lti/locallib.php');
+    // LTI 1.3 Configuration Settings.
+    $lti1p3configurationoptions = array();
+    $lti1p3configurationoptions[0] = "";
+    foreach (lti_get_lti_types() as $key => $val) {
+        if ($val->ltiversion == "1.3.0" && stripos($val->tooldomain, "echo360") !== false) {
+            $lti1p3configurationoptions[$key] = $val->name;
+        }
+    }
+    $settings->add(
+        new admin_setting_heading(
+            'atto_echo360attoplugin/lti1p3configurationsettings',
+            new lang_string('lti1p3configurationsettings', 'atto_echo360attoplugin'), ''
+        )
+    );
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'atto_echo360attoplugin/lti1p3configurationenabled',
+            new lang_string('lti1p3configurationenabled', 'atto_echo360attoplugin'),
+            new lang_string('lti1p3configurationenabled_desc', 'atto_echo360attoplugin'),
+            0
+        )
+    );
+    $settings->add(
+        new admin_setting_configselect(
+            'atto_echo360attoplugin/lti1p3configurationselection',
+            new lang_string('lti1p3configurationselection', 'atto_echo360attoplugin'),
+            new lang_string('lti1p3configurationselection_desc', 'atto_echo360attoplugin'),
+            0,
+            $lti1p3configurationoptions
+        )
+    );
+    // LTI 1.1 Configuration Settings.
+    $settings->add(
+        new admin_setting_heading(
+            'atto_echo360attoplugin/lti1p1configurationsettings',
+            new lang_string('lti1p1configurationsettings', 'atto_echo360attoplugin'), ''
+        )
+    );
     $settings->add(
         new admin_setting_configtext(
             'atto_echo360attoplugin/consumerkey',
