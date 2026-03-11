@@ -24,17 +24,24 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-    'tiny/echo360:visible' => array(
+$capabilities = [
+    'tiny/echo360:use' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'user' => CAP_ALLOW,
+        ],
+    ],
+    'tiny/echo360:visible' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW,
             'coursecreator' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
-            'student' => CAP_ALLOW
-        )
-    )
-);
+            'student' => CAP_ALLOW,
+        ]
+    ]
+];
 

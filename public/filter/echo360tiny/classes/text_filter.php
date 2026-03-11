@@ -1,4 +1,13 @@
 <?php
+
+namespace filter_echo360tiny;
+
+use cache;
+use cache_store;
+use core\output\html_writer;
+use core_collator;
+use filterobject;
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -22,8 +31,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace filter_echo360tiny;
-class text_filter extends \core_filters\text_filter {
+if (class_exists('\core_filters\text_filter')) {
+   class_alias('\core_filters\text_filter', 'echo360tiny_base_text_filter');
+} else {
+   class_alias('\moodle_text_filter', 'echo360tiny_base_text_filter');
+}
+
+
+class text_filter extends \echo360tiny_base_text_filter {
 
     // Echo360 Tiny LTI Launch URL filter installation path and filter needle.
     const FILTER_PATH = '/filter/echo360tiny/lti_launch.php';
@@ -50,7 +65,7 @@ class text_filter extends \core_filters\text_filter {
      * @param  array  $options
      * @return mixed|string
      */
-    public function filter($text, array $options = array()) {
+    public function filter($text, array $options = []) {
         global $CFG, $PAGE;
 
         // Check if Echo360 Tiny LTI Launch URLs do not exist, return immediately.
@@ -60,6 +75,12 @@ class text_filter extends \core_filters\text_filter {
 
         // Avoid placing videos on the 'View all submissions' page where there could be potentially many of them.
         if ($PAGE->pagetype == 'mod-assign-grading') {
+            $ltilinks = '%<a[\s]+[^>]*?href[\s]?=[\s]?"' .
+                preg_quote($CFG->wwwroot . self::FILTER_PATH) .
+                '.*?".*?>.*?<\/a>%';
+            if (preg_match($ltilinks, $text)) {
+              $text = preg_replace($ltilinks, '[Video]', $text);
+            }
             return $text;
         }
 
@@ -72,11 +93,11 @@ class text_filter extends \core_filters\text_filter {
                 preg_quote($CFG->wwwroot . self::FILTER_PATH) .
                 '\?url=.+?&.*?cmid=\d+".*?>.*?<\/a>%';
             if (preg_match_all($ltilinks, $text, $matches) !== false) {
-                foreach ($matches as $match) {
+                foreach ($matches[0] as $match) {
                     $cmidregex = '/cmid=\d+/';
-                    if (isset($match[0])) {
-                        $s = preg_replace($cmidregex, 'cmid='.$cmid, $match[0]);
-                        $text = str_replace($match[0], $s, $text);
+                    if (isset($match)) {
+                        $s = preg_replace($cmidregex, 'cmid='.$cmid, $match);
+                        $text = str_replace($match, $s, $text);
                     }
                 }
             }
@@ -129,6 +150,7 @@ class text_filter extends \core_filters\text_filter {
                     'height="' .  $result['height'][$i] . '" ' .
                     'frameborder="0" allowfullscreen="allowfullscreen" ' .
                     'webkitallowfullscreen="webkitallowfullscreen" ' .
+                    'loading="lazy" ' .
                     'mozallowfullscreen="mozallowfullscreen">' .
                 '</iframe></div>';
                 $filteredtext = preg_replace($searchfilter, $replacement, $filteredtext, 1);

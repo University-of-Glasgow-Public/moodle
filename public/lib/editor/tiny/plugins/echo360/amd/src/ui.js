@@ -42,7 +42,7 @@ export const handleAction = (editor) => {
     displayDialogue(editor);
 };
 
-const echoEventListeners = [];
+let echoEventListeners = false;
 
 /**
  * Returns the query parameters from data as an object
@@ -171,6 +171,7 @@ const displayDialogue = async(editor) => {
             type: Echo360Modal.TYPE,
             templateContext: ltiConfiguration,
             large: true,
+            removeOnClose: true,
         }).then(function(modal) {
             instanceModal = modal;
             modal.show();
@@ -179,7 +180,7 @@ const displayDialogue = async(editor) => {
             form.parentNode.removeChild(form);
         });
 
-        if(!echoEventListeners[editor.id]) {
+        if(!echoEventListeners) {
             window.addEventListener(
               'message', function (e) {
                   e.stopPropagation();
@@ -187,6 +188,6 @@ const displayDialogue = async(editor) => {
               }.bind(ltiConfiguration), true
             );
         }
-        echoEventListeners[editor.id] = true;
+        echoEventListeners = true;
     });
 };

@@ -23,6 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace filter_echo360tiny;
+
+use filter_echo360tiny;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -30,19 +34,29 @@ require_once($CFG->dirroot . '/filter/echo360tiny/filter.php'); // Include the c
 
 /**
  * Echo360 filter testcase.
+ * @package filter_echo360tiny
  */
-class filter_echo360tiny_testcase extends advanced_testcase {
+class filter_test extends \advanced_testcase {
 
     /**
      * Tests the filter doesn't affect text when no echo360 links are present.
      *
      * @dataProvider filter_echo360tiny_provider
+     * @covers \filter_echo360tiny
      */
     public function test_filter_echo360tiny($input, $expected) {
-        $this->resetAfterTest();
+        global $PAGE;
+        $this->resetAfterTest(true);
 
-        $filter = new testable_filter_echo360tiny();
-        $this->assertEquals($expected, $filter->filter($input));
+        // Create a test course.
+        $course = $this->getDataGenerator()->create_course();
+        $context = \context_course::instance($course->id);
+
+        $filteredtext = (new testable_filter_echo360tiny($context))->filter($input, [
+            'originalformat' => FORMAT_HTML,
+        ]);
+
+        $this->assertEquals($expected, $filteredtext);
     }
 
     /**
@@ -54,14 +68,14 @@ class filter_echo360tiny_testcase extends advanced_testcase {
         global $CFG;
 
         $text = '<p>Demo text with <a href="'.$CFG->wwwroot.'">link</a> and special chars '.
-                   '~!@#$%^&*()_+-={}[]\|/<>,.;:"`?'."'".
+                   '~!@#$%^&*()_+-={}[]\|/<>,.;:"`?'."'". // phpcs:ignore
                    'àáâäæãåāÀÁÂÄÆÃÅĀ'.
                    'èéêëēėęÈÉÊËĒĖĘ'.
                    'îïíīįìÎÏÍĪĮÌ'.
                    'ôöòóœøōõÔÖÒÓŒØŌÕ'.
                    'ûüùúūÛÜÙÚŪ'.
                    'ñńÑŃ'.
-                   'ß∂ƒ©®∑`´¥¨ˆπ“”‘’«˙∆˚¬…Ω≈ç√∫˜µ≤≥¯˘™£¢∞§¶•ªº–≠¡⁄€‹›ﬁ‡°·‚—±∏„´¸'.
+                   'ß∂ƒ©®∑`´¥¨ˆπ“”‘’«˙∆˚¬…Ω≈ç√∫˜µ≤≥¯˘™£¢∞§¶•ªº–≠¡⁄€‹›ﬁ‡°·‚—±∏„´¸'. // phpcs:ignore
                    'abc%7E%21%40%23%24%25%5E%26*%28%29_%2B-%60%7B%7D%5B%5D%5C%7C%3A%3B%27%3C%3E%2C.%3F%2F'.
                 '</p>';
 
@@ -84,14 +98,14 @@ class filter_echo360tiny_testcase extends advanced_testcase {
                      '%3FmediaId%3D173f7150-7455-431c-8e99-9c85d7b3b09c'.
                      '%26autoplay%3Dfalse'.
                      '%26automute%3Dfalse'.
-                     '&amp;cmid=124'.
+                     '&amp;cmid=0'.
                      '&amp;width=640'.
                      '&amp;height=360" target="_blank">'.
                      'abc%7E%21%40%23%24%25%5E%26*%28%29_%2B-%60%7B%7D%5B%5D%5C%7C%3A%3B%27%3C%3E%2C.%3F%2F'.
                    '</a>'.
                  '</p>';
 
-        $filtered_embed = '<p>'.
+        $filteredembed = '<p>'.
                             '<div class="echo360-iframe">'.
                               '<iframe src="'.$CFG->wwwroot.
                                  '/filter/echo360tiny/lti_launch.php'.
@@ -99,7 +113,7 @@ class filter_echo360tiny_testcase extends advanced_testcase {
                                  '%3FmediaId%3D173f7150-7455-431c-8e99-9c85d7b3b09c'.
                                  '%26autoplay%3Dfalse'.
                                  '%26automute%3Dfalse'.
-                                 '&cmid=124'.
+                                 '&cmid=0'.
                                  '&width=640'.
                                  '&height=360" '.
                                  'width="640" '.
@@ -107,6 +121,7 @@ class filter_echo360tiny_testcase extends advanced_testcase {
                                  'frameborder="0" '.
                                  'allowfullscreen="allowfullscreen" '.
                                  'webkitallowfullscreen="webkitallowfullscreen" '.
+                                 'loading="lazy" '.
                                  'mozallowfullscreen="mozallowfullscreen">'.
                               '</iframe>'.
                             '</div>'.
@@ -123,11 +138,11 @@ class filter_echo360tiny_testcase extends advanced_testcase {
             ],
             'One embed' => [
                 'input'    => $embed,
-                'expected' => $filtered_embed,
+                'expected' => $filteredembed,
             ],
             'Multiple links and embeds' => [
                 'input'    => $link.$embed.$link.$embed.$link,
-                'expected' => $link.$filtered_embed.$link.$filtered_embed.$link,
+                'expected' => $link.$filteredembed.$link.$filteredembed.$link,
             ],
             'Text and links' => [
                 'input'    => $text.$link.$text,
@@ -135,19 +150,19 @@ class filter_echo360tiny_testcase extends advanced_testcase {
             ],
             'Text and embeds' => [
                 'input'    => $text.$embed.$text,
-                'expected' => $text.$filtered_embed.$text,
+                'expected' => $text.$filteredembed.$text,
             ],
             'Text, links and embeds' => [
                 'input'    => $text.$link.$embed.$text.$embed.$link,
-                'expected' => $text.$link.$filtered_embed.$text.$filtered_embed.$link,
+                'expected' => $text.$link.$filteredembed.$text.$filteredembed.$link,
             ],
             'Text, links and embeds v2' => [
                 'input'    => $link.$text.$embed.$text.$embed.$link,
-                'expected' => $link.$text.$filtered_embed.$text.$filtered_embed.$link,
+                'expected' => $link.$text.$filteredembed.$text.$filteredembed.$link,
             ],
             'Text, links and embeds v3' => [
                 'input'    => $embed.$text.$embed.$text.$link,
-                'expected' => $filtered_embed.$text.$filtered_embed.$text.$link,
+                'expected' => $filteredembed.$text.$filteredembed.$text.$link,
             ],
         ];
     }
@@ -158,8 +173,10 @@ class filter_echo360tiny_testcase extends advanced_testcase {
  * Subclass for easier testing.
  */
 class testable_filter_echo360tiny extends filter_echo360tiny {
-    public function __construct() {
+    public function __construct($context) {
         // Use this context for filtering.
-        $this->context = context_system::instance();
+        $this->context = $context;
+        // Define FORMAT_HTML as only one filtering in DB.
+        set_config('formats', implode(',', [FORMAT_HTML]), 'filter_echo360tiny');
     }
 }

@@ -31,19 +31,19 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configtext(
             'tiny_echo360/consumerkey',
-            get_string('consumerkey', 'tiny_echo360'), 'The Public Key provided by Echo360', '', PARAM_TEXT
+            get_string('consumerkey', 'tiny_echo360'), get_string('consumerkeydesc', 'tiny_echo360'), '', PARAM_TEXT
         )
     );
     $settings->add(
         new admin_setting_configtext(
             'tiny_echo360/sharedsecret',
-            get_string('sharedsecret', 'tiny_echo360'), 'The Secret Key provided by Echo360', '', PARAM_TEXT
+            get_string('sharedsecret', 'tiny_echo360'), get_string('sharedsecretdesc', 'tiny_echo360'), '', PARAM_TEXT
         )
     );
     $settings->add(
         new admin_setting_configtext(
             'tiny_echo360/hosturl',
-            get_string('hosturl', 'tiny_echo360'), 'The Host URL provided by Echo360', '', PARAM_TEXT
+            get_string('hosturl', 'tiny_echo360'), get_string('hosturldesc', 'tiny_echo360'), '', PARAM_TEXT
         )
     );
 }

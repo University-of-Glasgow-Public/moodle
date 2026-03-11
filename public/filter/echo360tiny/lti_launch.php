@@ -24,9 +24,8 @@
 
 require_once("../../config.php");
 require_once("../../mod/lti/locallib.php");
-require_once("../../lib/editor/atto/plugins/echo360attoplugin/LtiConfiguration.php");
 
-global $USER, $PAGE, $COURSE, $SESSION;
+global $SESSION, $PAGE;
 
 // Query string parameters.
 $url    = required_param('url', PARAM_URL);             // LTI url.
@@ -35,9 +34,8 @@ $width  = optional_param('width', null, PARAM_INT);     // IFrame width (optiona
 $height = optional_param('height', null, PARAM_INT);    // IFrame height (optional to support lti_launch_url links).
 $resourcelinkid = optional_param('resourcelinkid', "0", PARAM_TEXT);    // LTI resourcelinkidparam added by button and filter.
 
-const ECHO360_LABEL_MOD_NAME = 'label';
 const ECHO360TINYPLUGIN_NAME = 'tiny_echo360';
-const ECHO360TINYPLUGIN_VERSION = '1.0.0';
+const ECHO360TINYPLUGIN_VERSION = '1.0.6';
 
 if ($width != null && $height != null) {
     if ($width < 50 || $width > 3000) {
@@ -56,20 +54,58 @@ if ($cmid) {
     require_login($course, false, $cm);
     $context = context_module::instance($cm->id);
 } else {
-    require_login();
-    $context = context_system::instance();
+    // Do not know the Course by the Course Module specified in the embedded Echo360 media link,
+    // use HTTP referer to determine Course context.
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        // Check HTTP_REFERER is a view.php page to extract the id / course query value.
+        if (substr(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), -strlen('view.php')) === 'view.php') {
+            parse_str(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY), $refererparams);
+
+            if (isset($refererparams['id']) && is_numeric($refererparams['id'])) {
+                $courseid = $refererparams['id'];
+            } else if (isset($refererparams['course']) && is_numeric($refererparams['course'])) {
+                $courseid = $refererparams['course'];
+            } else {
+                $courseid = null;
+            }
+        } else if (substr(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH), -strlen('section.php')) === 'section.php') {
+            parse_str(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY), $refererparams);
+
+            if (isset($refererparams['id']) && is_numeric($refererparams['id'])) {
+                $sectionid = $refererparams['id'];
+                $section = $DB->get_record('course_sections', ['id' => $sectionid], 'course');
+                $courseid = $section->course;
+            } else {
+                $courseid = null;
+            }
+        } else {
+            $courseid = null;
+        }
+    }
+
+    if (isset($courseid)) {
+        $course = $DB->get_record('course', array('id' => $courseid));
+        require_login($course, true);
+        $context = context_course::instance($course->id);
+    } else {
+        require_login();
+        $context = context_system::instance(); // Unable to determine Course context, default to Site context.
+        $course = $SITE;
+    }
+    // Set identified Course / Site context for cmid value in authenticated embedded Echo360 media link.
+    $PAGE->set_context($context);
 }
 
 
 // Remote LTI call.
 $lti        = new \tiny_echo360\lti\configuration($context, $course, $cm);
-$params     = array();
+$params     = [];
 if ($width != null && $height != null) {
-    $params = array(
+    $params = [
         'launch_presentation_document_target' => 'iframe',
         'launch_presentation_width'           => $width,
-        'launch_presentation_height'          => $height
-    );
+        'launch_presentation_height'          => $height,
+    ];
 }
 
 $lticonfig = $lti->generate($params);
@@ -107,9 +143,9 @@ $formid = 'form-' . rand(1000, 9999);
 $url = $lticonfig['launch_url'] . '?' . parse_url($url, PHP_URL_QUERY);
 echo html_writer::start_tag('html');
 echo html_writer::start_tag('body');
-echo html_writer::start_tag('form', array('id' => $formid, 'action' => $url, 'method' => 'post'));
+echo html_writer::start_tag('form', ['id' => $formid, 'action' => $url, 'method' => 'post']);
 foreach ($lticonfig as $key => $value) {
-    echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => $key, 'value' => $value));
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => $key, 'value' => $value]);
 }
 echo html_writer::end_tag('form');
 echo html_writer::tag('script', 'document.getElementById("' . $formid . '").submit();', null);

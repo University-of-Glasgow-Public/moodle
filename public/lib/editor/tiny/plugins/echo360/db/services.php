@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Tiny Echo360 external functions and service definitions.
  *
@@ -24,12 +23,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$functions = array(
-    'tiny_echo360_request_lti_configuration' => array(
+defined('MOODLE_INTERNAL') || die;
+
+$functions = [
+    'tiny_echo360_request_lti_configuration' => [
         'classname'   => 'tiny_echo360\external\lti_request_configuration',
         'description' => 'Retrieve the LTI configuration information.',
         'type'        => 'read',
         'capabilities' => 'tiny/echo360:visible',
         'ajax'          => true,
-    )
-);
+    ]
+];

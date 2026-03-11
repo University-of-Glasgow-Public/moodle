@@ -1,9 +1,32 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace filter_echo360tiny;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . "/mod/lti/locallib.php");
 
+/**
+ * Custom deep link class for LTI login requests.
+ *
+ * @package    filter_echo360tiny
+ * @copyright  2023 Echo360 Inc.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class custom_deep_link {
     /**
      * Generate the form for initiating a login request for an LTI 1.3 message
@@ -35,8 +58,8 @@ class custom_deep_link {
             "encType=\"application/x-www-form-urlencoded\">\n";
 
         foreach ($params as $key => $value) {
-            $key = htmlspecialchars($key);
-            $value = htmlspecialchars($value);
+            $key = htmlspecialchars($key, ENT_COMPAT);
+            $value = htmlspecialchars($value, ENT_COMPAT);
             $r .= "  <input type=\"hidden\" name=\"{$key}\" value=\"{$value}\"/>\n";
         }
         $r .= "</form>\n";

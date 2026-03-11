@@ -14,15 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace filter_echo360tiny;
 
-/**
- * Contains a link to the tool
- *
- * @package    filter_echo360tiny
- * @copyright  2023 Echo360 Inc.
- * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class deep_link {
-    public $toolurl;
-}
+defined('MOODLE_INTERNAL') || die;
+
+// Renamed because Andrew Nichols keeps messing with stuff for no reason.
+$renamedclasses = [
+    'filter_echo360tiny' => \filter_echo360tiny\text_filter::class,
+];

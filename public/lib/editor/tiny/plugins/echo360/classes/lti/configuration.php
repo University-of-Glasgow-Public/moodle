@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tiny_echo360\lti;
+
+use Exception as Exception;
+use DateTime as DateTime;
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once("$CFG->dirroot/mod/lti/locallib.php");
+
 /**
  * Tiny text editor integration
  * This class initializes the LTI authentication information
@@ -22,16 +31,6 @@
  * @copyright   2023 Echo360 Inc.
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace tiny_echo360\lti;
-
-use \Exception as Exception;
-use \DateTime as DateTime;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once("$CFG->dirroot/mod/lti/locallib.php");
-
 class configuration {
 
     const LTI_ROLE_REQUEST_ADMINISTRATOR = 'urn:lti:sysrole:ims/lis/Administrator';
@@ -57,14 +56,14 @@ class configuration {
 
     const LTI_STUDENT = 'student';
 
-    const LTI_ADMIN_ROLES = array(
+    const LTI_ADMIN_ROLES = [
       self::LTI_ADMIN,
       self::LTI_ADMINISTRATOR,
       self::LIS_SYSTEM_ADMIN,
-      self::LIS_INSTITUTION_ADMIN
-    );
+      self::LIS_INSTITUTION_ADMIN,
+    ];
 
-    const LTI_INSTRUCTOR_ROLES = array(
+    const LTI_INSTRUCTOR_ROLES = [
       self::LTI_FACULTY,
       self::LTI_INSTRUCTOR,
       self::LTI_TEACHER,
@@ -75,12 +74,12 @@ class configuration {
       self::LTI_CONTENT_DEVELOPER,
       self::LTI_TEACHING_ASSISTANT,
       self::LTI_GRADER,
-      self::LTI_COURSE_CREATOR
-    );
+      self::LTI_COURSE_CREATOR,
+    ];
 
-    const LTI_STUDENT_ROLES = array(
-      self::LTI_STUDENT
-    );
+    const LTI_STUDENT_ROLES = [
+      self::LTI_STUDENT,
+    ];
 
     private $launchurl;
     private $consumerkey;
@@ -95,7 +94,7 @@ class configuration {
      *
      * @param  course_context $context     array - the course context, https://docs.moodle.org/34/en/Context
      * @throws \Exception
-     * 
+     *
      */
     public function __construct(\context $context, \stdClass $course, $cm) {
         global $USER;
@@ -109,10 +108,8 @@ class configuration {
         $this->context = $context;
         $this->course = $course;
 
-        /**
-         * To support secureLinks the version needs to be in this format.
-         */
-        $this->version = "1.0.32"; 
+        // To support secureLinks the version needs to be in this format.
+        $this->version = "1.0.32";
 
         // Default to embed for users.
         $this->contentintendeduse = "embed";
@@ -153,7 +150,7 @@ class configuration {
     public static function get_role_names(\context $context, \stdClass $course) {
         global $USER;
 
-        $rolenames = array();
+        $rolenames = [];
         // Check IMS Roles.
         $imsroles = explode(",", lti_get_ims_role($USER, '', $course->id, ''));
         foreach ($imsroles as $imsrole) {
@@ -186,7 +183,7 @@ class configuration {
      * @return array $launch_params The parameters sorted alphabetically
      */
     public static function sort_array_alphabetically(array $assocarray) {
-        $params = array();
+        $params = [];
         $keys = array_keys($assocarray);
         sort($keys);
         foreach ($keys as $key) {
@@ -252,19 +249,19 @@ class configuration {
      * @param  $customparams An optional array of key => value parameters that will be added to the LTI request.
      * @return array
      */
-    public function generate($customparams = array()) {
+    public function generate($customparams = []) {
         global $USER, $CFG;
 
         // List of allowed custom parameters.
-        $allowedcustomparams = array(
+        $allowedcustomparams = [
             'launch_presentation_document_target',
             'launch_presentation_width',
-            'launch_presentation_height'
-        );
+            'launch_presentation_height',
+        ];
 
         // Configure the LTI form data.
         $now = new DateTime();
-        $launchdata = array(
+        $launchdata = [
             'lti_version' => 'LTI-1p0',
             'lti_message_type' => 'basic-lti-launch-request',
             'resource_link_id' => $this->context->id,
@@ -288,8 +285,8 @@ class configuration {
             'oauth_version' => '1.0',
             'oauth_nonce' => uniqid('', true),
             'oauth_timestamp' => $now->getTimestamp(),
-            'oauth_signature_method' => 'HMAC-SHA1'
-        );
+            'oauth_signature_method' => 'HMAC-SHA1',
+        ];
 
         foreach ($customparams as $key => $value) {
             // Only add allowed custom parameters.
