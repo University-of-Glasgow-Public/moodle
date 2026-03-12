@@ -1,6 +1,8 @@
 [submodule "local/gugrades"]
 	path = local/gugrades
-	url = git@github.com:University-of-Glasgow-Public/moodle-local_gugrades.git
+	url = https://github.com/University-of-Glasgow-Public/moodle-local_gugrades.git
+    branch = gu45
 [submodule "blocks/newgu_spdetails"]
 	path = blocks/newgu_spdetails
 	url = https://github.com/University-of-Glasgow-Public/moodle-blocks_newgu_spdetails.git
+    branch = gu45
