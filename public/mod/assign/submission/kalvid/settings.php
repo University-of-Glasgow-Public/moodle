@@ -15,24 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Kaltura LTI service script used receive data sent from the Kaltura content provider.
+ * This file defines the admin settings for this plugin
  *
- * @package    local_kaltura
- * @author     Remote-Learner.net Inc
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright  (C) 2014 Remote Learner.net Inc http://www.remote-learner.net
+ * @package   assignsubmission_kalvid
+ * @copyright 2025 Kaltura Inc
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$PAGE->set_pagelayout('embedded');
-echo $OUTPUT->header();
-$playurl = urldecode($url);
-?>
-<script>
-    var data = {
-        'url': "<?php echo $playurl; ?>",
-        'width': <?php echo $width; ?>,
-        'height': <?php echo $height; ?>,
-        'title': "<?php echo addcslashes($title, '"'); ?>"
-    };
-    parent.kaltura_atto_embed(data);
-</script>
+$settings->add(new admin_setting_configcheckbox('assignsubmission_kalvid/default',
+    new lang_string('default', 'assignsubmission_kalvid'),
+    new lang_string('default_help', 'assignsubmission_kalvid'), 0));
+
