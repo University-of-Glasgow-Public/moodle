@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2023071802;
+$plugin->version   = 2026021300;
 $plugin->requires  = 2022112804.00;
 $plugin->component = 'tiny_echo360';
-$plugin->release   = '1.0.0 (Build ' . $plugin->version . ')';
+$plugin->release   = '1.0.14 (Build ' . $plugin->version . ')';
 

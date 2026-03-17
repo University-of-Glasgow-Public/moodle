@@ -31,8 +31,6 @@ use core_privacy\local\request\context;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\userlist;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Privacy Subsystem for tiny_echo360 implementing metadata, plugin providers.
  *

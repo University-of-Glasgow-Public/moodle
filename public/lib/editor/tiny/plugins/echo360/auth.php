@@ -30,8 +30,8 @@
 // need to perform special handling of cookieless requests that contain no
 // re-POST data and are not logged in.
 // @codingStandardsIgnoreLine
-require_once("../../../../../config.php");
-require_once("../../../../../mod/lti/locallib.php");
+require_once(__DIR__ . '/../../../../../config.php');
+require_once("{$CFG->dirroot}/mod/lti/locallib.php");
 global $_POST, $_SERVER;
 
 if (!isloggedin() && empty($_POST['repost'])) {
@@ -121,22 +121,9 @@ if ($ok && !empty($prompt) && ($prompt !== 'none')) {
     $desc = 'Invalid prompt';
 }
 
-/* BAD EGG */
-class LtiStruct {
-    public $id;
-    public $typeid;
-    public $course;
-    public $toolurl;
-    // The naming convention of this object's properties is dictated by the
-    // internal Moodle LTI library and is require to complete functionality.
-    // @codingStandardsIgnoreLine
-    public $resource_link_id;
-    public $instructorcustomparameters;
-}
-
 if ($ok && !empty($deeplinkurl64)) {
-    $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-    $lti = new LtiStruct();
+    $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
+    $lti = new stdClass();
     $lti->typeid = $typeid;
     $lti->course = $course->id;
     $deeplinkurl = base64_decode($deeplinkurl64);
@@ -163,8 +150,8 @@ $r = '<form action="' . $redirecturi . "\" name=\"ltiAuthForm\" id=\"ltiAuthForm
      "method=\"post\" enctype=\"application/x-www-form-urlencoded\">\n";
 if (!empty($params)) {
     foreach ($params as $key => $value) {
-        $key = htmlspecialchars($key);
-        $value = htmlspecialchars($value);
+        $key = htmlspecialchars($key, ENT_COMPAT);
+        $value = htmlspecialchars($value, ENT_COMPAT);
         $r .= "  <input type=\"hidden\" name=\"{$key}\" value=\"{$value}\"/>\n";
     }
 }

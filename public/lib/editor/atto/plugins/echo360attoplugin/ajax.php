@@ -24,27 +24,31 @@
 define('AJAX_SCRIPT', true);
 
 require_once(__DIR__ . '/../../../../../config.php');
-require($CFG->dirroot.'/lib/editor/atto/plugins/echo360attoplugin/LtiConfiguration.php');
+require_once($CFG->dirroot.'/lib/editor/atto/plugins/echo360attoplugin/LtiConfiguration.php');
+require_once($CFG->dirroot . '/mod/lti/lib.php');
+require_once($CFG->dirroot . '/mod/lti/locallib.php');
+
 use Echo360\LtiConfiguration;
 
 const ECHO360ATTOPLUGIN_NAME = 'atto_echo360attoplugin';
-const ECHO360ATTOPLUGIN_VERSION = '1.0.30';
+const ECHO360ATTOPLUGIN_VERSION = '1.0.32';
 
+// Check access and capabilities.
 $contextcourseid = required_param('contextcourseid', PARAM_INT);
 $pagetype = required_param('pagetype', PARAM_TEXT);
 list($context, $course, $cm) = get_context_info_array($contextcourseid);
 require_login($course, false, $cm);
 require_sesskey();
 
-return request_lti_configuration($course->id, $pagetype);
+return request_lti_1p1_configuration($course->id, $pagetype);
 
 /**
- * Return LTI configuration parameters for LTI launch request.
+ * Return LTI 1.1 configuration parameters for LTI launch request.
  *
  * @param  $courseid
  * @return mixed
  */
-function request_lti_configuration($courseid, $pagetype) {
+function request_lti_1p1_configuration($courseid, $pagetype) {
     try {
         $context = context_course::instance($courseid);
         $lti = new LtiConfiguration($context, ECHO360ATTOPLUGIN_NAME, $pagetype);

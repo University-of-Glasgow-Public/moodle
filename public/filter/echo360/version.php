@@ -24,11 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2021091001;                    // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2026021300;                    // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2017010100;                    // Requires this Moodle version.
 $plugin->component = 'filter_echo360';              // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_STABLE;               // Human readable version information.
-$plugin->release   = '1.0.30 (Build 2021091001)';
+$plugin->release   = '1.0.35';
 $plugin->dependencies = array(
-    'atto_echo360attoplugin' => 2020060601,         // The Echo360 atto plugin must be present.
+    'atto_echo360attoplugin' => 2023011100,         // The Echo360 atto plugin must be present.
 );
