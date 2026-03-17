@@ -66,7 +66,14 @@ Features not yet implemented:
 
 ## Supported branches
 
-[See default branch for currently supported versions and branches](https://github.com/catalyst/moodle-auth_saml2?tab=readme-ov-file#supported-branches)
+| Moodle version    | Branch             | PHP       | SimpleSAMLphp |
+| ----------------- | ------------------ |-----------|---------------|
+| Moodle 5.0        | `MOODLE_500_STABLE`| 8.2+      | v2.3.7        |
+| Moodle 4.5        | `MOODLE_405_STABLE`| 8.1+      | v2.3.7        |
+| Moodle 4.4        | `MOODLE_404_STABLE`| 8.1+      | v2.3.5        |
+| Moodle 4.1        | `MOODLE_401_STABLE`| 7.4+      | v2.0.5        |
+| Totara 19+        | `TOTARA_19`        | 7.4+      | v2.0.5        |
+| Totara 13+        | `TOTARA_13_STABLE` | 7.4+      | v2.0.5        |
 
 ## Installation
 

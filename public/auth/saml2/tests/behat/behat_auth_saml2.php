@@ -400,7 +400,7 @@ EOF;
      */
     protected function execute(
         string|array $contextapi,
-        mixed $params = [],
+        mixed $params = []
     ): void {
         global $CFG;
 
