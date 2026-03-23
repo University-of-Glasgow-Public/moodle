@@ -56,3 +56,8 @@ nav.navbar button.navbar-toggler {
   background-color: $brand-color !important;
   border-color: $brand-dark !important;
 }
+
+.drawer-toggles .drawer-toggler .btn {
+    background-color: $brand-color;
+    color: $login-text;
+}

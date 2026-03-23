@@ -47,4 +47,9 @@ nav.navbar button.navbar-toggler {
 .btn-primary:active {
   background-color: #50C878 !important;
   border-color: rgb(54.7608695652, 174.2391304348, 94.5869565217) !important;
+}
+
+.drawer-toggles .drawer-toggler .btn {
+  background-color: #50C878;
+  color: #fff;
 }/*# sourceMappingURL=mint.css.map */

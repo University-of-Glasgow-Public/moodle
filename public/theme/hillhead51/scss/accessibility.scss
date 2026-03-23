@@ -444,7 +444,7 @@ body.hillhead51-night footer#page-footer a {
   color: #789BCA !important;
 }
 
-body.hillhead51-night a:not(body.hillhead51-night .que a):not(body.hillhead51-night .btn-primary):not(body.hillhead51-night .btn-secondary):not([aria-selected="true"]):not(body.hillhead51-night .courseindex-item.dimmed.pageitem a), body.hillhead51-night a.nav-link, body.hillhead51-night .description .course-description-item {
+body.hillhead51-night a:not(body.hillhead51-night .que a):not(body.hillhead51-night .btn-primary):not(body.hillhead51-night .btn-secondary):not([aria-selected="true"]):not(body.hillhead51-night .courseindex-item.dimmed.pageitem a), body.hillhead51-night a.nav-link, body.hillhead51-night .description .course-description-item, body.hillhead51-night .dropdown-toggle {
   color: #95B7E6;
 }
 
@@ -468,7 +468,7 @@ body.hillhead51-night .nav-tabs .nav-link {
   color: #789BCA;
 }
 
-body.hillhead51-night .nav-tabs .nav-link.active, body.hillhead51-night .nav-tabs .nav-item.show .nav-link {
+body.hillhead51-night .nav-tabs .nav-link.active, body.hillhead51-night .nav-tabs .nav-item.show .nav-link, body.hillhead51-night .drawer-toggles .drawer-toggler .btn, body.hillhead51-night .view-overview-body .list-group .list-group-item {
   color: #86B1EA !important;
   background-color: #274163;
   border-color: #274163;
@@ -582,7 +582,7 @@ body.hillhead51-night a.close, body.hillhead51-night button.close {
   color: #fff !important;
 }
 
-body.hillhead51-night .breadcrumb-item + .breadcrumb-item::before, body.hillhead51-night .popover-region-seeall-text {
+body.hillhead51-night .breadcrumb-item + .breadcrumb-item::before, body.hillhead51-night .popover-region-seeall-text, body.hillhead51-night .calendar_event_course {
   color: #274163;
 }
 
@@ -738,7 +738,7 @@ body.hillhead51-night .moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialog
   color: #C4D6EE;
 }
 
-body.hillhead51-night .text-muted, body.hillhead51-night a.dimmed, body.hillhead51-night a.dimmed:link, body.hillhead51-night a.dimmed:visited, body.hillhead51-night a.dimmed_text, body.hillhead51-night a.dimmed_text:link, body.hillhead51-night a.dimmed_text:visited, body.hillhead51-night .dimmed_text, body.hillhead51-night .dimmed_text a, body.hillhead51-night .dimmed_text a:link, body.hillhead51-night .dimmed_text a:visited, body.hillhead51-night .usersuspended, body.hillhead51-night .usersuspended a, body.hillhead51-night .usersuspended a:link, body.hillhead51-night .usersuspended a:visited, body.hillhead51-night .dimmed_category, body.hillhead51-night .dimmed_category a, body.hillhead51-night .tag_feed .media .muted a, body.hillhead51-night #page-admin-qtypes .disabled, body.hillhead51-night #page-admin-qbehaviours .disabled, body.hillhead51-night #page-admin-plugins #plugins-control-panel .pluginname .componentname, body.hillhead51-night #page-admin-plugins #plugins-control-panel .version .versionnumber, body.hillhead51-night #page-admin-plugins #plugins-control-panel .notes .requiredby, body.hillhead51-night #plugins-check-page .page-description, body.hillhead51-night #plugins-check-page #plugins-check .requires-ok, body.hillhead51-night #plugins-check-page #plugins-check .displayname .plugindir, body.hillhead51-night #plugins-check-page #plugins-check-available-dependencies .displayname .component, body.hillhead51-night #page-admin-search .adminpagepath li, body.hillhead51-night .block .minicalendar td.weekend, body.hillhead51-night .section .activity .stealth, body.hillhead51-night .course-content .section-summary .section-summary-activities .activity-count, body.hillhead51-night .course-content ul li.section.hidden .sectionname>span, body.hillhead51-night .course-content ul li.section.hidden .content>div.summary, body.hillhead51-night .course-content ul li.section.hidden .activity .activityinstance, body.hillhead51-night #course-category-listings .listitem[data-visible="0"], body.hillhead51-night #course-category-listings .listitem[data-visible="0"]>div>a, body.hillhead51-night #course-category-listings .listing-pagination-totals.dimmed, body.hillhead51-night .fitem.disabled .fp-btn-choose, body.hillhead51-night .form-defaultinfo, body.hillhead51-night .form-label .form-shortname, body.hillhead51-night .formsettingheading .form-horizontal, body.hillhead51-night .no-felement.fstatic, body.hillhead51-night .path-backup .backup_progress .backup_stage {
+body.hillhead51-night .text-muted, body.hillhead51-night a.dimmed, body.hillhead51-night a.dimmed:link, body.hillhead51-night a.dimmed:visited, body.hillhead51-night a.dimmed_text, body.hillhead51-night a.dimmed_text:link, body.hillhead51-night a.dimmed_text:visited, body.hillhead51-night .dimmed_text, body.hillhead51-night .dimmed_text a, body.hillhead51-night .dimmed_text a:link, body.hillhead51-night .dimmed_text a:visited, body.hillhead51-night .usersuspended, body.hillhead51-night .usersuspended a, body.hillhead51-night .usersuspended a:link, body.hillhead51-night .usersuspended a:visited, body.hillhead51-night .dimmed_category, body.hillhead51-night .dimmed_category a, body.hillhead51-night .tag_feed .media .muted a, body.hillhead51-night #page-admin-qtypes .disabled, body.hillhead51-night #page-admin-qbehaviours .disabled, body.hillhead51-night #page-admin-plugins #plugins-control-panel .pluginname .componentname, body.hillhead51-night #page-admin-plugins #plugins-control-panel .version .versionnumber, body.hillhead51-night #page-admin-plugins #plugins-control-panel .notes .requiredby, body.hillhead51-night #plugins-check-page .page-description, body.hillhead51-night #plugins-check-page #plugins-check .requires-ok, body.hillhead51-night #plugins-check-page #plugins-check .displayname .plugindir, body.hillhead51-night #plugins-check-page #plugins-check-available-dependencies .displayname .component, body.hillhead51-night #page-admin-search .adminpagepath li, body.hillhead51-night .block .minicalendar td.weekend, body.hillhead51-night .section .activity .stealth, body.hillhead51-night .course-content .section-summary .section-summary-activities .activity-count, body.hillhead51-night .course-content ul li.section.hidden .sectionname>span, body.hillhead51-night .course-content ul li.section.hidden .content>div.summary, body.hillhead51-night .course-content ul li.section.hidden .activity .activityinstance, body.hillhead51-night #course-category-listings .listitem[data-visible="0"], body.hillhead51-night #course-category-listings .listitem[data-visible="0"]>div>a, body.hillhead51-night #course-category-listings .listing-pagination-totals.dimmed, body.hillhead51-night .fitem.disabled .fp-btn-choose, body.hillhead51-night .form-defaultinfo, body.hillhead51-night .form-label .form-shortname, body.hillhead51-night .formsettingheading .form-horizontal, body.hillhead51-night .no-felement.fstatic, body.hillhead51-night .path-backup .backup_progress .backup_stage, body.hillhead51-night .card {
   color: #9CB0C8 !important;
 }
 
@@ -859,6 +859,10 @@ body.hillhead51-night img {
 body.hillhead51-night .content-item-container.unread {
   margin: 0;
   background-color: #274163;
+}
+
+body.hillhead51-night .activity-item .activity-dates {
+  color: #9ea1a4;    
 }
 
 @media (prefers-color-scheme: dark) {

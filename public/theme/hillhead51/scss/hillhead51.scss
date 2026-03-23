@@ -5,6 +5,7 @@ $hillhead-light: lighten($hillhead-blue, 10%);
 $hillhead-main: #344374;
 $hillhead-footer-color: #677297;
 $primary: $hillhead-blue;
+$login-text: #fff;
 
 h1 {
   font-size: 1.5rem;
@@ -154,12 +155,16 @@ nav.navbar a.navbar-brand {
   text-decoration: underline;
 }
 
-.drawer-toggles .drawer-toggler .btn {
-  padding: 20px;
-  background-color: #cce6ea;
-  color: #00434e;
-}
-
 .content-item-container .context-link, .empty-message {
   color: $hillhead-main;      
+}
+
+.drawer, .message-app {
+    background-color: #E6E7EE;  
+}
+
+.drawer-toggles .drawer-toggler .btn {
+    padding: 20px;
+    background-color: $hillhead-blue;
+    color: $login-text;
 }

@@ -47,4 +47,9 @@ nav.navbar button.navbar-toggler {
 .btn-primary:active {
   background-color: #678dc6 !important;
   border-color: rgb(68.1818181818, 113.6363636364, 181.8181818182) !important;
+}
+
+.drawer-toggles .drawer-toggler .btn {
+  background-color: #678dc6;
+  color: #fff;
 }/*# sourceMappingURL=glaucous.css.map */
