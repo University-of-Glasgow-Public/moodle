@@ -881,11 +881,11 @@ abstract class stack_input {
         // we don't need to extract updated values from the instantiated $session explicitly.
         if ('units' == $validationmethod || 'unitsnegpow' == $validationmethod) {
             // The units type changes the display, so we really need the validation method display here.
-            list($valid, $errors, $display) = $this->validation_display($answer, $lvars, $caslines, $additionalvars,
-                $valid, $errors, $castextprocessor, $inertdisplayform, $ilines);
+            list($valid, $errors, $display, $notes) = $this->validation_display($answer, $lvars, $caslines, $additionalvars,
+                $valid, $errors, $castextprocessor, $inertdisplayform, $ilines, $notes);
         } else {
-            list($valid, $errors, $display) = $this->validation_display($answerd, $lvars, $caslines, $additionalvars,
-                $valid, $errors, $castextprocessor, $inertdisplayform, $ilines);
+            list($valid, $errors, $display, $notes) = $this->validation_display($answerd, $lvars, $caslines, $additionalvars,
+                $valid, $errors, $castextprocessor, $inertdisplayform, $ilines, $notes);
         }
 
         // Answers may not contain the ? character.  CAS-strings may, but answers may not.
@@ -1024,14 +1024,15 @@ abstract class stack_input {
             $filterstoapply[] = '990_no_fixing_spaces';
         }
 
+        // Assume single letter variable names = 16.
+        // This needs to come before we split names into single letters.
+        if ($grammarautofixes & self::GRAMMAR_FIX_FUNCTIONS) {
+            $filterstoapply[] = '407_split_unknown_functions';
+        }
+
         // Assume single letter variable names = 4.
         if ($grammarautofixes & self::GRAMMAR_FIX_SINGLE_CHAR) {
             $filterstoapply[] = '410_single_char_vars';
-        }
-
-        // Assume single letter variable names = 16.
-        if ($grammarautofixes & self::GRAMMAR_FIX_FUNCTIONS) {
-            $filterstoapply[] = '441_split_unknown_functions';
         }
 
         // Consolidate M_1 to M1 and so on.
@@ -1212,11 +1213,11 @@ abstract class stack_input {
                     $additionalvars['statement-qv'] = new stack_secure_loader($questionvariables['statement-qv'], 'statement');
                 }
             }
-            if ($this->extraoptions['validator']) {
+            if ((array_key_exists('validator', $this->extraoptions) && $this->extraoptions['validator'])) {
                 $additionalvars['validator'] = stack_ast_container::make_from_teacher_source(
                     $this->extraoptions['validator'].'('.$this->name.')', '', new stack_cas_security(), []);
             }
-            if ($this->extraoptions['feedback']) {
+            if ((array_key_exists('feedback', $this->extraoptions) && $this->extraoptions['feedback'])) {
                 $additionalvars['feedback'] = stack_ast_container::make_from_teacher_source(
                     $this->extraoptions['feedback'].'('.$this->name.')', '', new stack_cas_security(), []);
             }
@@ -1235,7 +1236,7 @@ abstract class stack_input {
      *      string if the input is valid - at least according to this test.
      */
     protected function validation_display($answer, $lvars, $caslines, $additionalvars, $valid, $errors,
-                $castextprocessor, $inertdisplayform, $ilines) {
+                $castextprocessor, $inertdisplayform, $ilines, $notes) {
 
         $display = stack_maxima_format_casstring(htmlentities($this->contents_to_maxima($this->rawcontents), ENT_COMPAT));
         if ($answer->is_correctly_evaluated()) {
@@ -1256,7 +1257,7 @@ abstract class stack_input {
 
         // Guard clause at this point.
         if (!$valid) {
-            return [$valid, $errors, $display];
+            return [$valid, $errors, $display, $notes];
         }
 
         // The "novars" option is only used by the numerical input type.
@@ -1408,7 +1409,7 @@ abstract class stack_input {
             }
         }
 
-        return [$valid, $errors, $display];
+        return [$valid, $errors, $display, $notes];
     }
 
     // phpcs:ignore moodle.Commenting.MissingDocblock.Function
@@ -1422,7 +1423,9 @@ abstract class stack_input {
      * @param string student's current answer to insert into the xhtml.
      * @param string $fieldname the field name to use in the HTML for this input.
      * @param bool $readonly whether the control should be displayed read-only.
-     * @param array $tavalue the value of the teacher's answer for this input.
+     * ISS1436 - As far as I can tell, only equiv input is using $tavalue
+     * and that's expecting a string not an array.
+     * @param string $tavalue the value of the teacher's answer for this input.
      * @return string HTML for this input.
      */
     abstract public function render(stack_input_state $state, $fieldname, $readonly, $tavalue);
@@ -1496,7 +1499,7 @@ abstract class stack_input {
             $feedbackerr .= stack_string('studentValidation_invalidAnswer');
         }
         if ($state->errors) {
-            $feedbackerr .= $state->errors;
+            $feedbackerr .=  ' ' . $state->errors;
         }
         if ($feedbackerr != '') {
             // Bespoke validation messages might contain maths, which needs to be processed.
@@ -1696,6 +1699,18 @@ abstract class stack_input {
      */
     public function summarise_response($name, $state, $response) {
         return $name . ': ' . $this->contents_to_maxima($state->contents) . ' [' . $state->status . ']';
+    }
+
+
+    /**
+     * Provide a summary of the student's response for download as a JSON object.
+     */
+    public function summarise_response_json($name, $state, $response) {
+        $sum = [];
+        $sum['status'] = $state->status;
+        $sum['note']   = $state->note;
+        $sum['value']  = $this->contents_to_maxima($state->contents);
+        return $sum;
     }
 
     /**

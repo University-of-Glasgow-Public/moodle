@@ -15,7 +15,7 @@
 // along with Stack.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This script handles the various deploy/undeploy actions from questiontestrun.php.
+ * STACK API main landing page.
  *
  * @package    qtype_stack
  * @copyright  2023 RWTH Aachen
@@ -26,6 +26,7 @@ require_once('../config.php');
 require_once(__DIR__ . '../../emulation/MoodleEmulation.php');
 // Required to pass Moodle code check. Uses emulation stub.
 require_login();
+use api\controller\DiffController;
 use api\controller\GradingController;
 use api\controller\RenderController;
 use api\controller\TestController;
@@ -47,9 +48,10 @@ $errorhandler = $errormiddleware->getDefaultErrorHandler();
 $errorhandler->forceContentType("application/json");
 $errorhandler->registerErrorRenderer('application/json', ErrorRenderer::class);
 $app->post('/render', RenderController::class);
+$app->post('/diff', DiffController::class);
 $app->post('/test', TestController::class);
 $app->post('/grade', GradingController::class);
 $app->post('/validate', ValidationController::class);
 $app->post('/download', DownloadController::class);
-
+$app->redirect('/{page}', '/sample.php', 301);
 $app->run();

@@ -226,7 +226,7 @@ class stack_textarea_input extends stack_input {
      *      string if the input is valid - at least according to this test.
      */
     protected function validation_display($answer, $lvars, $caslines, $additionalvars,
-                                          $valid, $errors, $castextprocessor, $inertdisplayform, $ilines) {
+                                          $valid, $errors, $castextprocessor, $inertdisplayform, $ilines, $notes) {
 
         $rows = [];
         foreach ($caslines as $index => $cs) {
@@ -278,7 +278,7 @@ class stack_textarea_input extends stack_input {
         }
 
         // Return errors = null to delete error messages from the bottom of the input.
-        return [$valid, null, $display];
+        return [$valid, null, $display, $notes];
     }
 
     /**
@@ -342,21 +342,4 @@ class stack_textarea_input extends stack_input {
 
         return stack_string('teacheranswershow', ['value' => $value, 'display' => $display]);
     }
-
-    // phpcs:ignore moodle.Commenting.MissingDocblock.Function
-    public function get_api_solution($tavalue) {
-        $values = stack_utils::list_to_array($tavalue, false);
-        foreach ($values as $key => $val) {
-            if (trim($val) !== '' ) {
-                $cs = stack_ast_container::make_from_teacher_source($val);
-                $cs->get_valid();
-                $val = $cs->get_inputform(true, 0, true);
-            }
-            $values[$key] = $val;
-        }
-
-        return ['' => implode("\n", $values)];
-    }
-
-
 }
