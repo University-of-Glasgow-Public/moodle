@@ -109,10 +109,18 @@ if ($cfgsettings) {
             $table->captionhide = true;
             $table->attributes['role'] = 'presentation';
             $table->attributes['aria-describedby'] = 'report_desc';
+            $table->attributes['class'] = 'table table-striped table-hover table-bordered';
+            // We don't appear to be able to add style attributes directly to the HEAD section, so we need to do this.
+            $heading1 = new html_table_cell(get_string('column1', 'report_coursediagnostic'));
+            $heading1->attributes['class'] = 'table-secondary';
+            $heading2 = new html_table_cell(get_string('column2', 'report_coursediagnostic'));
+            $heading2->attributes['class'] = 'table-secondary';
+            $heading3 = new html_table_cell(get_string('column3', 'report_coursediagnostic'));
+            $heading3->attributes['class'] = 'table-secondary';
             $tableheadings = [
-                get_string('column1', 'report_coursediagnostic'),
-                get_string('column2', 'report_coursediagnostic'),
-                get_string('column3', 'report_coursediagnostic'),
+                $heading1,
+                $heading2,
+                $heading3,
             ];
             $table->head = $tableheadings;
             $table->data = [];
@@ -120,22 +128,14 @@ if ($cfgsettings) {
             $counter = 1;
             $numtests = count(get_object_vars($SESSION->report_coursediagnosticconfig));
             foreach ($SESSION->report_coursediagnosticconfig as $configkey => $configvalue) {
-
-                // ...@todo - refactor this - making use of some kind of table class
-                // cell3 is passed an initial value, whereas cell2 isn't - this
-                // is something to do with how Moodle generates table/cell data.
                 $cell1 = new html_table_cell(get_string($configkey, 'report_coursediagnostic'));
                 $cell1->attributes['class'] = 'rightalign ' . $configkey . 'cell';
                 $cell2 = new html_table_cell();
                 $cell2->attributes['class'] = 'leftalign ' . $configkey . 'cell';
                 $cell2->text = get_string('skipped_text', 'report_coursediagnostic');
                 $cell3 = new html_table_cell($configkey);
-                $cell3->style = 'border-left:1px solid #dee2e6;';
-                if ($numtests != $counter) {
-                    $cell3->style .= ' border-bottom:1px solid #dee2e6;';
-                }
                 $cell3->text = '<strong>' . get_string('skipped', 'report_coursediagnostic') . '<strong>';
-                $cell3->attributes['class'] = 'text-center ' . $configkey . 'cell';
+                $cell3->attributes['class'] = 'table-secondary text-center ' . $configkey . 'cell';
                 $tablecells = [];
                 $tablecells[] = $cell1;
                 $tmptext = '';
@@ -179,7 +179,7 @@ if ($cfgsettings) {
                     }
 
                     $cell3->text = '<strong>' . get_string('failtext', 'report_coursediagnostic') . '</strong>';
-                    $cell3->attributes['class'] = 'alert-warning text-center ' . $configkey . 'cell';
+                    $cell3->attributes['class'] = 'table-warning text-center ' . $configkey . 'cell';
 
                     // If our test has instead passed, clear and overwrite...
                     if ((isset($cachedata[0][$configkey]) && !is_array($cachedata[0][$configkey]) && ($cachedata[0][$configkey]))
@@ -206,7 +206,7 @@ if ($cfgsettings) {
 
                         $cell2->text = $tmptext;
                         $cell3->text = '<strong>' . get_string('passtext', 'report_coursediagnostic') . '</strong>';
-                        $cell3->attributes['class'] = 'alert-success text-center ' . $configkey . 'cell';
+                        $cell3->attributes['class'] = 'table-success text-center ' . $configkey . 'cell';
                     }
 
                 }
