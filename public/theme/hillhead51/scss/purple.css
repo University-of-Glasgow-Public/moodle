@@ -50,6 +50,7 @@ nav.navbar button.navbar-toggler {
 }
 
 .drawer-toggles .drawer-toggler .btn {
+  padding: 20px;
   background-color: #5B4D94;
   color: #fff;
 }/*# sourceMappingURL=purple.css.map */

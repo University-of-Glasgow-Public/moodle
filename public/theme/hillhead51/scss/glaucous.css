@@ -50,6 +50,7 @@ nav.navbar button.navbar-toggler {
 }
 
 .drawer-toggles .drawer-toggler .btn {
+  padding: 20px;
   background-color: #678dc6;
   color: #fff;
 }/*# sourceMappingURL=glaucous.css.map */
