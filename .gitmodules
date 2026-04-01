@@ -1,0 +1,6 @@
+[submodule "public/blocks/newgu_spdetails"]
+	path = public/blocks/newgu_spdetails
+	url = https://github.com/University-of-Glasgow-Public/moodle-blocks_newgu_spdetails.git
+[submodule "public/local/gugrades"]
+	path = public/local/gugrades
+	url = https://github.com/University-of-Glasgow-Public/moodle-local_gugrades
