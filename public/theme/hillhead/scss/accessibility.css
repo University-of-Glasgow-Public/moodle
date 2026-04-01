@@ -1,0 +1,1367 @@
+.accessibility-tools .block-body {
+  padding-top: 0;
+}
+
+body.hillhead-font-comic {
+  font-family: "Hillhead Comic", "Chalkboard", "Comic Sans", "Comic Sans MS", sans-serif !important;
+}
+
+body.hillhead-font-modern {
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
+}
+
+body.hillhead-font-classic {
+  font-family: "Palatino", "Times New Roman", serif !important;
+}
+
+body.hillhead-font-mono {
+  font-family: "Hillhead Mono", "Menlo", "Courier New", monospace !important;
+}
+
+body.hillhead-font-dyslexic {
+  font-family: "OpenDyslexic", "Helvetica", "Arial", sans-serif !important;
+}
+
+body.hillhead-size-120,
+body.hillhead-size-120 .assessments-overview-container h2,
+body.hillhead-size-120 .assessments-overview-container h3,
+body.hillhead-size-120 .assessments-details-container h3,
+body.hillhead-size-120 .assessments-details-container button,
+body.hillhead-size-120 .return-assessments-text,
+body.hillhead-size-120 .subcategory-details-container,
+body.hillhead-size-120 #assessmentsDue-container h3 {
+  font-size: 120%;
+}
+
+body.hillhead-size-140,
+body.hillhead-size-140 .assessments-overview-container h2,
+body.hillhead-size-140 .assessments-overview-container h3,
+body.hillhead-size-140 .assessments-details-container h3,
+body.hillhead-size-140 .assessments-details-container button,
+body.hillhead-size-140 .return-assessments-text,
+body.hillhead-size-140 .subcategory-details-container,
+body.hillhead-size-140 #assessmentsDue-container h3 {
+  font-size: 140%;
+}
+
+body.hillhead-size-160,
+body.hillhead-size-160 .assessments-overview-container h2,
+body.hillhead-size-160 .assessments-overview-container h3,
+body.hillhead-size-160 .assessments-details-container h3,
+body.hillhead-size-160 .assessments-details-container button,
+body.hillhead-size-160 .return-assessments-text,
+body.hillhead-size-160 .subcategory-details-container,
+body.hillhead-size-160 #assessmentsDue-container h3 {
+  font-size: 160%;
+}
+
+body.hillhead-size-180,
+body.hillhead-size-180 .assessments-overview-container h2,
+body.hillhead-size-180 .assessments-overview-container h3,
+body.hillhead-size-180 .assessments-details-container h3,
+body.hillhead-size-180 .assessments-details-container button,
+body.hillhead-size-180 .return-assessments-text,
+body.hillhead-size-180 .subcategory-details-container,
+body.hillhead-size-180 #assessmentsDue-container h3 {
+  font-size: 180%;
+}
+
+body.hillhead-size-120 .choosercontainer #chooseform .option label, body.hillhead-size-140 .choosercontainer #chooseform .option label, body.hillhead-size-160 .choosercontainer #chooseform .option label, body.hillhead-size-180 .choosercontainer #chooseform .option label {
+  font-size: inherit;
+}
+
+body.hillhead-size-120 .choosercontainer #chooseform .option .typename, body.hillhead-size-140 .choosercontainer #chooseform .option .typename, body.hillhead-size-160 .choosercontainer #chooseform .option .typename, body.hillhead-size-180 .choosercontainer #chooseform .option .typename {
+  width: inherit;
+  padding-left: 0.5em;
+}
+
+body.hillhead-size-120 .choosercontainer #chooseform .option .modicon, body.hillhead-size-140 .choosercontainer #chooseform .option .modicon, body.hillhead-size-160 .choosercontainer #chooseform .option .modicon, body.hillhead-size-180 .choosercontainer #chooseform .option .modicon {
+  display: none;
+}
+
+body.hillhead-spacing * {
+  line-height: 2rem;
+}
+
+body.hillhead-contrast-yb {
+  background: #000 !important;
+}
+
+body.hillhead-contrast-yb:not(.gugrades) *:not([class^=ally]) {
+  background: #000 !important;
+  color: #ee6;
+  border-color: #ee6 !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+}
+
+body.hillhead-contrast-yb video, .vjs-big-play-button {
+  z-index: 1;
+}
+
+body.hillhead-contrast-yb nav.navbar.fixed-top {
+  background-color: #000 !important;
+}
+
+body.hillhead-contrast-yb .primary-navigation > nav > ul > li > a.nav-link,
+.navbar-light .navbar-nav .nav-link,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:active,
+.input-group .mr-2,
+.navbar-nav > div,
+.editmode-switch-form,
+.text-center p-2 {
+  color: #ee6 !important;
+}
+
+body.hillhead-contrast-yb #user-menu-toggle, body.hillhead-contrast-yb #page-footer .hillheadFooterLinks li a {
+  color: #ee6 !important;
+}
+
+body.hillhead-contrast-yb .primary-navigation .moremenu .nav-link.active,
+body.hillhead-contrast-yb .primary-navigation .moremenu .nav-link:hover,
+body.hillhead-contrast-yb .btn-primary:hover {
+  background-color: #000 !important;
+  border-bottom-color: #ee6 !important;
+}
+
+body.hillhead-contrast-yb .block {
+  padding: 19px;
+}
+
+body.hillhead-contrast-yb .block-header {
+  border-bottom: 1px solid #000;
+}
+
+body.hillhead-contrast-yb .card.accessibility-tools {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+
+body.hillhead-contrast-yb .video-js,
+body.hillhead-contrast-yb .vjs-poster,
+body.hillhead-contrast-yb .vjs-video,
+body.hillhead-contrast-yb .vjs-text-track-display,
+body.hillhead-contrast-yb .vjs-text-track-display > div {
+  background: transparent !important;
+}
+
+body.hillhead-contrast-yb.path-mod-quiz #mod_quiz_navblock .qnbutton.complete .trafficlight,
+body.hillhead-contrast-yb.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved .trafficlight,
+body.hillhead-contrast-yb.path-mod-quiz #mod_quiz_navblock .qnbutton.requiresgrading .trafficlight {
+  background-color: #ee6;
+}
+
+body.hillhead-contrast-yb .activityiconcontainer .activityicon, body.hillhead-contrast-yb .activityiconcontainer .icon {
+  filter: brightness(1) invert(0) !important;
+}
+
+body.hillhead-contrast-yb .activityiconcontainer .activityicon, body.hillhead-contrast-yb .activityiconcontainer .icon {
+  filter: brightness(1) invert(0) !important;
+  background-color: #ee6 !important;
+}
+
+body.hillhead-contrast-by {
+  background: #ee6 !important;
+}
+
+body.hillhead-contrast-by:not(.gugrades) *:not([class^=ally]) {
+  background: #ee6 !important;
+  color: #111;
+  border-color: #111 !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+}
+
+body.hillhead-contrast-by video, .vjs-big-play-button {
+  z-index: 1;
+}
+
+body.hillhead-contrast-by nav.navbar.fixed-top {
+  background-color: #ee6 !important;
+}
+
+body.hillhead-contrast-by .primary-navigation > nav > ul > li > a.nav-link,
+.navbar-light .navbar-nav .nav-link,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:active,
+.input-group .mr-2,
+.navbar-nav > div,
+.editmode-switch-form,
+.text-center p-2 {
+  color: #111 !important;
+}
+
+body.hillhead-contrast-by #user-menu-toggle, body.hillhead-contrast-by #page-footer .hillheadFooterLinks li a {
+  color: #111 !important;
+}
+
+body.hillhead-contrast-by .primary-navigation .moremenu .nav-link.active,
+body.hillhead-contrast-by .primary-navigation .moremenu .nav-link:hover,
+body.hillhead-contrast-by .btn-primary:hover {
+  background-color: #ee6 !important;
+  border-bottom-color: #111 !important;
+}
+
+body.hillhead-contrast-by .block {
+  padding: 19px;
+}
+
+body.hillhead-contrast-by .block-header {
+  border-bottom: 1px solid #ee6;
+}
+
+body.hillhead-contrast-by .card.accessibility-tools {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+
+body.hillhead-contrast-by .video-js,
+body.hillhead-contrast-by .vjs-poster,
+body.hillhead-contrast-by .vjs-video,
+body.hillhead-contrast-by .vjs-text-track-display,
+body.hillhead-contrast-by .vjs-text-track-display > div {
+  background: transparent !important;
+}
+
+body.hillhead-contrast-by.path-mod-quiz #mod_quiz_navblock .qnbutton.complete .trafficlight,
+body.hillhead-contrast-by.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved .trafficlight,
+body.hillhead-contrast-by.path-mod-quiz #mod_quiz_navblock .qnbutton.requiresgrading .trafficlight {
+  background-color: #111;
+}
+
+body.hillhead-contrast-by .activityiconcontainer .activityicon, body.hillhead-contrast-by .activityiconcontainer .icon {
+  filter: brightness(1) invert(0) !important;
+}
+
+body.hillhead-contrast-wg {
+  background: #666 !important;
+}
+
+body.hillhead-contrast-wg:not(.gugrades) *:not([class^=ally]) {
+  background: #666 !important;
+  color: #eee;
+  border-color: #eee !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+}
+
+body.hillhead-contrast-wg video, .vjs-big-play-button {
+  z-index: 1;
+}
+
+body.hillhead-contrast-wg nav.navbar.fixed-top {
+  background-color: #666 !important;
+}
+
+body.hillhead-contrast-wg .primary-navigation > nav > ul > li > a.nav-link,
+.navbar-light .navbar-nav .nav-link,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:active,
+.input-group .mr-2,
+.navbar-nav > div,
+.editmode-switch-form,
+.text-center p-2 {
+  color: #eee !important;
+}
+
+body.hillhead-contrast-wg #user-menu-toggle, body.hillhead-contrast-wg #page-footer .hillheadFooterLinks li a {
+  color: #eee !important;
+}
+
+body.hillhead-contrast-wg .primary-navigation .moremenu .nav-link.active,
+body.hillhead-contrast-wg .primary-navigation .moremenu .nav-link:hover,
+body.hillhead-contrast-wg .btn-primary:hover {
+  background-color: #666 !important;
+  border-bottom-color: #eee !important;
+}
+
+body.hillhead-contrast-wg .block {
+  padding: 19px;
+}
+
+body.hillhead-contrast-wg .block-header {
+  border-bottom: 1px solid #666;
+}
+
+body.hillhead-contrast-wg .card.accessibility-tools {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+
+body.hillhead-contrast-wg .video-js,
+body.hillhead-contrast-wg .vjs-poster,
+body.hillhead-contrast-wg .vjs-video,
+body.hillhead-contrast-wg .vjs-text-track-display,
+body.hillhead-contrast-wg .vjs-text-track-display > div {
+  background: transparent !important;
+}
+
+body.hillhead-contrast-wg.path-mod-quiz #mod_quiz_navblock .qnbutton.complete .trafficlight,
+body.hillhead-contrast-wg.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved .trafficlight,
+body.hillhead-contrast-wg.path-mod-quiz #mod_quiz_navblock .qnbutton.requiresgrading .trafficlight {
+  background-color: #eee;
+}
+
+body.hillhead-contrast-wg .activityiconcontainer .activityicon, body.hillhead-contrast-wg .activityiconcontainer .icon {
+  filter: brightness(1) invert(0) !important;
+}
+
+body.hillhead-contrast-bb {
+  background: #B9D9EE !important;
+}
+
+body.hillhead-contrast-bb:not(.gugrades) *:not([class^=ally]) {
+  background: #B9D9EE !important;
+  color: #111;
+  border-color: #111 !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+}
+
+body.hillhead-contrast-bb video, .vjs-big-play-button {
+  z-index: 1;
+}
+
+body.hillhead-contrast-bb nav.navbar.fixed-top {
+  background-color: #B9D9EE !important;
+}
+
+body.hillhead-contrast-bb .primary-navigation > nav > ul > li > a.nav-link,
+.navbar-light .navbar-nav .nav-link,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:active,
+.input-group .mr-2,
+.navbar-nav > div,
+.editmode-switch-form,
+.text-center p-2 {
+  color: #111 !important;
+}
+
+body.hillhead-contrast-bb #user-menu-toggle, body.hillhead-contrast-bb #page-footer .hillheadFooterLinks li a {
+  color: #111 !important;
+}
+
+body.hillhead-contrast-bb .primary-navigation .moremenu .nav-link.active,
+body.hillhead-contrast-bb .primary-navigation .moremenu .nav-link:hover,
+body.hillhead-contrast-bb .btn-primary:hover {
+  background-color: #B9D9EE !important;
+  border-bottom-color: #111 !important;
+}
+
+body.hillhead-contrast-bb .block {
+  padding: 19px;
+}
+
+body.hillhead-contrast-bb .block-header {
+  border-bottom: 1px solid #B9D9EE;
+}
+
+body.hillhead-contrast-bb .card.accessibility-tools {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+
+body.hillhead-contrast-bb .video-js,
+body.hillhead-contrast-bb .vjs-poster,
+body.hillhead-contrast-bb .vjs-video,
+body.hillhead-contrast-bb .vjs-text-track-display,
+body.hillhead-contrast-bb .vjs-text-track-display > div {
+  background: transparent !important;
+}
+
+body.hillhead-contrast-bb.path-mod-quiz #mod_quiz_navblock .qnbutton.complete .trafficlight,
+body.hillhead-contrast-bb.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved .trafficlight,
+body.hillhead-contrast-bb.path-mod-quiz #mod_quiz_navblock .qnbutton.requiresgrading .trafficlight {
+  background-color: #111;
+}
+
+body.hillhead-contrast-bb .activityiconcontainer .activityicon, body.hillhead-contrast-bb .activityiconcontainer .icon {
+  filter: brightness(1) invert(0) !important;
+}
+
+body.hillhead-contrast-br {
+  background: #EEB9B9 !important;
+}
+
+body.hillhead-contrast-br:not(.gugrades) *:not([class^=ally]) {
+  background: #EEB9B9 !important;
+  color: #111;
+  border-color: #111 !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+}
+
+body.hillhead-contrast-br video, .vjs-big-play-button {
+  z-index: 1;
+}
+
+body.hillhead-contrast-br nav.navbar.fixed-top {
+  background-color: #EEB9B9 !important;
+}
+
+body.hillhead-contrast-br .primary-navigation > nav > ul > li > a.nav-link,
+.navbar-light .navbar-nav .nav-link,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:active,
+.input-group .mr-2,
+.navbar-nav > div,
+.editmode-switch-form,
+.text-center p-2 {
+  color: #111 !important;
+}
+
+body.hillhead-contrast-br #user-menu-toggle, body.hillhead-contrast-br #page-footer .hillheadFooterLinks li a {
+  color: #111 !important;
+}
+
+body.hillhead-contrast-br .primary-navigation .moremenu .nav-link.active,
+body.hillhead-contrast-br .primary-navigation .moremenu .nav-link:hover,
+body.hillhead-contrast-br .btn-primary:hover {
+  background-color: #EEB9B9 !important;
+  border-bottom-color: #111 !important;
+}
+
+body.hillhead-contrast-br .block {
+  padding: 19px;
+}
+
+body.hillhead-contrast-br .block-header {
+  border-bottom: 1px solid #EEB9B9;
+}
+
+body.hillhead-contrast-br .card.accessibility-tools {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+
+body.hillhead-contrast-br .video-js,
+body.hillhead-contrast-br .vjs-poster,
+body.hillhead-contrast-br .vjs-video,
+body.hillhead-contrast-br .vjs-text-track-display,
+body.hillhead-contrast-br .vjs-text-track-display > div {
+  background: transparent !important;
+}
+
+body.hillhead-contrast-br.path-mod-quiz #mod_quiz_navblock .qnbutton.complete .trafficlight,
+body.hillhead-contrast-br.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved .trafficlight,
+body.hillhead-contrast-br.path-mod-quiz #mod_quiz_navblock .qnbutton.requiresgrading .trafficlight {
+  background-color: #111;
+}
+
+body.hillhead-contrast-br .activityiconcontainer .activityicon, body.hillhead-contrast-br .activityiconcontainer .icon {
+  filter: brightness(1) invert(0) !important;
+}
+
+body.hillhead-contrast-bw {
+  background: #f6f6f6 !important;
+}
+
+body.hillhead-contrast-bw:not(.gugrades) *:not([class^=ally]) {
+  background: #f6f6f6 !important;
+  color: #111;
+  border-color: #111 !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+}
+
+body.hillhead-contrast-bw video, .vjs-big-play-button {
+  z-index: 1;
+}
+
+body.hillhead-contrast-bw nav.navbar.fixed-top {
+  background-color: #f6f6f6 !important;
+}
+
+body.hillhead-contrast-bw .primary-navigation > nav > ul > li > a.nav-link,
+.navbar-light .navbar-nav .nav-link,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:active,
+.input-group .mr-2,
+.navbar-nav > div,
+.editmode-switch-form,
+.text-center p-2 {
+  color: #111 !important;
+}
+
+body.hillhead-contrast-bw #user-menu-toggle, body.hillhead-contrast-bw #page-footer .hillheadFooterLinks li a {
+  color: #111 !important;
+}
+
+body.hillhead-contrast-bw .primary-navigation .moremenu .nav-link.active,
+body.hillhead-contrast-bw .primary-navigation .moremenu .nav-link:hover,
+body.hillhead-contrast-bw .btn-primary:hover {
+  background-color: #f6f6f6 !important;
+  border-bottom-color: #111 !important;
+}
+
+body.hillhead-contrast-bw .block {
+  padding: 19px;
+}
+
+body.hillhead-contrast-bw .block-header {
+  border-bottom: 1px solid #f6f6f6;
+}
+
+body.hillhead-contrast-bw .card.accessibility-tools {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+
+body.hillhead-contrast-bw .video-js,
+body.hillhead-contrast-bw .vjs-poster,
+body.hillhead-contrast-bw .vjs-video,
+body.hillhead-contrast-bw .vjs-text-track-display,
+body.hillhead-contrast-bw .vjs-text-track-display > div {
+  background: transparent !important;
+}
+
+body.hillhead-contrast-bw.path-mod-quiz #mod_quiz_navblock .qnbutton.complete .trafficlight,
+body.hillhead-contrast-bw.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved .trafficlight,
+body.hillhead-contrast-bw.path-mod-quiz #mod_quiz_navblock .qnbutton.requiresgrading .trafficlight {
+  background-color: #111;
+}
+
+body.hillhead-contrast-bw .activityiconcontainer .activityicon, body.hillhead-contrast-bw .activityiconcontainer .icon {
+  filter: brightness(1) invert(0) !important;
+}
+
+body.hillhead-contrast-wb {
+  background: #111 !important;
+}
+
+body.hillhead-contrast-wb:not(.gugrades) *:not([class^=ally]) {
+  background: #111 !important;
+  color: #f6f6f6;
+  border-color: #f6f6f6 !important;
+  border-radius: 0 !important;
+  text-shadow: none !important;
+}
+
+body.hillhead-contrast-wb video, .vjs-big-play-button {
+  z-index: 1;
+}
+
+body.hillhead-contrast-wb nav.navbar.fixed-top {
+  background-color: #111 !important;
+}
+
+body.hillhead-contrast-wb .primary-navigation > nav > ul > li > a.nav-link,
+.navbar-light .navbar-nav .nav-link,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:active,
+.input-group .mr-2,
+.navbar-nav > div,
+.editmode-switch-form,
+.text-center p-2 {
+  color: #f6f6f6 !important;
+}
+
+body.hillhead-contrast-wb #user-menu-toggle, body.hillhead-contrast-wb #page-footer .hillheadFooterLinks li a {
+  color: #f6f6f6 !important;
+}
+
+body.hillhead-contrast-wb .primary-navigation .moremenu .nav-link.active,
+body.hillhead-contrast-wb .primary-navigation .moremenu .nav-link:hover,
+body.hillhead-contrast-wb .btn-primary:hover {
+  background-color: #111 !important;
+  border-bottom-color: #f6f6f6 !important;
+}
+
+body.hillhead-contrast-wb .block {
+  padding: 19px;
+}
+
+body.hillhead-contrast-wb .block-header {
+  border-bottom: 1px solid #111;
+}
+
+body.hillhead-contrast-wb .card.accessibility-tools {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+
+body.hillhead-contrast-wb .video-js,
+body.hillhead-contrast-wb .vjs-poster,
+body.hillhead-contrast-wb .vjs-video,
+body.hillhead-contrast-wb .vjs-text-track-display,
+body.hillhead-contrast-wb .vjs-text-track-display > div {
+  background: transparent !important;
+}
+
+body.hillhead-contrast-wb.path-mod-quiz #mod_quiz_navblock .qnbutton.complete .trafficlight,
+body.hillhead-contrast-wb.path-mod-quiz #mod_quiz_navblock .qnbutton.answersaved .trafficlight,
+body.hillhead-contrast-wb.path-mod-quiz #mod_quiz_navblock .qnbutton.requiresgrading .trafficlight {
+  background-color: #f6f6f6;
+}
+
+body.hillhead-contrast-wb .activityiconcontainer .activityicon, body.hillhead-contrast-wb .activityiconcontainer .icon {
+  filter: brightness(1) invert(0) !important;
+}
+
+body.hillhead-contrast-wb .activityiconcontainer .activityicon, body.hillhead-contrast-wb .activityiconcontainer .icon {
+  filter: brightness(1) invert(0) !important;
+  background-color: #fff !important;
+}
+
+body.hillhead-contrast header .navbar-brand {
+  background-image: none;
+}
+
+body.hillhead-contrast header .navbar-brand span.site-name {
+  text-indent: 0;
+}
+
+body.hillhead-contrast.path-mod-quiz #mod_quiz_navblock .thispageholder,
+body.hillhead-contrast.path-mod-quiz #mod_quiz_navblock .trafficlight {
+  background: transparent !important;
+}
+
+.navbar .popover-region-container {
+  top: 2.9rem !important;
+}
+
+.card.accessibility-tools {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+
+.accessibility-tools .accessibility-group h4 {
+  font-size: 1rem !important;
+  font-weight: 500;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e6eb;
+  line-height: 30px !important;
+  padding: 3px 10px;
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
+
+.list-group.accessibility-toggle {
+  margin-bottom: 20px;
+}
+
+body.hillhead-bold * {
+  font-weight: bold !important;
+}
+
+.accessibility-features {
+  margin: 0;
+  padding-left: 0;
+}
+
+.accessibility-features li {
+  display: block;
+  padding-left: 0;
+}
+
+.hh-acc {
+  display: block;
+  line-height: 30px !important;
+  padding: 3px 10px;
+  margin-bottom: 5px;
+}
+
+.hh-acc i {
+  display: inline-block;
+  width: 26px;
+  text-align: center;
+  margin-right: 8px;
+}
+
+#hh-acc-ft-de {
+  font-family: "Hillhead", "Ubuntu", "Trebuchet MS", Arial, sans-serif;
+}
+
+#hh-acc-ft-mo {
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
+}
+
+#hh-acc-ft-cl {
+  font-family: "Palatino", "Times New Roman", serif !important;
+}
+
+#hh-acc-ft-co {
+  font-family: "Hillhead Comic", "Chalkboard", "Comic Sans", "Comic Sans MS", sans-serif !important;
+}
+
+#hh-acc-ft-mn {
+  font-family: "Hillhead Mono", "Menlo", "Courier New", monospace !important;
+}
+
+#hh-acc-ft-dx {
+  font-family: "OpenDyslexic", "Helvetica", "Arial", sans-serif !important;
+}
+
+#hh-acc-fs-10 {
+  font-size: 1rem;
+}
+
+#hh-acc-fs-12 {
+  font-size: 1.2rem;
+}
+
+#hh-acc-fs-14 {
+  font-size: 1.4rem;
+}
+
+#hh-acc-fs-16 {
+  font-size: 1.6rem;
+}
+
+#hh-acc-fs-18 {
+  font-size: 1.8rem;
+}
+
+#hh-acc-th-de, #hh-acc-th-de i {
+  background-color: #EBF1F5 !important;
+  color: #3a3a3a !important;
+}
+
+#hh-acc-th-yb, #hh-acc-th-yb i {
+  background-color: #000 !important;
+  color: #cc0 !important;
+}
+
+#hh-acc-th-by, #hh-acc-th-by i {
+  background-color: #ee6 !important;
+  color: #111 !important;
+}
+
+#hh-acc-th-wg, #hh-acc-th-wg i {
+  background-color: #666 !important;
+  color: #eee !important;
+}
+
+#hh-acc-th-br, #hh-acc-th-br i {
+  background-color: #EEB9B9 !important;
+  color: #111 !important;
+}
+
+#hh-acc-th-bb, #hh-acc-th-bb i {
+  background-color: #B9D9EE !important;
+  color: #111 !important;
+}
+
+#hh-acc-th-bw, #hh-acc-th-bw i {
+  background-color: #f6f6f6 !important;
+  color: #111 !important;
+}
+
+#hh-acc-th-nt, #hh-acc-th-nt i {
+  background-color: #121E30 !important;
+  color: #eee !important;
+}
+
+#hh-acc-th-wb, #hh-acc-th-wb i {
+  background-color: #111 !important;
+  color: #f6f6f6 !important;
+}
+
+#hh-acc-fb-on {
+  font-weight: 700 !important;
+}
+
+#hh-acc-fb-of {
+  font-weight: 300 !important;
+}
+
+.currentlySpeakingHighlight {
+  text-decoration: underline overline !important;
+}
+
+body.hillhead-night, #page-my-index.hillhead-night {
+  background-color: #132030;
+  color: #95B7E6 !important;
+}
+
+body.hillhead-night #page.drawers .main-inner, body.hillhead-night #searchform-navbar {
+  background-color: #274163 !important;
+}
+
+body.hillhead-night .modal-content {
+  background-color: #132030;
+  border-color: #121E30;
+}
+
+body.hillhead-night .modal-header, body.hillhead-night .modal-footer {
+  border-color: #182941;
+}
+
+body.hillhead-night nav.navbar.fixed-top {
+  background-color: #274163 !important;
+  border-bottom-color: #121E30 !important;
+}
+
+body.hillhead-night .secondary-navigation .navigation {
+  background-color: #274163 !important;
+  border-bottom-color: #274163 !important;
+}
+
+body.hillhead-night nav .navbar-nav li.nav-item a.nav-link, body.hillhead-night .secondary-navigation .more-nav .nav-item a.active, body.hillhead-night .empty-message {
+  color: #95B7E6 !important;
+}
+
+body.hillhead-night .secondary-navigation .more-nav {
+  background-color: #182941;
+  border-bottom-color: #121E30 !important;
+}
+
+body.hillhead-night .secondary-navigation .more-nav .nav-item .nav-link, body.hillhead-night .secondary-navigation .more-nav .nav-item a:active {
+  color: #789BCA !important;
+}
+
+body.hillhead-night .secondary-navigation .more-nav .nav-item a:visited {
+  background-color: #274163;
+  border-bottom-color: #121E30 !important;
+}
+
+body.hillhead-night .secondary-navigation .more-nav .nav-item a:hover {
+  background-color: #182941;
+  border-bottom-color: #463c72 !important;
+}
+
+body.hillhead-night #nav-drawer {
+  background-color: #182941;
+  border-right-color: #121E30;
+}
+
+body.hillhead-night .drawer {
+  background-color: #182941 !important;
+}
+
+body.hillhead-night nav.navbar.fixed-top a:hover, body.hillhead-night nav.navbar.fixed-top a:visited, body.hillhead-night .state-visible {
+  background-color: #121E30 !important;
+}
+
+body.hillhead-night nav.navbar.fixed-top ul li a, body.hillhead-night nav.navbar.fixed-top ul li a:hover {
+  color: #789BCA !important;
+}
+
+body.hillhead-night .icon {
+  color: #789BCA;
+}
+
+body.hillhead-night #nav-drawer a {
+  color: #C4D6EE;
+}
+
+body.hillhead-night #nav-drawer h2, body.hillhead-night .message-app .btn-link {
+  color: #789bca;
+}
+
+body.hillhead-night h1:not(page-header-headings), body.hillhead-night h2, body.hillhead-night h3:not(body.hillhead-night .que), body.hillhead-night h4, body.hillhead-night h5, body.hillhead-night h6, body.hillhead-night .message-app a, body.hillhead-night .message-app .btn-linkeff1f3 {
+  color: #617591;
+}
+
+body.hillhead-night div > h1, body.hillhead-night div > h2, body.hillhead-night div > section > h2, body.hillhead-night div > h3, body.hillhead-night div > h5, body.hillhead-night .assessments-details-container, body.hillhead-night .return-assessments-text, body.hillhead-night .subcategory-details-label {
+  color: inherit !important;
+}
+
+body.hillhead-night .accessibility-tools .accessibility-group h4 {
+  color: #95B7E6;
+}
+
+body.hillhead-night .card, body.hillhead-night.path-course-view .course-content > ul > li.section {
+  border-color: #121E30 !important;
+  background-color: #1A2B41;
+}
+
+body.hillhead-night .card .block-header, body.hillhead-night.format-weeks .course-content > ul > li.section .sectionname, body.hillhead-night .block .block-cards .course-summaryitem {
+  border-color: #121E30;
+  background-color: #274163;
+}
+
+body.hillhead-night.format-tiles #page .course-content ul li.section.main[data-section="0"] {
+  border-color: #121E30;
+  background-color: #1A2B41;
+}
+
+body.hillhead-night .card-body, body.hillhead-night .message-app {
+  border-radius: 0.5rem;
+}
+
+body.hillhead-night#page-course-view-topics .course-content ul.topics li.section {
+  background-color: #182941;
+  border-color: #121E30;
+}
+
+body.hillhead-night .course-content > ul > li.section .section-modchooser {
+  border-color: #121E30;
+}
+
+body.hillhead-night .accessibility-tools .accessibility-group h4 {
+  border-color: #121E30;
+  background-color: #274163;
+}
+
+body.hillhead-night #region-main,
+body.hillhead-night#page-user-profile #region-main .description,
+body.hillhead-night.path-course.path-user #region-main .description,
+body.hillhead-night.path-course.path-user #region-main .page-context-header,
+body.hillhead-night .course-content .single-section,
+body.hillhead-night.path-admin #region-main .card-block,
+body.hillhead-night.path-admin #region-main #page-enrol-users #filterform,
+#page-enrol-users body.hillhead-night.path-admin #region-main #filterform {
+  border-color: #121E30;
+  background-color: #1A2B41;
+}
+
+body.hillhead-night #nav-drawer .list-group-item {
+  border-color: #182941;
+  background-color: #121E2D;
+  color: #C4D6EE;
+}
+
+body.hillhead-night .alert, body.hillhead-night .alert a {
+  color: #132030;
+}
+
+body.hillhead-night pre {
+  color: #C4D6EE;
+}
+
+body.hillhead-night .footer-links h4, body.hillhead-night footer h3.glasgow {
+  color: #3F69A0 !important;
+}
+
+body.hillhead-night footer#page-footer p {
+  color: #A6B5CA !important;
+}
+
+body.hillhead-night footer#page-footer a {
+  color: #789BCA !important;
+}
+
+body.hillhead-night a:not(body.hillhead-night .que a):not(body.hillhead-night .btn-primary):not(body.hillhead-night .btn-secondary):not([aria-selected=true]):not(body.hillhead-night .courseindex-item.dimmed.pageitem a), body.hillhead-night a.nav-link, body.hillhead-night .description .course-description-item, body.hillhead-night .dropdown-toggle {
+  color: #95B7E6;
+}
+
+body.hillhead-night .drawercontent li.pageitem[aria-selected=false] > a.courseindex-link {
+  color: inherit !important;
+}
+
+body.hillhead-night .courseindex .courseindex-item.dimmed.pageitem a, body.hillhead-night .subcategory-details-value {
+  color: #fff !important;
+}
+
+body.hillhead-night .description .course-description-item, body.hillhead-night.path-mod .activity-header:not(:empty) {
+  background-color: #121E2D;
+}
+
+body.hillhead-night .nav-tabs {
+  border-color: #274163;
+}
+
+body.hillhead-night .nav-tabs .nav-link {
+  color: #789BCA;
+}
+
+body.hillhead-night .nav-tabs .nav-link.active, body.hillhead-night .nav-tabs .nav-item.show .nav-link, body.hillhead-night .drawer-toggles .drawer-toggler .btn, body.hillhead-night .view-overview-body .list-group .list-group-item {
+  color: #86B1EA !important;
+  background-color: #274163;
+  border-color: #274163;
+}
+
+body.hillhead-night .nav-tabs .nav-link:hover, body.hillhead-night .nav-tabs .nav-link:focus {
+  border-color: #274163;
+}
+
+body.hillhead-night .assessments-details-container .nav-tabs .nav-item .nav-link.active {
+  background-color: #274163;
+}
+
+body.hillhead-night table.grading-details th, body.hillhead-night table.personal-deadline-details th, body.hillhead-night table.grading-details td, body.hillhead-night table.personal-deadline-details, body.hillhead-night td {
+  border-color: #274163;
+}
+
+body.hillhead-night .block-course-overview .courseovbox {
+  border-color: #274163;
+}
+
+body.hillhead-night #page-header .context-header-settings-menu a {
+  color: #C4D6EE;
+}
+
+body.hillhead-night .submissionnotgraded {
+  background-color: #efefef;
+}
+
+body.hillhead-night .drawercontent a {
+  color: #C4D6EE !important;
+}
+
+body.hillhead-night .drawercontent li[aria-selected=false] > a.courseindex-link[aria-selected=true] {
+  color: white !important;
+}
+
+body.hillhead-night .alert {
+  color: #c4d6ee;
+  background-color: #132030;
+}
+
+body.hillhead-night .alert.alert-danger {
+  background-color: #CF6679 !important;
+  border-color: #4D1F20 !important;
+  color: #000 !important;
+}
+
+body.hillhead-night .alert.alert-danger a {
+  color: #000 !important;
+  text-decoration: underline;
+}
+
+body.hillhead-night .alert.alert-danger h3 {
+  color: white;
+}
+
+body.hillhead-night .alert.alert-warning, body.hillhead-night .adminwarning {
+  background-color: #956A31 !important;
+  border-color: #735326 !important;
+  color: white !important;
+}
+
+body.hillhead-night .alert.alert-warning a, body.hillhead-night .adminwarning a {
+  color: white;
+  text-decoration: underline;
+}
+
+body.hillhead-night .alert.alert-info {
+  border-color: #243C62 !important;
+  color: #c4d6ee !important;
+}
+
+body.hillhead-night .alert.alert-info a {
+  color: #c4d6ee;
+  text-decoration: underline;
+}
+
+body.hillhead-night .alert.alert-info h3 {
+  color: #c4d6ee;
+}
+
+body.hillhead-night .alert.alert-success {
+  background-color: #547D44 !important;
+  border-color: #436336 !important;
+  color: #fff !important;
+}
+
+body.hillhead-night .alert-success, body.hillhead-night .environmenttable .ok {
+  background-color: #7465af;
+}
+
+body.hillhead-night.path-mod .automatic-completion-conditions .badge {
+  mix-blend-mode: revert;
+}
+
+body.hillhead-night .alert.alert-success a {
+  color: #A4F284;
+  text-decoration: underline;
+}
+
+body.hillhead-night .alert.alert-success h3 {
+  color: #A4F284;
+}
+
+.alert a.close {
+  text-decoration: none !important;
+}
+
+body.hillhead-night a.close, body.hillhead-night button.close {
+  color: #fff !important;
+}
+
+body.hillhead-night .breadcrumb-item + .breadcrumb-item::before, body.hillhead-night .popover-region-seeall-text, body.hillhead-night .calendar_event_course {
+  color: #274163;
+}
+
+body.hillhead-night .filepicker-filelist, body.hillhead-night .filemanager, body.hillhead-night .filemanager .card {
+  background-color: #fff;
+  color: #132030;
+  border: none !important;
+}
+
+body.hillhead-night .page-item a {
+  border-color: #274163;
+  background-color: transparent;
+}
+
+body.hillhead-night .page-item.active a {
+  background-color: #274163;
+  border-color: #274163;
+}
+
+body.hillhead-night .page-item.disabled span, body.hillhead-night .page-item.disabled .page-link {
+  background: transparent;
+  color: #274163;
+  border-color: #274163;
+}
+
+body.hillhead-night table {
+  border-color: #274162;
+  color: #c4d6ee;
+}
+
+body.hillhead-night .btn-primary, body.hillhead-night .navitem .btn-primary {
+  background-color: #406BAF !important;
+  border-color: #243C62 !important;
+  color: white !important;
+}
+
+body.hillhead-night .btn-secondary {
+  color: white !important;
+}
+
+body.hillhead-night .btn-primary:hover {
+  background-color: #243C62 !important;
+}
+
+body.hillhead-night .btn-success {
+  background-color: #547D44 !important;
+  border-color: #436336 !important;
+  color: #A4F284 !important;
+}
+
+body.hillhead-night .btn-success:hover {
+  background-color: #436336 !important;
+}
+
+body.hillhead-night .btn-warning {
+  background-color: #956A31 !important;
+  border-color: #735326 !important;
+  color: #F6BD70 !important;
+}
+
+body.hillhead-night .btn-warning:hover {
+  background-color: #735326 !important;
+}
+
+body.hillhead-night .btn-danger {
+  background-color: #6B292B !important;
+  border-color: #4D1F20 !important;
+  color: #E57A7E !important;
+}
+
+body.hillhead-night .btn-danger:hover {
+  background-color: #4D1F20 !important;
+}
+
+body.hillhead-night .btn-secondary {
+  background-color: #555658 !important;
+  border-color: #474849 !important;
+  color: white !important;
+}
+
+body.hillhead-night .btn-secondary:hover {
+  background-color: #474849 !important;
+}
+
+body.hillhead-night .btn-info {
+  background-color: #0D6858 !important;
+  border-color: #09453B !important;
+  color: #76CABD !important;
+}
+
+body.hillhead-night .btn-info:hover {
+  background-color: #09453B !important;
+}
+
+body.hillhead-night nav.navbar .input-group-btn .btn-secondary {
+  background-color: #182941 !important;
+  border-color: #121E30 !important;
+  color: #c4d6ee !important;
+}
+
+body.hillhead-night nav.navbar .input-group-btn .btn-secondary:hover {
+  background-color: #121E30 !important;
+}
+
+body.hillhead-night #gridmiddle-column {
+  border-color: #121E30 !important;
+  background-color: #1A2B41 !important;
+}
+
+body.hillhead-night #gridshadebox_content {
+  border-color: #1A2B41 !important;
+  background-color: #121E30 !important;
+}
+
+body.hillhead-night .course-content ul.ctopics li.section .content .toggle, body.hillhead-night .course-content ul.ctopics li.section .content.sectionhidden {
+  background-color: #132030 !important;
+}
+
+body.hillhead-night .tabBar {
+  background-color: #1A2B41;
+  border: 1px solid #121E30;
+}
+
+body.hillhead-night .tabBar li {
+  border-color: #121E30;
+}
+
+body.hillhead-night .tabBar a {
+  color: #789BCA;
+}
+
+body.hillhead-night .mform fieldset {
+  border-bottom-color: #132030;
+}
+
+body.hillhead-night .choosercontainer #chooseform .option label, body.hillhead-night .choosercontainer #chooseform .options {
+  border-bottom-color: #1A2B41;
+}
+
+body.hillhead-night .choosercontainer #chooseform .selected {
+  background-color: #1A2B41;
+}
+
+body.hillhead-night .chooserdialogue .moodle-dialogue-wrap .moodle-dialogue-bd {
+  background-color: #121E30;
+}
+
+body.hillhead-night.jschooser .choosercontainer #chooseform .instruction, body.hillhead-night.jschooser .choosercontainer #chooseform .typesummary {
+  background-color: #1A2B41;
+}
+
+body.hillhead-night .moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd.yui3-widget-hd {
+  color: #C4D6EE;
+}
+
+body.hillhead-night .text-muted, body.hillhead-night a.dimmed, body.hillhead-night a.dimmed:link, body.hillhead-night a.dimmed:visited, body.hillhead-night a.dimmed_text, body.hillhead-night a.dimmed_text:link, body.hillhead-night a.dimmed_text:visited, body.hillhead-night .dimmed_text, body.hillhead-night .dimmed_text a, body.hillhead-night .dimmed_text a:link, body.hillhead-night .dimmed_text a:visited, body.hillhead-night .usersuspended, body.hillhead-night .usersuspended a, body.hillhead-night .usersuspended a:link, body.hillhead-night .usersuspended a:visited, body.hillhead-night .dimmed_category, body.hillhead-night .dimmed_category a, body.hillhead-night .tag_feed .media .muted a, body.hillhead-night #page-admin-qtypes .disabled, body.hillhead-night #page-admin-qbehaviours .disabled, body.hillhead-night #page-admin-plugins #plugins-control-panel .pluginname .componentname, body.hillhead-night #page-admin-plugins #plugins-control-panel .version .versionnumber, body.hillhead-night #page-admin-plugins #plugins-control-panel .notes .requiredby, body.hillhead-night #plugins-check-page .page-description, body.hillhead-night #plugins-check-page #plugins-check .requires-ok, body.hillhead-night #plugins-check-page #plugins-check .displayname .plugindir, body.hillhead-night #plugins-check-page #plugins-check-available-dependencies .displayname .component, body.hillhead-night #page-admin-search .adminpagepath li, body.hillhead-night .block .minicalendar td.weekend, body.hillhead-night .section .activity .stealth, body.hillhead-night .course-content .section-summary .section-summary-activities .activity-count, body.hillhead-night .course-content ul li.section.hidden .sectionname > span, body.hillhead-night .course-content ul li.section.hidden .content > div.summary, body.hillhead-night .course-content ul li.section.hidden .activity .activityinstance, body.hillhead-night #course-category-listings .listitem[data-visible="0"], body.hillhead-night #course-category-listings .listitem[data-visible="0"] > div > a, body.hillhead-night #course-category-listings .listing-pagination-totals.dimmed, body.hillhead-night .fitem.disabled .fp-btn-choose, body.hillhead-night .form-defaultinfo, body.hillhead-night .form-label .form-shortname, body.hillhead-night .formsettingheading .form-horizontal, body.hillhead-night .no-felement.fstatic, body.hillhead-night .path-backup .backup_progress .backup_stage, body.hillhead-night .card {
+  color: #9CB0C8 !important;
+}
+
+body.hillhead-stripstyles i {
+  font-style: normal !important;
+}
+
+body.hillhead-stripstyles strong {
+  font-weight: inherit !important;
+}
+
+body.hillhead-night .bg-white {
+  background: transparent !important;
+}
+
+body.hillhead-night .btn-outline-secondary {
+  color: #c4d6ee;
+  border-color: #c4d6ee;
+}
+
+body.hillhead-night .btn-outline-secondary:hover {
+  background-color: #c4d6ee;
+  border-color: #1A2B41;
+  color: #1A2B41;
+}
+
+body.hillhead-night .dropdown-menu {
+  color: #c4d6ee;
+  border-color: #c4d6ee;
+  background-color: #1A2B41;
+}
+
+body.hillhead-night .dropdown-item {
+  color: #c4d6ee !important;
+}
+
+body.hillhead-night .dropdown-item:hover, body.hillhead-night .dropdown-item:focus {
+  background-color: #132030;
+}
+
+body.hillhead-night #page-footer {
+  border-top-color: #1A2B41;
+}
+
+body.hillhead-night .popover-region-container {
+  color: #c4d6ee;
+  border-color: #c4d6ee;
+  background-color: #1A2B41;
+}
+
+body.hillhead-night .generaltable tbody tr:hover {
+  color: #c4d6ee;
+}
+
+body.hillhead-night .block .block-cards a.coursename,
+body.hillhead-night .block .block-cards span.categoryname,
+body.hillhead-night .block .block-cards .btn-link,
+body.hillhead-night .block .block-cards .progress-text,
+body.hillhead-night .block_recentlyaccesseditems a.dashboard-card small {
+  color: inherit;
+}
+
+body.hillhead-night .courses.frontpage-course-list-all a {
+  text-decoration: underline;
+}
+
+body.hillhead-night .que h3, body.hillhead-night .que div.info {
+  color: #526d91 !important;
+}
+
+body.hillhead-night .que a {
+  color: #5E6A7B !important;
+}
+
+body.hillhead-night .message-app {
+  display: flex;
+  flex-direction: column;
+  background-color: #1A2B41;
+}
+
+body.hillhead-night table.quizreviewsummary th.cell {
+  padding: 1px 0.5em 1px 1em;
+  font-weight: bold;
+  text-align: right;
+  width: 10em;
+  background-color: inherit;
+}
+
+body.hillhead-night table.quizreviewsummary td.cell {
+  padding: 1px 1em 1px 0.5em;
+  text-align: left;
+  background: inherit;
+}
+
+#page-mod-quiz-view.hillhead-night table.quizattemptsummary tr.bestrow td {
+  border-color: #bce8f1;
+  background-color: #555658 !important;
+  color: white;
+}
+
+#page-mod-quiz-view.hillhead-night table.quizattemptsummary a {
+  color: #ced4da;
+  text-decoration: underline;
+}
+
+body.hillhead-night #courseindex > div > div > div > .courseindex-section-title.pageitem a.courseindex-link {
+  color: inherit !important;
+}
+
+body.hillhead-night.path-mod-quiz #mod_quiz_navblock .qnbutton, body.hillhead-night.path-mod-quiz #mod_quiz_navblock .qnbutton.notyetanswered .trafficlight {
+  background-color: #555658;
+}
+
+body.hillhead-night img {
+  filter: brightness(0.8) contrast(1.2);
+}
+
+body.hillhead-night .content-item-container.unread {
+  margin: 0;
+  background-color: #274163;
+}
+
+body.hillhead-night .activity-item .activity-dates {
+  color: #9ea1a4;
+}
+
+@media (prefers-color-scheme: dark) {
+  img {
+    filter: brightness(1) contrast(1);
+  }
+  body.hillhead-night img {
+    filter: brightness(0.8) contrast(1.2);
+  }
+}
+@media (prefers-color-scheme: light) {
+  /* Light theme styles go here */
+}/*# sourceMappingURL=accessibility.css.map */
