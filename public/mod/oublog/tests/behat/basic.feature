@@ -524,6 +524,47 @@ Feature: Test Post and Comment on OUBlog entry
     And I wait to be redirected
     And I should see "Deleted by Admin User"
 
+  @javascript @editor_tiny
+  Scenario: Check deleting post and email
+    Given I create "1" sample posts for blog with id "oublog1"
+    And I log in as "teacher1"
+    And I am on the "Test oublog basics" "oublog activity" page
+    And I should see "Test post 0"
+
+    # Delete a post as teacher1.
+    And I click on "Delete" "link" in the ".oublog-post:nth-child(1) .oublog-post-links" "css_element"
+    And I wait to be redirected
+    And I should see "Select to delete the post"
+    When I click on "Delete and email" "button" in the "Confirm" "dialogue"
+    And I wait to be redirected
+    # Check deleted post details.
+    And I should see "Delete and email"
+    And I switch to the "Message" TinyMCE editor iframe
+    Then I should see "This is a notification to advise you that your Blog post with the following details has been deleted by 'Teacher 1':"
+    And I should see "Subject: Test post 0"
+    And I should see "Blog: Test oublog basics"
+    And I should see "Course: Course 1"
+    And I switch to the main frame
+    And I press "Send and delete"
+    And I wait to be redirected
+    And ".oublog-deleted" "css_element" should exist
+    And ".oublog-post-deletedby" "css_element" should exist
+    And I should see "Deleted by Teacher 1"
+    And "Delete" "link" should not exist in the ".oublog-deleted" "css_element"
+    And I log out
+
+    # Check posts as student1.
+    Given I log in as "student1"
+    And I am on the "Test oublog basics" "oublog activity" page
+    And I should not see "Test post 0"
+    And I log out
+
+    # Check posts as admin.
+    Given I log in as "admin"
+    And I am on the "Test oublog basics" "oublog activity" page
+    And I should see "Test post 0"
+    And I should see "Deleted by Teacher 1"
+
   @javascript
   Scenario: Check deleting comments
     Given I create "1" sample posts for blog with id "oublog1"
@@ -969,3 +1010,120 @@ Feature: Test Post and Comment on OUBlog entry
     And I press "Add post"
     When I am on "Course 2" course homepage
     Then I should see "100%"
+
+  @javascript
+  Scenario: Check tag selectors.
+    Given I log in as "teacher1"
+    And I am on homepage
+    And I am on "Course 1" course homepage
+    When I follow "Test oublog with default tags"
+    And I press "New blog post"
+    And I set the following fields to these values:
+      | Title                      | Teacher1 blog                     |
+      | Message                    | Teacher1 post with default tags 1 |
+      | Tags (separated by commas) |                                   |
+    Then ".autocomplete-dropdown-wrapper .autocomplete-dropdown" "css_element" should be visible
+    And I should see "tag1" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(1)" "css_element"
+    And I should see "0 posts" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(1)" "css_element"
+    And I should see "tag2" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(2)" "css_element"
+    And I should see "0 posts" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(2)" "css_element"
+    And I should see "tag3" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(3)" "css_element"
+    And I should see "0 posts" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(3)" "css_element"
+    And I click on "tag1" "text" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(1)" "css_element"
+    And I should not see "tag1" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(1)" "css_element"
+    And I should see "tag2" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(1)" "css_element"
+    And I should see "tag3" in the ".autocomplete-dropdown-wrapper ul.autocomplete-dropdown li:nth-child(2)" "css_element"
+    And I press "Add post"
+    Then I should see "tag1(1)"
+
+  @javascript
+  Scenario: Check session on saving a post edit
+    Given I log in as "teacher1"
+    And I am on homepage
+    And I am on "Course 1" course homepage
+    And I follow "Test oublog with default tags"
+    And I press "New blog post"
+    And I set the following fields to these values:
+      | Title                      | Teacher1 blog                     |
+      | Message                    | Teacher1 post with default tags 1 |
+      | Tags (separated by commas) |                                   |
+    And I clear the session cookie in oublog
+    When I press "Add post"
+    Then I should see "[Course or activity not accessible. (You are not logged in)]" in the "Post cannot be saved" "dialogue"
+
+  @javascript
+  Scenario: Check the toggle comment warning when editing a post
+    Given the following "activities" exist:
+      | activity | name                      | introduction            | course | idnumber | allowcomments | maxvisibility |
+      | oublog   | Test oublog allow comment | Test oublog description | C1     | oublog10 | 2             | 300           |
+    And I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I follow "Test oublog allow comment"
+    And I press "New blog post"
+    And I should not see "This is necessary in order to prevent spam."
+    When I set the field "allowcomments" to "2"
+    Then I should see "This is necessary in order to prevent spam."
+
+  @javascript @editor_tiny
+  Scenario: Check TinyMCE does not autosave when creating a blog post.
+    Given I log in as "teacher1"
+    And I am on the "Test oublog basics" "oublog activity" page
+    And I press "New blog post"
+    And I set the following fields to these values:
+      | Title                      | Teacher1 blog   |
+      | Message                    | Teacher1 post 1 |
+      | Tags (separated by commas) |                 |
+    And I press "Add post"
+    And I am on the "Test oublog basics" "oublog activity" page
+    And I press "New blog post"
+    When I switch to the "Message" TinyMCE editor iframe
+    Then I should not see "Teacher1 post 1"
+    And I switch to the main frame
+    # Content should be autosaved when reload the page.
+    And I set the following fields to these values:
+      | Title                      | Teacher1 blog   |
+      | Message                    | Teacher1 post 2 |
+      | Tags (separated by commas) |                 |
+    And I reload the page
+    And I switch to the "Message" TinyMCE editor iframe
+    And I should see "Teacher1 post 2"
+    And I switch to the main frame
+    # Content should not be autosaved when cancel the page.
+    And I set the following fields to these values:
+      | Title                      | Teacher1 blog   |
+      | Message                    | Teacher1 post 3 |
+      | Tags (separated by commas) |                 |
+    And I press "Cancel"
+    And I am on the "Test oublog basics" "oublog activity" page
+    And I press "New blog post"
+    And I switch to the "Message" TinyMCE editor iframe
+    And I should not see "Teacher1 post 3"
+
+  @javascript
+  Scenario: Check text format using plain text area when creating a blog post and comment.
+    Given I log in as "admin"
+    And I follow "Preferences" in the user menu
+    And I follow "Editor preferences"
+    And I set the field "Text editor" to "Plain text area"
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    And I am on the "Test oublog basics" "oublog activity" page
+    # Check post.
+    And I press "New blog post"
+    And I set the following fields to these values:
+      | Title             | Test text format post |
+      | Message           | This is content       |
+      | menumessageformat | 4                     |
+    When I press "Add post"
+    And I should see "This is content" in the ".oublog-post-content p" "css_element"
+    And I follow "Edit"
+    Then "//select[contains(@id,'menumessageformat')]/option[contains(@value, '4') and contains(@selected, '')]" "xpath_element" should exist
+    And I press "Cancel"
+    # Check comment.
+    And I follow "Add your comment"
+    And I set the following fields to these values:
+      | Title                    | Test text format comment |
+      | Add your comment         | This is comment          |
+      | menumessagecommentformat | 4                        |
+    And I press "Add comment"
+    And I should see "This is comment" in the ".oublog-comment-content p" "css_element"

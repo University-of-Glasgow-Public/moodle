@@ -132,7 +132,8 @@ function oublog_delete_instance($oublogid) {
     }
 
     if ($oublog->global) {
-        throw new moodle_exception('deleteglobalblog', 'oublog');
+        debugging("Skipping deletion of global blog (ID: {$oublogid}). Global blogs cannot be deleted.", DEBUG_DEVELOPER);
+        return false; // Prevent cron failure, but do not delete the blog.
     }
 
     if ($instances = $DB->get_records('oublog_instances', array('oublogid'=>$oublog->id))) {
@@ -168,16 +169,15 @@ function oublog_delete_instance($oublogid) {
         throw new moodle_exception('invalidcoursemodule');
     }
 
-    // Fulltext search data
     require_once(dirname(__FILE__).'/locallib.php');
-    if (oublog_search_installed()) {
-        local_ousearch_document::delete_module_instance_data($cm);
-    }
 
     oublog_grade_item_delete($oublog);
 
     // Delete event in calendar when deleting activity.
-    \core_completion\api::update_completion_date_event($cm->id, 'oublog', $oublogid, null);
+    if (isset($cm)) {
+        \core_completion\api::update_completion_date_event($cm->id, 'oublog', $oublogid, null);
+    }
+
 
     // oublog
     return($DB->delete_records('oublog', array('id'=>$oublog->id)));
@@ -270,7 +270,8 @@ function oublog_print_recent_activity($course, $isteacher, $timestart) {
 
     include_once('locallib.php');
 
-    $sql = "SELECT i.oublogid, p.id AS postid, p.*, u.firstname, u.lastname, u.email, u.idnumber, i.userid
+    $sql = "SELECT i.oublogid, p.id AS postid, p.*, u.firstname, u.lastname, u.email, u.idnumber,
+       u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename, i.userid
             FROM {oublog_posts} p
                 INNER JOIN {oublog_instances} i ON p.oubloginstancesid = i.id
                 INNER JOIN {oublog} b ON i.oublogid = b.id
@@ -354,7 +355,8 @@ function oublog_print_recent_activity($course, $isteacher, $timestart) {
 function oublog_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid=0, $groupid=0) {
     global $CFG, $COURSE, $DB;
 
-    $sql = "SELECT i.oublogid, p.id AS postid, p.*, u.firstname, u.lastname, u.email, u.idnumber, u.picture, u.imagealt, i.userid
+    $sql = "SELECT i.oublogid, p.id AS postid, p.*, u.firstname, u.lastname, u.email, u.idnumber, u.picture, u.imagealt,
+       u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename, i.userid
             FROM {oublog_posts} p
                 INNER JOIN {oublog_instances} i ON p.oubloginstancesid = i.id
                 INNER JOIN {oublog} b ON i.oublogid = b.id
@@ -383,6 +385,7 @@ function oublog_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
             continue;
         }
 
+        require_once(dirname(__FILE__).'/locallib.php');
         $groupmode = oublog_get_activity_groupmode($cm, $COURSE);
 
         if ($groupmode) {
@@ -422,6 +425,10 @@ function oublog_get_recent_mod_activity(&$activities, &$index, $timestart, $cour
         $tmpactivity->user->picture   = $blog->picture;
         $tmpactivity->user->imagealt  = $blog->imagealt;
         $tmpactivity->user->email     = $blog->email;
+        $tmpactivity->user->firstnamephonetic  = $blog->firstnamephonetic;
+        $tmpactivity->user->lastnamephonetic  = $blog->lastnamephonetic;
+        $tmpactivity->user->middlename  = $blog->middlename;
+        $tmpactivity->user->alternatename  = $blog->alternatename;
 
         $activities[$index++] = $tmpactivity;
     }
@@ -449,7 +456,7 @@ function oublog_print_recent_mod_activity($activity, $courseid, $detail, $modnam
 
     echo '<div class="title">';
     if ($detail) {
-        echo "<img src=\"".$OUTPUT->image_url('icon', $activity->type)."\" class=\"icon\" alt=\"".s($activity->title)."\" />";
+        echo "<img src=\"".$OUTPUT->image_url('monologo', $activity->type)."\" class=\"icon\" alt=\"".s($activity->title)."\" />";
     }
     echo "<a href=\"$CFG->wwwroot/mod/oublog/viewpost.php?post={$activity->content->postid}\">{$activity->content->title}</a>";
     echo '</div>';
@@ -462,138 +469,6 @@ function oublog_print_recent_mod_activity($activity, $courseid, $detail, $modnam
     echo "</td></tr></table>";
 
     return;
-}
-
-
-/**
- * Obtains a search document given the ousearch parameters.
- * @param object $document Object containing fields from the ousearch documents table
- * @return mixed False if object can't be found, otherwise object containing the following
- *   fields: ->content, ->title, ->url, ->activityname, ->activityurl
- */
-function oublog_ousearch_get_document($document) {
-    global $CFG, $DB;
-    require_once('locallib.php');
-
-    // Get data
-    if (!($cm=$DB->get_record('course_modules', array('id' => $document->coursemoduleid)))) {
-        return false;
-    }
-    if (!($oublog=$DB->get_record('oublog', array('id' => $cm->instance)))) {
-        return false;
-    }
-    if (!($post=$DB->get_record_sql("
-SELECT
-    p.*,bi.userid
-FROM
-{oublog_posts} p
-    INNER JOIN {oublog_instances} bi ON p.oubloginstancesid=bi.id
-WHERE
-    p.id= ? ", array($document->intref1)))) {
-        return false;
-    }
-
-    $result=new StdClass;
-
-    // Set up activity name and URL
-    $result->activityname=$oublog->name;
-    if ($oublog->global) {
-        $result->activityurl=$CFG->wwwroot.'/mod/oublog/view.php?user='.
-        $document->userid;
-    } else {
-        $result->activityurl=$CFG->wwwroot.'/mod/oublog/view.php?id='.
-        $document->coursemoduleid;
-    }
-
-    // Now do the post details
-    $result->title=$post->title;
-    $result->content=$post->message;
-    $result->url=$CFG->wwwroot.'/mod/oublog/viewpost.php?post='.$document->intref1;
-
-    // Sort out tags for use as extrastrings
-    $taglist=oublog_get_post_tags($post, true);
-    if (count($taglist)!=0) {
-        $result->extrastrings=$taglist;
-    }
-
-    // Post object is used in filter
-    $result->data=$post;
-
-    return $result;
-}
-
-/**
- * Update all documents for ousearch.
- * @param bool $feedback If true, prints feedback as HTML list items
- * @param int $courseid If specified, restricts to particular courseid
- */
-function oublog_ousearch_update_all($feedback=false, $courseid=0) {
-    global $CFG, $DB;
-    if (get_config('local_ousearch', 'ousearchindexingdisabled')) {
-        // Do nothing if the OU Search system is turned off.
-        return;
-    }
-    require_once($CFG->dirroot . '/mod/oublog/locallib.php');
-
-    // Get all existing blogs as $cm objects (which we are going to need to
-    // do the updates). get_records is ok here because we're only taking a
-    // few fields and there's unlikely to be more than a few thousand blog
-    // instances [user blogs all use a single course-module]
-    $coursemodules=$DB->get_records_sql("
-SELECT
-    cm.id,cm.course,cm.instance
-FROM
-{modules} m
-    INNER JOIN {course_modules} cm ON m.id=cm.module
-WHERE
-    m.name='oublog'".($courseid ? " AND cm.course= ? " : ""), array($courseid));
-    if (!$coursemodules) {
-        $coursemodules = array();
-    }
-
-    // Display info and loop around each coursemodule
-    if ($feedback) {
-        print '<li><strong>'.count($coursemodules).'</strong> instances to process.</li>';
-        $dotcount=0;
-    }
-    $posts=0; $instances=0;
-    foreach ($coursemodules as $coursemodule) {
-
-        // Get all the posts that aren't deleted
-        $rs=$DB->get_recordset_sql("
-SELECT
-    p.id,p.title,p.message,p.groupid,i.userid
-FROM
-{oublog_instances} i
-    INNER JOIN {oublog_posts} p ON p.oubloginstancesid=i.id
-WHERE
-    p.deletedby IS NULL AND i.oublogid= ? ", array($coursemodule->instance));
-
-        foreach ($rs as $post) {
-            oublog_search_update($post, $coursemodule);
-
-            // Add to count and do user feedback every 100 posts
-            $posts++;
-            if ($feedback && ($posts%100)==0) {
-                if ($dotcount==0) {
-                    print '<li>';
-                }
-                print '.';
-                $dotcount++;
-                if ($dotcount == 20 || $instances == count($coursemodules)) {
-                    print "done $posts posts ($instances instances)</li>";
-                    $dotcount=0;
-                }
-                flush();
-            }
-        }
-        $rs->close();
-
-        $instances++;
-    }
-    if ($feedback && ($dotcount!=0 || $posts<100)) {
-        print ($dotcount==0?'<li>':'')."done $posts posts ($instances instances)</li>";
-    }
 }
 
 /**
@@ -612,6 +487,8 @@ function oublog_supports($feature) {
         case FEATURE_GROUPS: return true;
         case FEATURE_GRADE_HAS_GRADE: return true;
         case FEATURE_RATE: return true;
+        case FEATURE_MOD_PURPOSE:
+            return MOD_PURPOSE_COLLABORATION;
         default: return null;
     }
 }
@@ -883,7 +760,7 @@ function oublog_get_file_info($browser, $areas, $course, $cm, $context, $fileare
         if (!oublog_can_view_post($post, $USER, $context, $cm, $oublog)) {
             return null;
         }
-    } catch (mod_oublog_exception $e) {
+    } catch (moodle_exception $e) {
         return null;
     }
 
@@ -1594,4 +1471,29 @@ function mod_oublog_core_calendar_provide_event_action(calendar_event $event, \c
         1,
         true
     );
+}
+
+/**
+ * Gets plugin prefs.
+ *
+ * @return array List of prefs that can be set by AJAX
+ */
+function mod_oublog_user_preferences(): array {
+    return [
+        '~^oublog_accordion_.*_open$~' => [
+            'isregex' => true,
+            'type' => PARAM_INT,
+            'null' => NULL_NOT_ALLOWED,
+            'default' => '0',
+            'permissioncallback' => [core_user::class, 'is_current_user'],
+        ],
+        '~^mod_oublog_hidestatsform_.*$~' => [
+            'isregex' => true,
+            'type' => PARAM_INT,
+            'null' => NULL_NOT_ALLOWED,
+            'default' => '0',
+            'choices' => [0, 1],
+            'permissioncallback' => [core_user::class, 'is_current_user'],
+        ],
+    ];
 }

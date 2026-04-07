@@ -531,10 +531,7 @@ function oublog_add_post($post, $cm, $oublog, $course) {
         oublog_update_item_tags($post->oubloginstancesid, $postid, $post->tags, $post->visibility);
     }
 
-    $post->id=$postid; // Needed by the below
-    if (!oublog_search_update($post, $cm)) {
-        return(false);
-    }
+    $post->id = $postid; // Needed by later code in callers (sometimes).
 
     // Inform completion system, if available
     $completion = new completion_info($course);
@@ -614,10 +611,6 @@ function oublog_edit_post($post, $cm) {
     }
 
     if (!$DB->update_record('oublog_posts', $post)) {
-        return(false);
-    }
-
-    if (!oublog_search_update($post, $cm)) {
         return(false);
     }
 
@@ -893,10 +886,10 @@ function oublog_get_post($postid, $canaudit=false) {
                 WHERE c.postid = ? ";
 
         if (!$canaudit) {
-            $sql .= "AND c.deletedby IS NULL ";
+            $sql .= " AND c.deletedby IS NULL ";
         }
 
-        $sql .= "ORDER BY c.timeposted ASC ";
+        $sql .= " ORDER BY c.timeposted ASC ";
 
         $rs = $DB->get_recordset_sql($sql, array($postid));
         foreach ($rs as $comment) {
@@ -1490,10 +1483,10 @@ function oublog_get_links($oublog, $oubloginstance, $context, $cmid = null) {
     if ($canmanagelinks) {
         if ($oublog->global) {
             $html .= '<a href="editlink.php?blog=' . $oublog->id . '&amp;bloginstance=' . $oubloginstance->id .
-                $cmparam .'" class="oublog-links">' . get_string('addlink', 'oublog').'</a>';
+                $cmparam .'" class="oublog-links osep-smallbutton">' . get_string('addlink', 'oublog') . '</a>';
         } else {
             $html .= '<a href="editlink.php?blog=' . $oublog->id .
-                $cmparam . '"  class="oublog-links">' . get_string('addlink', 'oublog').'</a>';
+                $cmparam . '"  class="oublog-links osep-smallbutton">' . get_string('addlink', 'oublog') . '</a>';
         }
     }
 
@@ -1970,47 +1963,6 @@ function oublog_replace_url_param($url, $replacekey, $newvalue=null) {
     return($url);
 }
 
-/** @return True if OU search extension is installed */
-function oublog_search_installed() {
-    return @include_once(dirname(__FILE__).'/../../local/ousearch/searchlib.php');
-}
-
-/**
- * Obtains a search document relating to a particular blog post.
- *
- * @param object $post Post object. Required fields: id (optionally also
- *   groupid, userid save a db query)
- * @param object $cm Course-module object. Required fields: id, course
- * @return ousearch_doument
- */
-function oublog_get_search_document($post, $cm) {
-    global $DB;
-    // Set up 'search document' to refer to this post
-    $doc=new local_ousearch_document();
-    $doc->init_module_instance('oublog', $cm);
-    if (!isset($post->userid) || !isset($post->groupid)) {
-        $results=$DB->get_record_sql("
-SELECT
-    p.groupid,i.userid
-FROM
-{oublog_posts} p
-    INNER JOIN {oublog_instances} i ON p.oubloginstancesid=i.id
-WHERE
-    p.id= ?", array($post->id));
-        if (!$results) {
-            throw new moodle_exception('invalidblogdetails', 'oublog');
-        }
-        $post->userid=$results->userid;
-        $post->groupid=$results->groupid;
-    }
-    if ($post->groupid) {
-        $doc->set_group_id($post->groupid);
-    }
-    $doc->set_user_id($post->userid);
-    $doc->set_int_refs($post->id);
-    return $doc;
-}
-
 /**
  * Obtains tags for a $post object whether or not it currently has them
  * defined in some way. (If they're not defined, uses a database query.)
@@ -2049,34 +2001,6 @@ WHERE
     }
 
     return $taglist;
-}
-
-/**
- * Updates the fulltext search information for a post which is being added or
- * updated.
- * @param object $post Post data, including slashes for database. Must have
- *   fields id,userid,groupid (if applicable), title, message
- * @param object $cm Course-module
- * @return True if search update was successful
- */
-function oublog_search_update($post, $cm) {
-    // Do nothing if OU search is not installed
-    if (!oublog_search_installed()) {
-        return true;
-    }
-
-    // Get search document
-    $doc=oublog_get_search_document($post, $cm);
-
-    // Sort out tags for use as extrastrings
-    $taglist=oublog_get_post_tags($post, true);
-    if (count($taglist)==0) {
-        $taglist=null;
-    }
-
-    // Update information about this post (works ok for add or edit)
-    $doc->update($post->title, $post->message, null, null, $taglist);
-    return true;
 }
 
 function oublog_date($time, $insentence = false) {
@@ -2770,8 +2694,7 @@ function oublog_add_comment_moderated($oublog, $oubloginstance, $post, $comment)
         'commenter' => $commenterhtml,
         'commenttitle' => $comment->title ? $comment->title : '',
         'comment' =>
-            format_text($comment->message, FORMAT_MOODLE,
-            null, $oublog->course),
+            format_text($comment->message, FORMAT_MOODLE),
         'approvelink' => $approvebase . '&amp;approve=1',
         'approvetext' => get_string('moderated_approve', 'oublog'),
         'rejectlink' => $approvebase . '&amp;approve=0',
@@ -2904,9 +2827,10 @@ function oublog_get_post_extranav($post, $link = true, $cmid = null) {
 function oublog_get_master($idshared, $printerror = true) {
     global $DB;
 
-    $sql = 'SELECT b.*
+    $sql = 'SELECT b.*,c.shortname, cm.id as cmid
               FROM {course_modules} cm
               JOIN {oublog} b on cm.instance = b.id
+              JOIN {course} c ON cm.course = c.id
              WHERE cm.idnumber = ?';
 
     // Get masterblog from idshared.
@@ -2936,10 +2860,11 @@ function oublog_get_master($idshared, $printerror = true) {
  */
 function oublog_get_children($idnumber) {
     global $DB;
-    $sql = 'SELECT b.*
+    $sql = 'SELECT b.*, c.shortname, cm.id as cmid
               FROM {course_modules} cm
               JOIN {oublog} b on cm.instance = b.id
               JOIN {modules} m ON cm.module = m.id
+              JOIN {course} c ON cm.course = c.id
              WHERE b.idsharedblog = ?
                AND m.name = ?';
 
@@ -3293,54 +3218,6 @@ class oublog_portfolio_caller extends portfolio_module_caller_base {
     public static function base_supported_formats() {
         return array(PORTFOLIO_FORMAT_FILE, PORTFOLIO_FORMAT_RICHHTML, PORTFOLIO_FORMAT_PLAINHTML);
     }
-}
-
-/**
- * Returns html for a search form for the nav bar
- * @param string $name blog identifier field e.g. id
- * @param string $value blog identifier value e.g. 266
- * @param string $strblogsearch search this blog text
- * @param string $querytext optional search term
- * @param bool $newsearchimage optional param to display a different image..
- * @param int $cmid cmid of shared blog.
- * @returns string html
- */
-function oublog_get_search_form($name, $value, $strblogsearch, $querytext='', $newsearchimage = false, $cmid = null) {
-    if (!oublog_search_installed()) {
-        return '';
-    }
-    global $OUTPUT, $DB;
-
-    // Check if search in shared blog.
-    if ($name == 'id') {
-        $cm = get_coursemodule_from_id('oublog', $value);
-        $oublog = $DB->get_record('oublog', ['id' => $cm->instance]);
-        if ($oublog->individual && $oublog->idsharedblog) {
-            // Get master blog.
-            $masterblog = oublog_get_master($oublog->idsharedblog);
-            // Get cmid of master blog.
-            $cmmaster = get_coursemodule_from_instance('oublog', $masterblog->id);
-            $value = $cmmaster->id;
-            $cmid = $cm->id;
-        }
-    }
-    $out = html_writer::start_tag('form', array('action' => 'search.php', 'method' => 'get'));
-    $out .= html_writer::start_tag('div');
-    $out .= html_writer::tag('label', $strblogsearch . ' ', array('for' => 'oublog_searchquery'));
-    $out .= $OUTPUT->help_icon('searchblogs', 'oublog');
-    $out .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => $name,
-            'value' => $value));
-    $out .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'cmid',
-            'value' => $cmid));
-    $out .= html_writer::empty_tag('input', array('type' => 'text', 'name' => 'query',
-            'id' => 'oublog_searchquery', 'value' => $querytext));
-    $src = ($newsearchimage) ? $OUTPUT->image_url('search_rgb_32px', 'theme_osep') : $OUTPUT->image_url('i/search');
-    $out .= html_writer::empty_tag('input', array('type' => 'image',
-            'id' => 'ousearch_searchbutton', 'alt' => get_string('search'),
-            'title' => get_string('search'), 'src' => $src));
-    $out .= html_writer::end_tag('div');
-    $out .= html_writer::end_tag('form');
-    return $out;
 }
 
 /**
@@ -3825,7 +3702,7 @@ function oublog_stats_output_visitstats($oublog, $cm, $renderer = null, $ajax = 
         $params = array($oublog->id, $filtertime);
         if ($oublog->global || ($oublog->maxvisibility == OUBLOG_VISIBILITY_PUBLIC && !isloggedin())) {
             // Only include visible posts on global blogs and public blogs when not logged in.
-            $sql .= 'AND p.visibility >= ? ';
+            $sql .= ' AND p.visibility >= ? ';
             if (!isloggedin()) {
                 $params[] = OUBLOG_VISIBILITY_PUBLIC;
             } else {
@@ -4636,7 +4513,8 @@ function oublog_stats_output_myparticipation($oublog, $cm, $renderer, $course, $
         'user' => $participation->user->id
     );
     $url = new moodle_url('/mod/oublog/userparticipation.php', $params);
-    $viewmyparticipation = html_writer::link($url, get_string('viewmyparticipation', 'oublog'));
+    $viewmyparticipation = html_writer::link($url, get_string('viewmyparticipation', 'oublog'),
+        ['class' => 'osep-smallbutton']);
     $content .= html_writer::start_tag('div', array('class' => 'oublog-post-content'));
     $content .= html_writer::tag('h3', $viewmyparticipation, array('class' => 'oublog-post-title'));
     $content .= html_writer::end_tag('div');
@@ -4714,7 +4592,7 @@ function oublog_stats_output_participation($oublog, $cm, $renderer, $course, $al
     } else {
         $percent = 0;
         $stat = null;
-        $content .= html_writer::tag('p', get_string('recentposts', 'oublog'));
+        $content .= html_writer::tag('h3', get_string('recentposts', 'oublog'));
         foreach ($participation->posts as $post) {
             // Post user object required for oublog_statsinfo.
             $postuser = new stdClass();
@@ -4797,7 +4675,7 @@ function oublog_stats_output_participation($oublog, $cm, $renderer, $course, $al
         $percent = 0;
         $stat = null;// Removing all stats div.
         if ($blogtype || $getcomments) {
-            $content .= html_writer::tag('p', get_string('recentcomments', 'oublog'));
+            $content .= html_writer::tag('h3', get_string('recentcomments', 'oublog'));
         }
         foreach ($participation->comments as $comment) {
             // Comment user object required for oublog_statsinfo.
@@ -4910,7 +4788,9 @@ function oublog_stats_output_participation($oublog, $cm, $renderer, $course, $al
     if (!$blogtype) {
         if (!$allposts) {
             $url = new moodle_url('/mod/oublog/participationlist.php', $params);
-            $viewparticipation = html_writer::div(html_writer::link($url, get_string('viewallparticipation', 'oublog')));
+            $viewparticipation = html_writer::div(
+                html_writer::link($url, get_string('viewallparticipation', 'oublog'), ['class' => 'osep-smallbutton'])
+            );
             $content .= html_writer::start_tag('div', array('class' => 'oublog-post-content'));
             $content .= html_writer::tag('h3', $viewparticipation, array('class' => 'oublog-post-title'));
             $content .= html_writer::end_tag('div');
@@ -5089,8 +4969,7 @@ class oublog_stats_timefilter_form extends moodleform {
         // Override render so we can output js to page.
         global $PAGE;
         if (isset($this->type)) {
-            $PAGE->requires->yui_module('moodle-mod_oublog-statsupdate', 'M.mod_oublog.statsupdate.init',
-                    array($this->type));
+            $PAGE->requires->js_call_amd('mod_oublog/statsupdate', 'init',  [$this->type]);
         }
         return parent::render();
     }
@@ -5369,6 +5248,113 @@ function oublog_get_displayname($oublog, $upperfirst = false) {
     } else {
         return $string;
     }
+}
+
+/**
+ * Determines if the blog is shared (a child of another blog).
+ *
+ * @param cm_info $cm The course module object.
+ * @return bool True if the blog is shared, false otherwise.
+ * @throws dml_exception
+ */
+function oublog_is_shared(cm_info $cm): bool {
+    global $DB;
+    $blogrecord = $DB->get_record('oublog', ['id' => $cm->instance], 'idsharedblog');
+    return !empty($blogrecord->idsharedblog);
+}
+
+/**
+ * Gets the course module ID, handling shared blogs.
+ *
+ * @param cm_info $cm The course module object.
+ * @param bool $forcereal If true, forces retrieval of the actual CM ID, even for shared blogs.
+ * @return int The course module ID.
+ * @throws coding_exception
+ */
+function oublog_get_course_module_id(cm_info $cm, bool $forcereal = false): int {
+    global $DB;
+
+    if (empty($cm)) {
+        throw new coding_exception('Course-module not set for this blog');
+    }
+
+    if (oublog_is_shared($cm) && !$forcereal) {
+        $blogoublog = $DB->get_record('oublog', ['id' => $cm->instance]);
+
+        if (!$blogoublog || !$blogoublog->idsharedblog) {
+            throw new coding_exception('Clone reference not defined');
+        }
+
+        $masterblog = oublog_get_master($blogoublog->idsharedblog);
+        if (!$masterblog) {
+            throw new coding_exception('Master blog not found for shared instance.');
+        }
+        return (int) $masterblog->cmid;
+    }
+    return (int) $cm->id;
+}
+
+/**
+ * Displays sharing information for a blog.
+ *
+ * @param cm_info $cm The course module object.
+ * @return string The HTML to display, or an empty string if nothing to show.
+ */
+function oublog_display_sharing_info(cm_info $cm): string {
+    global $DB;
+    // If it's neither a master blog nor a child blog, nothing to show.
+    if (empty($cm->idnumber) && !oublog_is_shared($cm)) {
+        return '';
+    }
+
+    // Only show this to people who can edit and stuff.
+    if (!has_capability('moodle/course:manageactivities', context_module::instance($cm->id))) {
+        return '';
+    }
+
+    $out = '<div class="oublog-shareinfo">';
+    if (oublog_get_course_module_id($cm) !== oublog_get_course_module_id($cm, true)) {
+        // We are looking at a clone. Show link to original, if user can
+        // see it, otherwise text.
+        $blogcmid = oublog_get_course_module_id($cm);
+        $blogoublog = $DB->get_record('oublog', ['id' => $cm->instance]);
+        $cloneinfo = (object)[
+            'url' => new moodle_url('/mod/oublog/view.php', ['id' => $blogcmid]),
+            'shortname' => s(oublog_get_master($blogoublog->idsharedblog)->shortname),
+        ];
+
+        $out .= get_string('sharedviewinfoclone', 'oublog', $cloneinfo);
+    } else {
+        // We are looking at an original.
+        // I want to display the idnumber here - unfortuantely this requires
+        // an extra query because it is not included in get_fast_modinfo.
+        $idnumber = $cm->idnumber;
+
+        $out .= get_string('sharedviewinfooriginal', 'oublog', $idnumber);
+        $out .= ' ';
+
+        // Show links to each child, if you
+        // can see them.
+        $children = oublog_get_children($idnumber);
+        if (empty($children)) {
+            return '';
+        } else {
+            $list = '';
+            foreach ($children as $child) {
+                if ($list) {
+                    $list .= ', ';
+                }
+                // Make it a link if you have access.
+                $href = new moodle_url('/mod/oublog/view.php', ['id' => $child->cmid]);
+                if (has_capability('mod/oublog:view', context_module::instance($child->cmid))) {
+                    $list .= html_writer::link($href, s($child->shortname));
+                }
+            }
+            $out .= get_string('sharedviewinfolist', 'oublog', $list);
+        }
+    }
+    $out .= '</div>';
+    return $out;
 }
 
 function oublog_get_reportingemail($oublog) {
