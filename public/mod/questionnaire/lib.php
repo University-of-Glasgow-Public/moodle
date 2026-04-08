@@ -264,26 +264,42 @@ function questionnaire_get_coursemodule_info($coursemodule) {
     $questionnaire = $DB->get_record(
         'questionnaire',
         ['id' => $coursemodule->instance],
-        'id, name, intro, introformat, completionsubmit'
+        'id,
+        name,
+        intro,
+        introformat,
+        opendate,
+        closedate,
+        completionsubmit',
     );
+
     if (!$questionnaire) {
         return null;
     }
 
-    $info = new cached_cm_info();
-    $info->customdata = (object)[];
+    $result = new cached_cm_info();
+    $result->name = $questionnaire->name;
 
     if ($coursemodule->showdescription) {
         // Convert intro to html. Do not filter cached version, filters run at display time.
         // Based on the function quiz_get_coursemodule_info() in the quiz module.
-        $info->content = format_module_intro('questionnaire', $questionnaire, $coursemodule->id, false);
+        $result->content = format_module_intro('questionnaire', $questionnaire, $coursemodule->id, false);
     }
 
     // Populate the custom completion rules as key => value pairs, but only if the completion mode is 'automatic'.
     if ($coursemodule->completion == COMPLETION_TRACKING_AUTOMATIC) {
-        $info->customdata->customcompletionrules['completionsubmit'] = $questionnaire->completionsubmit;
+        $result->customdata['customcompletionrules']['completionsubmit'] = $questionnaire->completionsubmit;
     }
-    return $info;
+
+    // Populate some other values that can be used in calendar or on dashboard.
+    if ($questionnaire->opendate) {
+        $result->customdata['timeopen'] = $questionnaire->opendate;
+    }
+    if ($questionnaire->closedate) {
+        $result->customdata['timeclose'] = $questionnaire->closedate;
+    }
+
+    return $result;
 }
 
 /**
@@ -535,11 +551,12 @@ function questionnaire_scale_used_anywhere($scaleid) {
  * @param string $filearea
  * @param array $args
  * @param bool $forcedownload
+ * @param mixed $options
  * @return bool false if file not found, does not return if found - justsend the file
  *
  * $forcedownload is unused, but API requires it. Suppress PHPMD warning.
  */
-function questionnaire_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
+function questionnaire_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options) {
     global $DB;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -548,7 +565,7 @@ function questionnaire_pluginfile($course, $cm, $context, $filearea, $args, $for
 
     require_course_login($course, true, $cm);
 
-    $fileareas = ['intro', 'info', 'thankbody', 'question', 'feedbacknotes', 'sectionheading', 'feedback'];
+    $fileareas = ['intro', 'info', 'thankbody', 'question', 'feedbacknotes', 'sectionheading', 'feedback', 'response_file'];
     if (!in_array($filearea, $fileareas)) {
         return false;
     }
@@ -565,6 +582,10 @@ function questionnaire_pluginfile($course, $cm, $context, $filearea, $args, $for
         }
     } else if ($filearea == 'feedback') {
         if (!$DB->record_exists('questionnaire_feedback', ['id' => $componentid])) {
+            return false;
+        }
+    } else if ($filearea == 'response_file') {
+        if (!$DB->record_exists('questionnaire_response_file', ['id' => $componentid])) {
             return false;
         }
     } else {
@@ -585,7 +606,7 @@ function questionnaire_pluginfile($course, $cm, $context, $filearea, $args, $for
     }
 
     // Finally send the file.
-    send_stored_file($file, 0, 0, true); // Download MUST be forced - security!
+    send_stored_file($file, null, 0, $forcedownload, $options); // Download MUST be forced - security!
 }
 /**
  * Adds module specific settings to the settings block

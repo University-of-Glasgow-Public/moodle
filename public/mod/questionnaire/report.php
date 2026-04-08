@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
+
 require_once("../../config.php");
 require_once($CFG->dirroot . '/mod/questionnaire/questionnaire.class.php');
 
@@ -220,8 +221,6 @@ switch ($action) {
         require_capability('mod/questionnaire:deleteresponses', $context);
 
         if (empty($questionnaire->survey)) {
-            $id = $questionnaire->survey;
-            notify("questionnaire->survey = /$id/");
             throw new \moodle_exception('surveynotexists', 'mod_questionnaire');
         } else if ($questionnaire->survey->courseid != $course->id) {
             throw new \moodle_exception('surveyowner', 'mod_questionnaire');
@@ -366,11 +365,17 @@ switch ($action) {
             } else {
                 $ruser = $response->userid;
             }
-            error(
-                get_string('couldnotdelresp', 'questionnaire') .
-                    $rid . get_string('by', 'questionnaire') . $ruser . '?',
-                $CFG->wwwroot . '/mod/questionnaire/report.php?action=vresp&amp;sid=' . $sid . '&amp;&amp;instance=' .
-                    $instance . 'byresponse=1'
+            $link = new \moodle_url('/mod/questionnaire/report.php', [
+                'action' => 'vresp',
+                'sid' => $sid,
+                'instance' => $instance,
+                'byresponse' => '1',
+            ]);
+            throw new \moodle_exception(
+                'couldnotdelrespby',
+                'mod_questionnaire',
+                $link,
+                ['rid' => $rid, 'user' => $ruser]
             );
         }
         break;
@@ -442,10 +447,12 @@ switch ($action) {
 
             redirect($redirection);
         } else {
-            error(
-                get_string('couldnotdelresp', 'questionnaire'),
-                $CFG->wwwroot . '/mod/questionnaire/report.php?action=vall&amp;sid=' . $sid . '&amp;instance=' . $instance
-            );
+            $link = new \moodle_url('/mod/questionnaire/report.php', [
+                'action' => 'vall',
+                'sid' => $sid,
+                'instance' => $instance,
+            ]);
+            throw new \moodle_exception('couldnotdelresp', 'mod_questionnaire', $link);
         }
         break;
 
@@ -792,6 +799,13 @@ switch ($action) {
             }
         }
 
+        // Add group filter dropdown.
+        if ($groupmode > 0) {
+            $groupselect = groups_print_activity_menu($cm, $url->out(), true);
+            $questionnaire->page->add_to_page('respondentinfo', $groupselect);
+            $currentgroupid = groups_get_activity_group($cm);
+        }
+
         if ($byresponse || $rid) {
             // Available group modes (0 = no groups; 1 = separate groups; 2 = visible groups).
             if ($groupmode > 0) {
@@ -830,13 +844,7 @@ switch ($action) {
             $rid = $rids[0];
         }
 
-        if ($noresponses) {
-            $questionnaire->page->add_to_page(
-                'respondentinfo',
-                get_string('group') . ' <strong>' .
-                    groups_get_group_name($currentgroupid) . '</strong>: ' . get_string('noresponses', 'questionnaire')
-            );
-        } else if ($outputtarget == 'pdf') {
+        if ($outputtarget == 'pdf') {
             $pdf = questionnaire_report_start_pdf();
             if ($currentgroupid > 0) {
                 $groupname = get_string('group') . ': <strong>' . groups_get_group_name($currentgroupid) . '</strong>';
@@ -854,6 +862,14 @@ switch ($action) {
             @$pdf->Output(clean_param($questionnaire->name, PARAM_FILE), 'D');
             error_reporting($errorreporting);
         } else { // Default to HTML.
+            if ($noresponses) {
+                $questionnaire->page->add_to_page(
+                    'respondentinfo',
+                    get_string('group') . ' <strong>' .
+                        groups_get_group_name($currentgroupid) . '</strong>: ' . get_string('noresponses', 'questionnaire')
+                );
+            }
+
             // Print the page header.
             $PAGE->set_title(get_string('questionnairereport', 'questionnaire'));
             $PAGE->set_heading(format_string($course->fullname));
