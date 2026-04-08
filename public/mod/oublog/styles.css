@@ -65,20 +65,6 @@
     background-color: #F2F2F2;
     min-height:0; /* ie7 */
 }
-.ie6 .oublog-post *, .ie6 .oublog-comment *,
-.ie6 .oublog-post, .ie6 .oublog-comment {
-    height:0;
-}
-.ie6 .oublog-post img,
-.ie6 .oublog-comment img,
-.ie6 .oublog-post ul,
-.ie6 .oublog-comment ul,
-.ie6 .oublog-post ol,
-.ie6 .oublog-comment ol,
-.ie6 .oublog-post li,
-.ie6 .oublog-comment li {
-    height:auto;
-}
 .oublog-post .oublog-post-top {
     margin-bottom: 1em;
 }
@@ -189,11 +175,6 @@
     margin-bottom:1.2em;
     min-height:0; /* ie7... */
     clear: both;
-}
-.ie6 .oublog-post-content,
-.ie6 .oublog-comment-content {
-    height:auto !important;
-    width:99%; /* for some reason it actually believes 'height' on this element */
 }
 
 .oublog-deleted {
@@ -477,7 +458,7 @@ div.oublog-individualselector {
     width: 20px;
     height: 20px;
     background: url([[pix:i/ajaxloader]]) no-repeat;
-    top: 4px;
+    top: 25px;
     left: 2px;
 }
 #oublog-discover .oublogstats_commentposts_blogname {
@@ -505,10 +486,6 @@ div.oublog-accordion-closed {
 .oublog_statsinfo_bar {
     font-size: .85em;
 }
-.oublog_statsinfo_bar span.oublogbar {
-    background: #0070a8;
-    color: #ffffff;
-}
 .oublog_statsview_content form {
     margin-left: 10px;
     margin-bottom: .5em;
@@ -520,8 +497,7 @@ div.oublog-accordion-closed {
     width: 5.5em;
     text-align: left;
 }
-.oublog_statsview_content form .fitem .felement,
-.ie .oublog_statsview_content form .fitem .felement {
+.oublog_statsview_content form .fitem .felement {
     margin-left: 5.5em;
 }
 .oublog_statsview_content form .fitem .fsubmit {
@@ -670,17 +646,17 @@ label[for=oublog_searchquery] {
 	display: inline;
 }
 /** Tag selector **/
-#page-mod-oublog-editpost .yui3-aclist-content {
+#page-mod-oublog-editpost .autocomplete-items {
 	height: 200px;
     overflow-y: auto;
 }
-div.tagselector_result {
+div.autocomplete_result {
 	position: relative;
 }
-div.tagselector_result .tagselector_result_title {
+div.autocomplete_result .autocomplete_result_title {
 	display: inline;
 }
-div.tagselector_result .tagselector_result_info {
+div.autocomplete_result .autocomplete_result_info {
 	position: relative;
 	padding: 1px;
 	padding-left: 4px;
@@ -693,8 +669,35 @@ div.tagselector_result .tagselector_result_info {
     display: inline-block;
     white-space: nowrap;
 }
-.yui3-aclist-item-active div.tagselector_result .tagselector_result_info {
+div.autocomplete_result .autocomplete_result_info {
 	color: black;
+}
+
+.autocomplete-dropdown-wrapper {
+    z-index: 1000;
+    display: none;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.autocomplete-dropdown {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.autocomplete-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.autocomplete-item.active {
+    background: #2647a0;
+    color: #fff;
+    outline: 0;
 }
 
 .oublog-tag-order {
@@ -761,4 +764,12 @@ oublog-filter-tagcount {
 
 .gecko #oublog-tags {
     display: block;
+}
+/* Not a standard theme breakpoint. */
+@media only screen and (max-width: 767px),
+(max-width: 1024px) and (orientation: landscape) and (pointer: coarse) {
+    #page-mod-oublog-editpost div[id^=fitem_id_message] .btn.btn-link[data-content*="help-popover-container"],
+    #page-mod-oublog-editcomment div[id^=fitem_id_messagecomment] .btn.btn-link[data-content*="help-popover-container"] {
+        display: none;
+    }
 }

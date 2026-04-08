@@ -52,7 +52,7 @@ class mod_oublog_comment_form extends moodleform {
             $mform->addElement('text', 'authorname',
                     get_string('moderated_authorname', 'oublog'), 'size="48"');
             $mform->setType('authorname', PARAM_TEXT);
-            $mform->addRule('authorname', get_string('required'), 'required', null, 'client');
+            $mform->addRule('authorname', null, 'required', null, 'client');
         }
 
         $mform->addElement('text', 'title', get_string('title', 'oublog'), 'size="48"');
@@ -66,8 +66,11 @@ class mod_oublog_comment_form extends moodleform {
         $mform->addElement($messagetype, 'messagecomment', get_string('comment', 'oublog'),
                 array('cols' => 50, 'rows' => 30),
                 array('maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $maxbytes));
+        if (editors_get_preferred_editor() instanceof \editor_tiny\editor) {
+            $mform->addHelpButton('messagecomment', 'messageshortcuts', 'oublog');
+        }
         $mform->setType('messagecomment', PARAM_CLEANHTML);
-        $mform->addRule('messagecomment', get_string('required'), 'required', null, 'server');
+        $mform->addRule('messagecomment', null, 'required', null, 'server');
 
         // When using moderation, we include the world's dumbest capcha (the
         // user is told to type 'yes' into the box). Because there is moderation

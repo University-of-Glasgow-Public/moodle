@@ -74,6 +74,11 @@ $string['newpost'] = 'New {$a} post';
 $string['removeblogs'] = 'Remove all blog entries';
 $string['title'] = 'Title';
 $string['message'] = 'Message';
+$string['messageshortcuts'] = 'Keyboard shortcuts';
+$string['messageshortcuts_help'] = '
+Access buttons in the menu bar using Alt + F9 (Windows) or ⌥ + F9 (Mac). <br />
+Access the toolbar using Alt + F10 (Windows) or ⌥ + F10 (Mac) including the help menu which contains a full list of keyboard shortcuts.
+';
 $string['tags'] = 'Tags';
 $string['tagsfield'] = 'Tags (separated by commas)';
 $string['allowcomments'] = 'Allow comments';
@@ -120,6 +125,11 @@ $string['sharedblog_error'] = 'Error – no blog with that ID is available';
 $string['sharedblog_help'] = '<p><strong>Shared blog</strong></p>
 <p>This option allows the blog instance to act as a ‘child’ blog and display the content of a ‘parent’ blog.</p>
 <p>Please input the IDNumber field value of \'parent\' blog whose content you wish this blog to display</p>';
+$string['sharedviewinfooriginal'] = '<strong>This blog is shared</strong> under the name
+<strong>{$a}</strong> for use in other courses.';
+$string['sharedviewinfolist'] = 'It is included in the following: {$a}.';
+$string['sharedviewinfoclone'] = '<strong>This is a shared blog</strong>. The
+<a href=\'{$a->url}\'>original blog</a> is in {$a->shortname}.';
 $string['displayname_default'] = 'blog';
 $string['displayname'] = 'Alternate activity name (blank uses default)';
 $string['displayname_help'] = 'Set an alternate activity type name within the interface.
@@ -204,14 +214,6 @@ $string['personalblogtitle'] = 'Personal blog';
 $string['postmessage'] = 'Post';
 
 $string['searchthisblog'] = 'Search this {$a}';
-$string['searchblogs'] = 'Search';
-$string['searchblogs_help'] = 'Type your search term and press Enter or click the button.
-
-To search for exact phrases use quote marks.
-
-To exclude a word insert a hyphen immediately before the word.
-
-Example: the search term <tt>picasso -sculpture &quot;early works&quot;</tt> will return results for &lsquo;picasso&rsquo; or the phrase &lsquo;early works&rsquo; but will exclude items containing &lsquo;sculpture&rsquo;.';
 
 $string['url'] = 'Full Web address';
 
@@ -425,7 +427,8 @@ if you give them the blog\'s address.</p>
 option is set on the whole blog, that becomes a maximum. For example, if
 the whole blog is set to the first level, you cannot change the
 level of an individual post at all.</p>';
-$string['tags_help'] = 'Tags are labels that help you find and categorise posts.';
+$string['tags_help'] = 'Tags are labels that help you find and categorise posts. When adding tags, they should be comma separated if using two or more. {$a}';
+$string['tags_help_predefined'] = 'You must select available tags from the dropdown tag list.';
 // Used at OU only.
 $string['externaldashboardadd'] = 'Add blog to dashboard';
 $string['externaldashboardremove'] = 'Remove blog from dashboard';
@@ -657,10 +660,11 @@ $string['oublogcrontask'] = 'OU blog maintenance jobs';
 $string['oublogsettingstask'] = 'OU Blog settings task';
 
 $string['restricttags'] = 'Tag options';
-$string['restricttags_req'] = 'Must enter tags';
-$string['restricttags_req_set'] = 'Must enter pre-defined tags only';
-$string['restricttags_set'] = 'Allow pre-defined tags only';
-$string['restricttags_default'] = 'Add tags by default';
+$string['restricttags_none'] = 'Individual tags (separated by commas) can be added to a post if required';
+$string['restricttags_req'] = 'Pre-defined or individual tags (separated by commas) must be chosen to add a post';
+$string['restricttags_req_set'] = 'Pre-defined tags must be chosen to add a post';
+$string['restricttags_set'] = 'Pre-defined tags can be chosen for a post if required';
+$string['restricttags_default'] = 'Predefined tags are added by default a new post';
 $string['restricttags_help'] = 'If you select this option, you can restrict
 tag entry to only those that are pre-defined at activity level and/or require that at least one tag be entered in a post.';
 $string['restricttagslist'] = 'You may only enter the \'Set\' tags: {$a}';
@@ -677,6 +681,7 @@ $string['privacy:metadata:oublog_comments'] = 'Comments on an OU blog post.';
 $string['privacy:metadata:oublog_comments:title'] = 'The title of the comment.';
 $string['privacy:metadata:oublog_comments:userid'] = 'The user ID of the comment originator.';
 $string['privacy:metadata:oublog_comments:message'] = 'The comment detail.';
+$string['privacy:metadata:oublog_comments:messageformat'] = 'Format of text in the comment \'message\' field, e.g. FORMAT_HTML.';
 $string['privacy:metadata:oublog_comments:authorname'] = 'For moderated comments: author name (required).';
 $string['privacy:metadata:oublog_comments:authorip'] = 'For moderated comments: author IP address (required).';
 
@@ -687,6 +692,7 @@ $string['privacy:metadata:oublog_instances:summary'] = 'Summary of the OU blog i
 
 $string['privacy:metadata:oublog_posts'] = 'Posts in an OU blog.';
 $string['privacy:metadata:oublog_posts:message'] = 'The text of the OU blog post.';
+$string['privacy:metadata:oublog_posts:messageformat'] = 'Format of text in the \'message\' field, e.g. FORMAT_HTML.';
 $string['privacy:metadata:oublog_posts:title'] = 'The title of the OU blog post.';
 $string['privacy:metadata:oublog_posts:deletedby'] = 'The user who deleted this blog post (if it was deleted).';
 $string['privacy:metadata:oublog_posts:lasteditedby'] = 'The user to last edit the OU blog post (if it was edited).';
