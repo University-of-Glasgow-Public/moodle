@@ -1,13 +1,30 @@
-Release Notes
+# Release Notes #
 
-Release 5.0.1 (Build - 2025110900)
+## Release 5.0.2 (Build - 2026040400) ##
+### New Features: ###
+* [PR677](https://github.com/PoetOS/moodle-mod_questionnaire/pull/677): New recycle bin for deleted questions.
+* [PR681](https://github.com/PoetOS/moodle-mod_questionnaire/pull/681): Addition of new file type question.
+
+### Improvements: ###
+* [PR675](https://github.com/PoetOS/moodle-mod_questionnaire/pull/675): Added group selector to by response report.
+* [PR651](https://github.com/PoetOS/moodle-mod_questionnaire/pull/651): Remove intermittent warnings when questionnaire started.
+* [PR657](https://github.com/PoetOS/moodle-mod_questionnaire/pull/657): Style the summary view page print button.
+* [PR660](https://github.com/PoetOS/moodle-mod_questionnaire/pull/660): Replace deprecated error functions.
+* [PR667](https://github.com/PoetOS/moodle-mod_questionnaire/pull/667): Improve table border appearance.
+* [PR669](https://github.com/PoetOS/moodle-mod_questionnaire/pull/669): Add "Activities" course navigation item.
+
+### Bug Fixes: ###
+* [PR648](https://github.com/PoetOS/moodle-mod_questionnaire/pull/648): Fix install structure to pass core unit tests.
+* [PR680](https://github.com/PoetOS/moodle-mod_questionnaire/pull/680): Make SQL statement compatible to Microsoft SQL Server.
+
+## Release 5.0.1 (Build - 2025110900) ##
 * Initial release for Moodle 5.0 forward.
 
-Release 4.4.0 (Build - 2025110900)
-New Features:
+## Release 4.4.0 (Build - 2025110900) ##
+### New Features: ###
 * [PR590](https://github.com/PoetOS/moodle-mod_questionnaire/pull/590): Allow responses to be deleted automatically after a specified time. This is disabled by default.
 
-Improvements:
+### Improvements: ###
 * [PR618](https://github.com/PoetOS/moodle-mod_questionnaire/pull/618): Make printable questionnaire more readable.
 * Updated deprecated functions.
 * [PR589](https://github.com/PoetOS/moodle-mod_questionnaire/pull/589): Allow selection of submitted responses or in progress responses on results pages.
@@ -18,16 +35,16 @@ Improvements:
 * [PR616](https://github.com/PoetOS/moodle-mod_questionnaire/pull/616): Only show dependent questions answered on response page.
 * [I120](https://github.com/PoetOS/moodle-mod_questionnaire/issues/120): Added idnumber to export.
 
-Bug Fixes:
+### Bug Fixes: ###
 * Ensure numbering doesn't appear on results pages when they are turned off.
 * Mobile - ensure pull to refresh doesn't resend question responses.
 * Fixed empty key error.
 * Fixed oversize icon display in 4.5.
 * Thank you page header is now filtered.
 
-Release 4.1.1 (Build - 2024082900)
+## Release 4.1.1 (Build - 2024082900) ##
 
-Improvements:
+### Improvements: ###
 * Compatible with Moodle 4.3 and 4.4.
 * Compatible with PHP8.2.
 * PR449 - Allow localized answer options to be displayed correctly in conditions.
@@ -49,13 +66,13 @@ Improvements:
 * PR586, PR579, PR594 - Various deprecations fixed.
 * PR593 - Ensure "pdf" extension force.
 
-Bug Fixes:
+### Bug Fixes: ###
 * PR508 - General PHP fixes.
 * PR523 - Behat activity completion fix.
 * PR514 - Section text qtype should not support feedback.
 * PR516 - Course description displays properly.
 
-Release 4.1.0 (Build - 2023081100)
+## Release 4.1.0 (Build - 2023081100) ##
 
 Initial release for Moodle 4.1 forward.
 

@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace mod_questionnaire\question;
-use mod_questionnaire\edit_question_form;
-use mod_questionnaire\responsetype\response\response;
-use questionnaire;
-
-defined('MOODLE_INTERNAL') || die();
-use html_writer;
-
 /**
  * This file contains the parent class for questionnaire question types.
  *
@@ -30,7 +22,16 @@ use html_writer;
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package mod_questionnaire
  */
- // Constants.
+
+namespace mod_questionnaire\question;
+use mod_questionnaire\edit_question_form;
+use mod_questionnaire\responsetype\response\response;
+use questionnaire;
+use html_writer;
+
+defined('MOODLE_INTERNAL') || die();
+
+// Constants.
 define('QUESCHOOSE', 0);
 define('QUESYESNO', 1);
 define('QUESTEXT', 2);
@@ -42,6 +43,7 @@ define('QUESRATE', 8);
 define('QUESDATE', 9);
 define('QUESNUMERIC', 10);
 define('QUESSLIDER', 11);
+define('QUESFILE', 12);
 define('QUESPAGEBREAK', 99);
 define('QUESSECTIONTEXT', 100);
 
@@ -102,8 +104,8 @@ abstract class question {
     /** @var bool $required The required flag. */
     public $required = 'n';
 
-    /** @var bool $deleted The deleted flag. */
-    public $deleted = 'n';
+    /** @var int $deleted The deleted flag. */
+    public $deleted = null;
 
     /** @var mixed $extradata Any custom data for the question type. */
     public $extradata = '';
@@ -121,6 +123,7 @@ abstract class question {
         QUESDROP => 'drop',
         QUESRATE => 'rate',
         QUESDATE => 'date',
+        QUESFILE => 'file',
         QUESNUMERIC => 'numerical',
         QUESPAGEBREAK => 'pagebreak',
         QUESSECTIONTEXT => 'sectiontext',
@@ -617,7 +620,7 @@ abstract class question {
             // If $responsedata is webform data, check that its not empty.
             $answered = isset($responsedata->{'q' . $this->id}) && ($responsedata->{'q' . $this->id} != '');
         }
-        return !($this->required() && ($this->deleted == 'n') && !$answered);
+        return !($this->required() && (empty($this->deleted)) && !$answered);
     }
 
     /**
@@ -682,8 +685,8 @@ abstract class question {
             // Set the position to the end.
             $sql = 'SELECT MAX(position) as maxpos ' .
                    'FROM {questionnaire_question} ' .
-                   'WHERE surveyid = ? AND deleted = ?';
-            $params = ['surveyid' => $questionrecord->surveyid, 'deleted' => 'n'];
+                   'WHERE surveyid = ? AND deleted IS NULL';
+            $params = ['surveyid' => $questionrecord->surveyid];
             if ($record = $DB->get_record_sql($sql, $params)) {
                 $questionrecord->position = $record->maxpos + 1;
             } else {
@@ -1673,7 +1676,7 @@ abstract class question {
      */
     protected function form_preprocess_choicedata($formdata) {
         if (empty($formdata->allchoices)) {
-            error(get_string('enterpossibleanswers', 'questionnaire'));
+            throw new \moodle_exception('enterpossibleanswers', 'mod_questionnaire');
         }
         return false;
     }
