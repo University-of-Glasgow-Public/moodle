@@ -53,7 +53,7 @@ class theme_hillhead51_core_renderer extends core_renderer {
             }
             $branchlabel = $spantext . ' Accessibility Tools';
             $script = '/theme/hillhead51/accessibility.php';
-            $args = '?o=theme_hillhead_accessibility&v=' . $varg;
+            $args = '?o=theme_hillhead51_accessibility&v=' . $varg;
             $branchurl = new moodle_url($CFG->wwwroot . $script . $args);
             $branchtitle = $branchlabel;
             $branchsort  = 10000;
