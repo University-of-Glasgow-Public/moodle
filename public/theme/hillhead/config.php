@@ -25,7 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/lib.php');
+// Returns whether the course selector plugin /local/template is present.
+\theme_hillhead\theme_hillhead_exists_template_plugin::template_plugin_exists();
 
 $THEME->name = 'hillhead';
 $THEME->sheets = ['ubuntu', 'comic', 'mono', 'dyslexic'];
@@ -41,7 +42,8 @@ $THEME->haseditswitch = true;
 $THEME->iconsystem = \core\output\icon_system::FONTAWESOME;
 $THEME->usescourseindex = true;
 $THEME->scss = function($theme) {
-    return theme_hillhead_get_main_scss_content($theme);
+    $themecss = new \theme_hillhead\theme_hillhead_get_main_scss_content($theme);
+    return $themecss->compiledcss;
 };
 
 $THEME->layouts = [

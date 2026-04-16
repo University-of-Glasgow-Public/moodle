@@ -14,22 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace theme_hillhead;
+
 /**
- * UofG version file for the plugin.
+ * This class determines if the Course Template Wizard is available
  *
  * @package    theme_hillhead
  * @author     Greg Pedder <greg.pedder@glasgow.ac.uk>
  * @copyright  2026 University of Glasgow
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class theme_hillhead_exists_template_plugin {
 
-defined('MOODLE_INTERNAL') || die();
+    /**
+     * Implementing the logic of the previous approach, but within a class.
+     */
+    public static function template_plugin_exists() {
+        global $CFG;
 
-$plugin->version   = 2026041600;
-$plugin->requires  = 2026032700;         // Requires Moodle version 5.2 or greater.
-$plugin->component = 'theme_hillhead';
-$plugin->dependencies = [
-    'theme_boost' => '2025100600',
-];
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release  = '0.1 Alpha';
+        if (file_exists("{$CFG->dirroot}/local/template/version.php")) {
+            if (is_readable("{$CFG->dirroot}/local/template/version.php")) {
+                // Moodle codechecker incorrectly asserts require_once must use parenthesis.
+                // @codingStandardsIgnoreLine
+                require_once $CFG->dirroot . '/local/template/locallib.php';
+                local_template_add_new_course_hook();
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+}

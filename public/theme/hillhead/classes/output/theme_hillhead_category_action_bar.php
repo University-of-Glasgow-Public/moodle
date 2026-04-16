@@ -17,9 +17,7 @@
 namespace theme_hillhead\output;
 
 use context_coursecat;
-use core_course_category;
 use course_request;
-use moodle_page;
 use moodle_url;
 
 /**
@@ -52,7 +50,7 @@ class theme_hillhead_category_action_bar extends \core_course\output\category_ac
      * @return array
      */
     protected function get_additional_category_options(): array {
-        if (!theme_hillhead_exists_template_plugin()) {
+        if (!\theme_hillhead\theme_hillhead_exists_template_plugin::template_plugin_exists()) {
             // Unreachable code. Defensive.
             return parent::get_additional_category_options();
         }
