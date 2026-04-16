@@ -17,9 +17,7 @@
 namespace theme_hillhead51\output;
 
 use context_coursecat;
-use core_course_category;
 use course_request;
-use moodle_page;
 use moodle_url;
 
 /**
@@ -34,7 +32,6 @@ use moodle_url;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class theme_hillhead51_category_action_bar extends \core_course\output\category_action_bar {
-
 
     /**
      *
@@ -52,7 +49,7 @@ class theme_hillhead51_category_action_bar extends \core_course\output\category_
      * @return array
      */
     protected function get_additional_category_options(): array {
-        if (!theme_hillhead51_exists_template_plugin()) {
+        if (!\theme_hillhead51\theme_hillhead51_exists_template_plugin::template_plugin_exists()) {
             // Unreachable code. Defensive.
             return parent::get_additional_category_options();
         }
