@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A login page layout for the UofG Hillhead 5.1 theme
+ * A login page layout for the UofG Hillhead theme
  *
  * @package    theme_hillhead
  * @author     Greg Pedder <greg.pedder@glasgow.ac.uk>

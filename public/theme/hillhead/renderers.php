@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renderer class for UofG Hillhead 5.1 theme features
+ * Renderer class for UofG Hillhead theme features
  *
  * @package    theme_hillhead
  * @author     Greg Pedder <greg.pedder@glasgow.ac.uk>

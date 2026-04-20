@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A drawer based layout for the Hillhead 5.1 theme, inspired by Boost.
+ * A drawer based layout for the Hillhead theme, inspired by Boost.
  *
  * @package    theme_hillhead
  * @author     Greg Pedder <greg.pedder@glasgow.ac.uk>

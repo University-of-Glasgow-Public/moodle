@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Hillhead';
 $string['region-side-pre'] = 'Right';
 $string['choosereadme'] = 'University of Glasgow Theme - 5.1 (Hillhead) by Greg Pedder';
-$string['configtitle'] = 'Hillhead 5.1 settings';
+$string['configtitle'] = 'Hillhead settings';
 $string['guid-report'] = 'GUID Report';
 // Name of the first settings tab.
 $string['generalsettings'] = 'Appearance';
@@ -63,4 +63,4 @@ $string['rawscss'] = 'Raw SCSS';
 $string['rawscss_desc'] = 'Use this field to provide SCSS or CSS code which will be injected at the end of the style sheet.';
 $string['login_intro'] = 'Login Page Introduction';
 $string['login_intro_desc'] = 'Anything you enter here will be shown on the Moodle login page. We recommend a one line &lt;h2&gt; tag followed by a couple of &lt;p&gt; tags.';
-$string['cachedef_fontawesomeiconmapping'] = 'Hillhead 5.1 Icon Cache';
+$string['cachedef_fontawesomeiconmapping'] = 'Hillhead Icon Cache';
