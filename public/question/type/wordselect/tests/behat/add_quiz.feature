@@ -3,10 +3,7 @@
 Feature: Add a wordselect quiz
     In order to evaluate students
     As a teacher I need to create a quiz with wordselect questions
-  @javascript
-  Scenario: Add and configure small quiz and perform an attempt as a student with Javascript enabled
-        Background:
-
+  Background:
     Given the following "users" exist:
         | username | firstname | lastname | email                |
         | teacher1 | Terry1    | Teacher1 | teacher1@example.com |
@@ -41,7 +38,9 @@ Feature: Add a wordselect quiz
         | First question  | 1    | 0               |
         | Second question | 1    | 0               |
 
-    And I log in as "student1"
+  @javascript
+  Scenario: Add and configure small quiz and perform an attempt as a student with Javascript enabled
+    Given I log in as "student1"
     And I am on "Course 1" course homepage
     And I follow "Wordselect single page quiz"
     And I press "Attempt quiz"
