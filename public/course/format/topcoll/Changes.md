@@ -1,30 +1,78 @@
 ﻿Version Information
 ===================
 
-Version 405.1.4 - 19/11/2025
+Version 502.0.1 - 19/04/2026
+----------------------------
+1. Address implications of [MDL-87276](https://moodle.atlassian.net/browse/MDL-87276).
+2. Boost theme anchor improvement.
+
+Version 501.0.1 - 05/04/2026
+----------------------------
+### Release notes
+This release not only makes the format compatible with Moodle 5.1 but refactors it to put it in a position where it can continue in
+line with core improvements.  Such as '[MDL-82709](https://moodle.atlassian.net/browse/MDL-82709)' which while still in progress is a
+good idea as section id's don't change when sections move.  Thus I have updated the code to use section id's instead of numbers. This
+brings with it implications:
+
+ - When a section moves then the open / closed intent stays with the section.
+ - Risk in terms of code change to migrate from numbers to id's and hence this is a 'Release Candidate'.  There is migration functionality,
+so you don't need to do anything.  But... this also means that going back is currently not an option.  Therefore it is 'really' essential
+that you test before using on production.
+ - I've used the same user preference as the 'Custom sections' format with the same data format of storing what sections are collapsed.
+And thus changing between the two formats will retain the collapsed / expanded state of each section.
+
+#### Timing
+I realise that this version has been released much later than previous updates to major versions.  I'm releasing this version now because
+I'm passionate about the impact that Collapsed Topics has within the community driven Moodle ecosystem that helps to bring education to all.
+It is one cog amongst many that contributes to the overall success of the eLearning system.
+
+The format is fully 'Open Source' including the CSS and JavaScript ([GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)).  This is because
+from my understanding of the GPLv3 licence ([GPLAndPlugins](https://www.gnu.org/licenses/gpl-faq.html#GPLAndPlugins) and
+[GPLPlugins](https://www.gnu.org/licenses/gpl-faq.html#GPLPlugins)) then only the CSS could employ a 'Closed Source' licence as the
+JavaScript imports core API code which is GPLv3 licenced, and thus has to be too.  The CSS is already GPLv3 and that cannot be revoked.
+Therefore when you get a copy of the code then you can redistribute for free or charge a distribution fee if you wish
+'[DoesTheGPLAllowMoney](https://www.gnu.org/licenses/gpl-faq.html#DoesTheGPLAllowMoney)' and related in the FAQ.
+
+### Changes
+1. First Moodle 5.1 version.
+2. Fix 'Accessibility - "Jump to" menu on section page needs label' - #183.  Thanks to [Stefan Topfstedt](https://github.com/stopfstedt)
+   for the patch.
+3. Put back removed 'One section icon' in #181 for when no element text is shown on the right of the toggle.
+4. Fix badge and section availability messages when editing.
+5. Address hidden sections string deprecation.
+6. Address deprecation of '`get_max_sections`'.
+7. Address move of activity chooser.
+8. Address deprecation of '`course_section_add_cm_control`'.
+9. Apply 'MDL-86565 courseformat: don't link to sections user cannot see'.
+10. Impact of 'MDL-84045 core_courseformat: Restore section return functionality'.
+
+Version 500.1.3 - 19/11/2025
 ----------------------------
 1. Fix 'Can't toggle sections open/closed when editing is on' - #177.
 2. Fix 'Inconsistent deletion result on bulk actions' - #179.
 3. Fix 'Activities with no restrictions are hidden if the section is unavailable' - #181.
 
-Version 405.1.3 - 01/11/2025
+Version 500.1.2 - 01/11/2025
 ----------------------------
 1. Fix 'Images only in section zero summary don't count as content to be shown'.
-2. Fix 'Bulk section control showing for delegated sections'.
-3. Fix 'Course index content does not load when a subsection is in the first section of the course' - #175.
-4. Fix 'Bulk section control not showing'.
-5. Fix 'Warning about 'numsections' when duplicating a section'.
-6. Fix 'Prevent section zero moving when other sections are moved'.
-7. Fix 'Restricted sections are hidden - option "Hidden sections are completely invisible"' - #176.
-8. Removed additional module information.
-9. Improve 'Flexible modules' description and style.
-10. Improve toggle icon set description.
+2. Fix 'Question banks cannot determine if section zero can be shown'.
+3. Fix 'Bulk section control showing for delegated sections'.
+4. Fix 'Course index content does not load when a subsection is in the first section of the course' - #175.
+5. Fix 'Bulk section control not showing'.
+6. Fix 'Warning about 'numsections' when duplicating a section'.
+7. Fix 'Prevent section zero moving when other sections are moved'.
+8. Fix 'Prevent qbank activities from being displayed after an activity move', thanks to [Julien Boulen](https://github.com/jboulen)
+   for the patch.
+9. Fix 'Restricted sections are hidden - option "Hidden sections are completely invisible"' - #176.
+10. Removed additional module information.
+11. Improve 'Flexible modules' description and style.
+12. Improve toggle icon set description.
 
-Version 405.1.2 - 05/07/2025
+Version 500.1.1 - 05/07/2025
 ----------------------------
 1. Fix 'Issue with creating subsections' - #169.
 
-Version 405.1.1 - 30/06/2025
+Version 500.1.0 - 30/06/2025
 ----------------------------
 1. Fix 'Section 0 does not appear in course index' - #162.
 2. Fix 'Bulk actions controls do not display after editing an activity' - #164.
@@ -36,6 +84,15 @@ Version 405.1.1 - 30/06/2025
 8. Fix minimal column break point calculation.
 9. Fix course index not showing the same order or sections in the course.
 10. Fix 'Hidden sections are shown as not available - course format setting does not seem to work' - #168.
+11. Add PHP attributes for PHPUnit.  Leaving doc-comments for now as attributes work in PHPUnit 10 (I think).  Refs:
+    https://github.com/sebastianbergmann/phpunit/issues/4502
+    https://docs.phpunit.de/en/10.5/attributes.html
+    https://www.php.net/manual/en/language.attributes.overview.php
+
+Version 500.0.1 - 21/04/2025
+----------------------------
+1. First Moodle 5.0 version.
+2. Update section highlight in line with core changes.
 
 Version 405.1.0 - 21/04/2025
 ----------------------------
