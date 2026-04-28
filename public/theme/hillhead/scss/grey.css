@@ -59,4 +59,9 @@ nav.navbar button.navbar-toggler {
   padding: 20px;
   background-color: #4f5961;
   color: #fff;
+}
+
+.btn-icon.icons-collapse-expand {
+  color: #fff;
+  background-color: rgb(101.8920454545, 114.7897727273, 125.1079545455);
 }/*# sourceMappingURL=grey.css.map */

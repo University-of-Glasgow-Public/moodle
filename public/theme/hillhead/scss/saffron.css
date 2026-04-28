@@ -53,4 +53,9 @@ nav.navbar button.navbar-toggler {
   padding: 20px;
   background-color: #f1c338;
   color: #fff;
+}
+
+.btn-icon.icons-collapse-expand {
+  color: #fff;
+  background-color: rgb(244.3521126761, 209.3661971831, 103.6478873239);
 }/*# sourceMappingURL=saffron.css.map */

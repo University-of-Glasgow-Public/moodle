@@ -53,4 +53,9 @@ nav.navbar button.navbar-toggler {
   padding: 20px;
   background-color: #50C878;
   color: #fff;
+}
+
+.btn-icon.icons-collapse-expand {
+  color: #fff;
+  background-color: rgb(118.8043478261, 212.1956521739, 149.9347826087);
 }/*# sourceMappingURL=mint.css.map */

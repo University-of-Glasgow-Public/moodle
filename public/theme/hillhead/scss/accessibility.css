@@ -114,7 +114,7 @@ body.hillhead-contrast-yb .primary-navigation > nav > ul > li > a.nav-link,
   color: #ee6 !important;
 }
 
-body.hillhead-contrast-yb #user-menu-toggle, body.hillhead-contrast-yb #page-footer .hillheadFooterLinks li a {
+body.hillhead-contrast-yb #user-menu-toggle, body.hillhead-contrast-yb #page-footer .hillheadFooterLinks li a, body.hillhead-contrast-yb .courseindex-link {
   color: #ee6 !important;
 }
 
@@ -123,6 +123,11 @@ body.hillhead-contrast-yb .primary-navigation .moremenu .nav-link:hover,
 body.hillhead-contrast-yb .btn-primary:hover {
   background-color: #000 !important;
   border-bottom-color: #ee6 !important;
+  text-decoration: underline !important;
+}
+
+body.hillhead-contrast-yb .courseindex-link:hover {
+  text-decoration: underline !important;
 }
 
 body.hillhead-contrast-yb .block {
@@ -154,6 +159,10 @@ body.hillhead-contrast-yb.path-mod-quiz #mod_quiz_navblock .qnbutton.requiresgra
 
 body.hillhead-contrast-yb .activityiconcontainer .activityicon, body.hillhead-contrast-yb .activityiconcontainer .icon {
   filter: brightness(1) invert(0) !important;
+}
+
+body.hillhead-contrast-yb textarea {
+  color: #ee6 !important;
 }
 
 body.hillhead-contrast-yb .activityiconcontainer .activityicon, body.hillhead-contrast-yb .activityiconcontainer .icon {
@@ -192,7 +201,7 @@ body.hillhead-contrast-by .primary-navigation > nav > ul > li > a.nav-link,
   color: #111 !important;
 }
 
-body.hillhead-contrast-by #user-menu-toggle, body.hillhead-contrast-by #page-footer .hillheadFooterLinks li a {
+body.hillhead-contrast-by #user-menu-toggle, body.hillhead-contrast-by #page-footer .hillheadFooterLinks li a, body.hillhead-contrast-by .courseindex-link {
   color: #111 !important;
 }
 
@@ -201,6 +210,11 @@ body.hillhead-contrast-by .primary-navigation .moremenu .nav-link:hover,
 body.hillhead-contrast-by .btn-primary:hover {
   background-color: #ee6 !important;
   border-bottom-color: #111 !important;
+  text-decoration: underline !important;
+}
+
+body.hillhead-contrast-by .courseindex-link:hover {
+  text-decoration: underline !important;
 }
 
 body.hillhead-contrast-by .block {
@@ -234,6 +248,10 @@ body.hillhead-contrast-by .activityiconcontainer .activityicon, body.hillhead-co
   filter: brightness(1) invert(0) !important;
 }
 
+body.hillhead-contrast-by textarea {
+  color: #ee6;
+}
+
 body.hillhead-contrast-wg {
   background: #666 !important;
 }
@@ -265,7 +283,7 @@ body.hillhead-contrast-wg .primary-navigation > nav > ul > li > a.nav-link,
   color: #eee !important;
 }
 
-body.hillhead-contrast-wg #user-menu-toggle, body.hillhead-contrast-wg #page-footer .hillheadFooterLinks li a {
+body.hillhead-contrast-wg #user-menu-toggle, body.hillhead-contrast-wg #page-footer .hillheadFooterLinks li a, body.hillhead-contrast-wg .courseindex-link {
   color: #eee !important;
 }
 
@@ -274,6 +292,11 @@ body.hillhead-contrast-wg .primary-navigation .moremenu .nav-link:hover,
 body.hillhead-contrast-wg .btn-primary:hover {
   background-color: #666 !important;
   border-bottom-color: #eee !important;
+  text-decoration: underline !important;
+}
+
+body.hillhead-contrast-wg .courseindex-link:hover {
+  text-decoration: underline !important;
 }
 
 body.hillhead-contrast-wg .block {
@@ -307,6 +330,10 @@ body.hillhead-contrast-wg .activityiconcontainer .activityicon, body.hillhead-co
   filter: brightness(1) invert(0) !important;
 }
 
+body.hillhead-contrast-wg textarea {
+  color: #eee !important;
+}
+
 body.hillhead-contrast-bb {
   background: #B9D9EE !important;
 }
@@ -338,7 +365,7 @@ body.hillhead-contrast-bb .primary-navigation > nav > ul > li > a.nav-link,
   color: #111 !important;
 }
 
-body.hillhead-contrast-bb #user-menu-toggle, body.hillhead-contrast-bb #page-footer .hillheadFooterLinks li a {
+body.hillhead-contrast-bb #user-menu-toggle, body.hillhead-contrast-bb #page-footer .hillheadFooterLinks li a, body.hillhead-contrast-bb .courseindex-link {
   color: #111 !important;
 }
 
@@ -347,6 +374,11 @@ body.hillhead-contrast-bb .primary-navigation .moremenu .nav-link:hover,
 body.hillhead-contrast-bb .btn-primary:hover {
   background-color: #B9D9EE !important;
   border-bottom-color: #111 !important;
+  text-decoration: underline !important;
+}
+
+body.hillhead-contrast-bb .courseindex-link:hover {
+  text-decoration: underline !important;
 }
 
 body.hillhead-contrast-bb .block {
@@ -380,6 +412,10 @@ body.hillhead-contrast-bb .activityiconcontainer .activityicon, body.hillhead-co
   filter: brightness(1) invert(0) !important;
 }
 
+body.hillhead-contrast-bb textarea {
+  color: #B9D9EE;
+}
+
 body.hillhead-contrast-br {
   background: #EEB9B9 !important;
 }
@@ -411,7 +447,7 @@ body.hillhead-contrast-br .primary-navigation > nav > ul > li > a.nav-link,
   color: #111 !important;
 }
 
-body.hillhead-contrast-br #user-menu-toggle, body.hillhead-contrast-br #page-footer .hillheadFooterLinks li a {
+body.hillhead-contrast-br #user-menu-toggle, body.hillhead-contrast-br #page-footer .hillheadFooterLinks li a, body.hillhead-contrast-br .courseindex-link {
   color: #111 !important;
 }
 
@@ -420,6 +456,11 @@ body.hillhead-contrast-br .primary-navigation .moremenu .nav-link:hover,
 body.hillhead-contrast-br .btn-primary:hover {
   background-color: #EEB9B9 !important;
   border-bottom-color: #111 !important;
+  text-decoration: underline !important;
+}
+
+body.hillhead-contrast-br .courseindex-link:hover {
+  text-decoration: underline !important;
 }
 
 body.hillhead-contrast-br .block {
@@ -453,6 +494,10 @@ body.hillhead-contrast-br .activityiconcontainer .activityicon, body.hillhead-co
   filter: brightness(1) invert(0) !important;
 }
 
+body.hillhead-contrast-br textarea {
+  color: #EEB9B9;
+}
+
 body.hillhead-contrast-bw {
   background: #f6f6f6 !important;
 }
@@ -484,7 +529,7 @@ body.hillhead-contrast-bw .primary-navigation > nav > ul > li > a.nav-link,
   color: #111 !important;
 }
 
-body.hillhead-contrast-bw #user-menu-toggle, body.hillhead-contrast-bw #page-footer .hillheadFooterLinks li a {
+body.hillhead-contrast-bw #user-menu-toggle, body.hillhead-contrast-bw #page-footer .hillheadFooterLinks li a, body.hillhead-contrast-bw .courseindex-link {
   color: #111 !important;
 }
 
@@ -493,6 +538,11 @@ body.hillhead-contrast-bw .primary-navigation .moremenu .nav-link:hover,
 body.hillhead-contrast-bw .btn-primary:hover {
   background-color: #f6f6f6 !important;
   border-bottom-color: #111 !important;
+  text-decoration: underline !important;
+}
+
+body.hillhead-contrast-bw .courseindex-link:hover {
+  text-decoration: underline !important;
 }
 
 body.hillhead-contrast-bw .block {
@@ -526,6 +576,10 @@ body.hillhead-contrast-bw .activityiconcontainer .activityicon, body.hillhead-co
   filter: brightness(1) invert(0) !important;
 }
 
+body.hillhead-contrast-bw textarea {
+  color: #f6f6f6;
+}
+
 body.hillhead-contrast-wb {
   background: #111 !important;
 }
@@ -557,7 +611,7 @@ body.hillhead-contrast-wb .primary-navigation > nav > ul > li > a.nav-link,
   color: #f6f6f6 !important;
 }
 
-body.hillhead-contrast-wb #user-menu-toggle, body.hillhead-contrast-wb #page-footer .hillheadFooterLinks li a {
+body.hillhead-contrast-wb #user-menu-toggle, body.hillhead-contrast-wb #page-footer .hillheadFooterLinks li a, body.hillhead-contrast-wb .courseindex-link {
   color: #f6f6f6 !important;
 }
 
@@ -566,6 +620,11 @@ body.hillhead-contrast-wb .primary-navigation .moremenu .nav-link:hover,
 body.hillhead-contrast-wb .btn-primary:hover {
   background-color: #111 !important;
   border-bottom-color: #f6f6f6 !important;
+  text-decoration: underline !important;
+}
+
+body.hillhead-contrast-wb .courseindex-link:hover {
+  text-decoration: underline !important;
 }
 
 body.hillhead-contrast-wb .block {
@@ -597,6 +656,10 @@ body.hillhead-contrast-wb.path-mod-quiz #mod_quiz_navblock .qnbutton.requiresgra
 
 body.hillhead-contrast-wb .activityiconcontainer .activityicon, body.hillhead-contrast-wb .activityiconcontainer .icon {
   filter: brightness(1) invert(0) !important;
+}
+
+body.hillhead-contrast-wb textarea {
+  color: #f6f6f6 !important;
 }
 
 body.hillhead-contrast-wb .activityiconcontainer .activityicon, body.hillhead-contrast-wb .activityiconcontainer .icon {
@@ -798,7 +861,7 @@ body.hillhead-night .secondary-navigation .navigation {
   border-bottom-color: #274163 !important;
 }
 
-body.hillhead-night nav .navbar-nav li.nav-item a.nav-link, body.hillhead-night .secondary-navigation .more-nav .nav-item a.active, body.hillhead-night .empty-message {
+body.hillhead-night nav .navbar-nav li.nav-item a.nav-link, body.hillhead-night .secondary-navigation .more-nav .nav-item a.active, body.hillhead-night .empty-message, body.hillhead-night.path-mod .activity-dates .date-item {
   color: #95B7E6 !important;
 }
 
@@ -854,7 +917,7 @@ body.hillhead-night h1:not(page-header-headings), body.hillhead-night h2, body.h
   color: #617591;
 }
 
-body.hillhead-night div > h1, body.hillhead-night div > h2, body.hillhead-night div > section > h2, body.hillhead-night div > h3, body.hillhead-night div > h5, body.hillhead-night .assessments-details-container, body.hillhead-night .return-assessments-text, body.hillhead-night .subcategory-details-label {
+body.hillhead-night div > h1, body.hillhead-night div > h2, body.hillhead-night div > section > h2, body.hillhead-night div > h3, body.hillhead-night div > h5, body.hillhead-night .assessments-details-container, body.hillhead-night .return-assessments-text, body.hillhead-night .subcategory-details-label, body.hillhead-night .courseindex-link {
   color: inherit !important;
 }
 
@@ -1352,6 +1415,10 @@ body.hillhead-night .content-item-container.unread {
 
 body.hillhead-night .activity-item .activity-dates {
   color: #9ea1a4;
+}
+
+body.hillhead-night .courseindex-link:hover {
+  text-decoration: underline !important;
 }
 
 @media (prefers-color-scheme: dark) {

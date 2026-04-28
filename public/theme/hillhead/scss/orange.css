@@ -53,4 +53,9 @@ nav.navbar button.navbar-toggler {
   padding: 20px;
   background-color: #9A3A06;
   color: #fff;
+}
+
+.btn-icon.icons-collapse-expand {
+  color: #fff;
+  background-color: rgb(203.0875, 76.4875, 7.9125);
 }/*# sourceMappingURL=orange.css.map */

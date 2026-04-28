@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026041600;
+$plugin->version   = 2026042800;
 $plugin->requires  = 2026032700;         // Requires Moodle version 5.2 or greater.
 $plugin->component = 'theme_hillhead';
 $plugin->dependencies = [

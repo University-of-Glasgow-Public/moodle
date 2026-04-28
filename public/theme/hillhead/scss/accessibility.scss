@@ -120,7 +120,7 @@ body.hillhead-spacing * {
     color: $foreground !important;
   }
 
-  body.hillhead-#{$class} #user-menu-toggle, body.hillhead-#{$class} #page-footer .hillheadFooterLinks li a {
+  body.hillhead-#{$class} #user-menu-toggle, body.hillhead-#{$class} #page-footer .hillheadFooterLinks li a, body.hillhead-#{$class} .courseindex-link {
     color: $foreground !important;
   }
 
@@ -129,6 +129,11 @@ body.hillhead-spacing * {
   body.hillhead-#{$class} .btn-primary:hover {
     background-color: $background !important;
     border-bottom-color: $foreground !important;
+    text-decoration: underline !important; 
+  }
+
+  body.hillhead-#{$class} .courseindex-link:hover {
+    text-decoration: underline !important;  
   }
 
   body.hillhead-#{$class} .block {
@@ -160,6 +165,24 @@ body.hillhead-spacing * {
 
   body.hillhead-#{$class} .activityiconcontainer .activityicon, body.hillhead-#{$class} .activityiconcontainer .icon {
     filter: brightness(1) invert(0) !important;
+  }
+
+  @if $class == contrast-wb {
+    body.hillhead-#{$class} textarea {
+      color: $foreground !important;
+    }
+  } @else if $class == contrast-yb {
+    body.hillhead-#{$class} textarea {
+      color: $foreground !important;
+    }
+  } @else if $class == contrast-wg {
+    body.hillhead-#{$class} textarea {
+      color: $foreground !important;
+    }
+  } @else {
+    body.hillhead-#{$class} textarea {
+      color: $background;
+    }
   }
 
   @if $filtercolour {
@@ -309,7 +332,7 @@ body.hillhead-night .secondary-navigation .navigation {
   border-bottom-color: #274163 !important;
 }
 
-body.hillhead-night nav .navbar-nav li.nav-item a.nav-link, body.hillhead-night .secondary-navigation .more-nav .nav-item a.active, body.hillhead-night .empty-message {
+body.hillhead-night nav .navbar-nav li.nav-item a.nav-link, body.hillhead-night .secondary-navigation .more-nav .nav-item a.active, body.hillhead-night .empty-message, body.hillhead-night.path-mod .activity-dates .date-item {
   color: #95B7E6 !important;
 }
 
@@ -365,7 +388,7 @@ body.hillhead-night h1:not(page-header-headings), body.hillhead-night h2, body.h
   color: #617591;
 }
 
-body.hillhead-night div > h1, body.hillhead-night div > h2, body.hillhead-night div > section > h2,  body.hillhead-night div > h3, body.hillhead-night div > h5, body.hillhead-night .assessments-details-container, body.hillhead-night .return-assessments-text, body.hillhead-night .subcategory-details-label {
+body.hillhead-night div > h1, body.hillhead-night div > h2, body.hillhead-night div > section > h2,  body.hillhead-night div > h3, body.hillhead-night div > h5, body.hillhead-night .assessments-details-container, body.hillhead-night .return-assessments-text, body.hillhead-night .subcategory-details-label, body.hillhead-night .courseindex-link {
   color: inherit !important;
 }
 
@@ -863,6 +886,10 @@ body.hillhead-night .content-item-container.unread {
 
 body.hillhead-night .activity-item .activity-dates {
   color: #9ea1a4;    
+}
+
+body.hillhead-night .courseindex-link:hover {
+  text-decoration: underline !important;  
 }
 
 @media (prefers-color-scheme: dark) {
