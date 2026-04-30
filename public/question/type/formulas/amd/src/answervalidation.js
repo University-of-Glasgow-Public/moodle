@@ -66,6 +66,7 @@ export const init = (debounceDelay) => {
         input.addEventListener('input', setDebounceTimer);
         input.addEventListener('focus', focusReceived);
         input.addEventListener('blur', hideMathJax);
+        input.addEventListener('change', markTainted);
     }
 
     // If we have a recent version of Moodle (4.3 and newer), the MathJax filter will notify us when our
@@ -75,6 +76,23 @@ export const init = (debounceDelay) => {
     } else {
         addLegacyMathJaxListener();
     }
+
+    // Add event listener for scrolling and resizing, because our preview div might have to be shifted.
+    window.addEventListener('scroll', repositionPreviewDiv);
+    window.addEventListener('resize', repositionPreviewDiv);
+};
+
+/**
+ * Event handler when input field has been changed. In that case, it should be marked "tainted", in order
+ * to make sure that upon next re-entry, the preview will be updated.
+ *
+ * @param {Event} evt event with details
+ * @returns void
+ */
+const markTainted = (evt) => {
+    const field = evt.target;
+
+    field.dataset.qtypeFormulasTainted = 'true';
 };
 
 /**
@@ -86,17 +104,18 @@ export const init = (debounceDelay) => {
 const focusReceived = (evt) => {
     const field = evt.target;
 
-    // If the field is empty, there is nothing to do.
-    if (field.value.trim() == '') {
+    // If the field is empty or does not need a preview, there is nothing to do.
+    if (field.value.trim() == '' || doesNotNeedPreview(field.value)) {
         return;
     }
 
     // If the field is not empty, not invalid and we already have a MathJax display for this field,
-    // we can simply reactivate it -- unless the field does not need rendering, because in that case,
-    // the content might not be accurate.
+    // we can simply reactivate it, unless it is marked as "tainted", in which case we should rather
+    // do a complete re-rendering.
     const div = document.getElementById('qtype_formulas_mathjax_display');
     let isOurDiv = div !== null && div.dataset.for == field.id;
-    if (!doesNotNeedRendering(field.value) && !field.classList.contains('is-invalid') && isOurDiv) {
+    let needsReRendering = field.dataset.qtypeFormulasTainted === 'true';
+    if (!needsReRendering && !field.classList.contains('is-invalid') && isOurDiv) {
         div.style.visibility = 'visible';
         return;
     }
@@ -139,7 +158,7 @@ const addLegacyMathJaxListener = () => {
  * @returns Element
  */
 const getMathJaxContainer = (element) => {
-    // If we are using MathJax v3, the rendered output is in a custom <mjx-container> tag.
+    // If we are using MathJax v3 or v4, the rendered output is in a custom <mjx-container> tag.
     // If we are using MathJax v2, the rendered output is in a <span> with a certain id.
     let v3container = element.querySelector('mjx-container');
     let v2container = element.querySelector("span[id^='MathJax-Element-'][id$='Frame']");
@@ -181,13 +200,21 @@ const handleRenderingComplete = (evt) => {
 
     // Now fetch our preview <div> and set its width. We must account for the padding and
     // want to make sure that the preview is not larger than the rectangle around the question
-    // itself.
+    // itself. For MathJax v4, we do not set the width, but rather the max-width. The reason is that
+    // MathJax v4 will auto-wrap mathematical content if it is being typeset in a constrained container,
+    // so once a width has been set, the <div> will never grow beyond that value. (Setting it every time
+    // would not be necessary, but we don't mind.)
     let div = document.getElementById('qtype_formulas_mathjax_display');
     if (div !== null) {
-        let style = window.getComputedStyle(div);
-        width += 3 * parseInt(style.padding);
-        width = Math.min(width, div.parentNode.getBoundingClientRect().width);
-        div.style.width = width + 'px';
+        const field = document.getElementById(div.dataset.for);
+        if (field !== null) {
+            div.style.maxWidth = field.closest('.formulaspart').getBoundingClientRect().width + 'px';
+        }
+
+        if (parseInt((window.MathJax.version || '')[0]) < 4) {
+            width += 3 * parseInt(window.getComputedStyle(div).padding);
+            div.style.width = width + 'px';
+        }
     }
 };
 
@@ -249,6 +276,10 @@ const validateStudentAnswer = async(id) => {
         if (validationResult.status === 'success') {
             field.classList.remove('is-invalid');
             showMathJax(id, validationResult.detail);
+            // Only remove the "tainted" flag, if we still have focus.
+            if (document.activeElement === field) {
+                field.dataset.qtypeFormulasTainted = 'false';
+            }
         } else {
             field.classList.add('is-invalid');
             hideMathJax();
@@ -277,8 +308,33 @@ const hideMathJax = () => {
  * @param {string} content the field's content
  * @returns bool
  */
-const doesNotNeedRendering = (content) => {
+const doesNotNeedPreview = (content) => {
     return content.trim().match(/^([A-Za-z]+|[0-9]*[.,]?[0-9]*)$/);
+};
+
+/**
+ * Make sure the preview div is correctly positioned below the input field, taking into account the
+ * scroll position.
+ *
+ * @returns void
+ */
+const repositionPreviewDiv = () => {
+    // Fetch our div. If it does not exist, we have nothing to do.
+    const div = document.getElementById('qtype_formulas_mathjax_display');
+    if (div === null) {
+        return;
+    }
+
+    // Fetch the field our div belongs to. If we cannot fetch it (which should not happen),
+    // we simply stop.
+    const field = document.getElementById(div.dataset.for);
+    if (field === null) {
+        return;
+    }
+
+    const rect = field.getBoundingClientRect();
+    div.style.left = (rect.left + window.scrollX) + 'px';
+    div.style.top = (rect.bottom + window.scrollY) + 'px';
 };
 
 /**
@@ -296,7 +352,7 @@ const showMathJax = (id, texcode) => {
         return;
     }
 
-    if (doesNotNeedRendering(field.value)) {
+    if (doesNotNeedPreview(field.value)) {
         hideMathJax();
         return;
     }
@@ -314,9 +370,10 @@ const showMathJax = (id, texcode) => {
         div.id = 'qtype_formulas_mathjax_display';
         div.classList.add('filter_mathjaxloader_equation');
         div.dataset.for = id;
-        div.style.left = field.offsetLeft + 'px';
-        // We insert the div right after the relevant input field.
-        field.parentNode.insertBefore(div, field.nextSibling);
+
+        // We have to insert the <div> first. For full flexibility in placement, we append it to the <body>.
+        document.body.appendChild(div);
+        repositionPreviewDiv();
     }
 
     // Copy the LaTeX code into the div, show it and tell the MathJax filter that there is work to be done.

@@ -106,18 +106,15 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
      * @return string HTML fragment
      */
     public function head_code(question_attempt $qa): string {
-        global $CFG;
         $this->page->requires->js_call_amd(
             'qtype_formulas/answervalidation',
             'init',
             [get_config('qtype_formulas', 'debouncedelay')]
         );
-
-        // Include backwards-compatibility layer for Bootstrap 4 data attributes, if available.
-        // We may safely assume that if the uncompiled version is there, the minified one exists as well.
-        if (file_exists($CFG->dirroot . '/theme/boost/amd/src/bs4-compat.js')) {
-            $this->page->requires->js_call_amd('theme_boost/bs4-compat', 'init');
-        }
+        $this->page->requires->js_call_amd(
+            'qtype_formulas/tooltip',
+            'init',
+        );
 
         return '';
     }
@@ -282,6 +279,7 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
 
         // Inside the fieldset, we put the accessibility label, following the example of core's multichoice
         // question type, i. e. the label is inside a <span> with class 'sr-only', wrapped in a <legend>.
+        // TODO: we should use visually-hidden after dropping Moodle 4.5.
         $output .= html_writer::start_tag('legend', ['class' => 'sr-only']);
         $output .= html_writer::span(
             $this->generate_accessibility_label_text($answerindex, $part->numbox, $part->partindex, $question->numparts),
@@ -419,7 +417,7 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
     protected function create_label_for_input(string $text, string $inputid, array $additionalattributes = []): array {
         $labelid = 'lbl_' . str_replace(':', '__', $inputid);
         $attributes = [
-            'class' => 'subq accesshide',
+            'class' => 'subq sr-only',
             'for' => $inputid,
             'id' => $labelid,
         ];
@@ -657,13 +655,10 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
         $iscombined = $inputattributes['data-withunit'] === '1';
         $isnumber = !$iscombined && $inputattributes['data-answertype'] === qtype_formulas::ANSWER_TYPE_NUMBER;
         $shownumbertooltip = get_config('qtype_formulas', 'shownumbertooltip');
-        if (!$isnumber || $shownumbertooltip) {
-            $inputattributes += [
-                'data-toggle' => 'tooltip',
-                'data-title' => $title,
-                'data-custom-class' => 'qtype_formulas-tooltip',
-            ];
-        }
+        $inputattributes += [
+            'data-qtype-formulas-enable-tooltip' => (!$isnumber || $shownumbertooltip ? 'true' : 'false'),
+            'data-qtype-formulas-tooltip-trigger' => get_config('qtype_formulas', 'tooltiptrigger'),
+        ];
 
         if ($displayoptions->readonly) {
             $inputattributes['readonly'] = 'readonly';
@@ -675,6 +670,8 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
         );
         $inputattributes['aria-labelledby'] = $label['id'];
 
+        // We need to wrap our input field into a wrapper <div>, in order for the LaTeX preview
+        // to be correctly positioned even inside a table.
         $output = $label['html'];
         $output .= html_writer::empty_tag('input', $inputattributes);
 
@@ -858,7 +855,7 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
         return html_writer::nonempty_tag(
             'div',
             get_string($string, 'qtype_formulas', $answertext),
-            ['class' => 'formulaspartcorrectanswer'],
+            ['class' => 'formulaspartcorrectanswer filter_mathjaxloader_equation'],
         );
     }
 

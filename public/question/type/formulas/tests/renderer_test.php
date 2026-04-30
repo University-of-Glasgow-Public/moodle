@@ -727,7 +727,7 @@ final class renderer_test extends walkthrough_test_base {
             new \question_contains_tag_with_attribute('select', 'name', $this->quba->get_field_prefix($this->slot) . '0_0'),
             $this->get_does_not_contain_specific_feedback_expectation(),
             new \question_contains_tag_with_contents('label', 'Answer'),
-            new \question_contains_tag_with_attribute('label', 'class', 'subq accesshide'),
+            new \question_contains_tag_with_attribute('label', 'class', 'subq sr-only'),
         );
         $this->check_output_contains_selectoptions(
             $this->get_contains_select_expectation('0_0', ['Dog', 'Cat', 'Bird', 'Fish'], 0)
@@ -813,48 +813,79 @@ final class renderer_test extends walkthrough_test_base {
         );
     }
 
-    public function test_textbox_tooltip_title(): void {
-        // Create a simple test question.
+    public function test_textbox_tooltip_enable(): void {
+        // Create a simple test question. First, 'shownumbertooltip' is enabled. Then we disable the option.
+        // This should only have an effect for the number type.
         $q = $this->get_test_formulas_question('testsinglenum');
         $this->start_attempt_at_question($q, 'immediatefeedback', 1);
         $this->check_current_output(
-            new \question_contains_tag_with_attribute('input', 'data-title', 'Number'),
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-enable-tooltip', 'true'),
+        );
+        set_config('shownumbertooltip', '0', 'qtype_formulas');
+        $this->start_attempt_at_question($q, 'immediatefeedback', 1);
+        $this->check_current_output(
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-enable-tooltip', 'false'),
         );
 
         // Change answer type to numeric.
         $q->parts[0]->answertype = qtype_formulas::ANSWER_TYPE_NUMERIC;
         $this->start_attempt_at_question($q, 'immediatefeedback', 1);
         $this->check_current_output(
-            new \question_contains_tag_with_attribute('input', 'data-title', 'Numeric'),
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-enable-tooltip', 'true'),
         );
 
         // Change answer type to numerical formula.
         $q->parts[0]->answertype = qtype_formulas::ANSWER_TYPE_NUMERICAL_FORMULA;
         $this->start_attempt_at_question($q, 'immediatefeedback', 1);
         $this->check_current_output(
-            new \question_contains_tag_with_attribute('input', 'data-title', 'Numerical formula'),
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-enable-tooltip', 'true'),
         );
 
         // Change answer type to algebraic formula.
         $q->parts[0]->answertype = qtype_formulas::ANSWER_TYPE_ALGEBRAIC;
         $this->start_attempt_at_question($q, 'immediatefeedback', 1);
         $this->check_current_output(
-            new \question_contains_tag_with_attribute('input', 'data-title', 'Algebraic formula'),
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-enable-tooltip', 'true'),
         );
 
         // Create a simple test question with a combined field.
         $q = $this->get_test_formulas_question('testsinglenumunit');
         $this->start_attempt_at_question($q, 'immediatefeedback', 1);
         $this->check_current_output(
-            new \question_contains_tag_with_attribute('input', 'data-title', 'Number and unit'),
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-enable-tooltip', 'true'),
         );
 
         // Create a simple test question with a separate unit field.
         $q = $this->get_test_formulas_question('testsinglenumunitsep');
         $this->start_attempt_at_question($q, 'immediatefeedback', 1);
         $this->check_current_output(
-            new \question_contains_tag_with_attribute('input', 'data-title', 'Number'),
-            new \question_contains_tag_with_attribute('input', 'data-title', 'Unit'),
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-enable-tooltip', 'true'),
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-enable-tooltip', 'true'),
+        );
+    }
+
+    public function test_textbox_tooltip_trigger(): void {
+        // Create a simple test question. Check the data-qtype-formulas-tooltip-trigger attribute is set
+        // correctly. The default value is 'hover'.
+        $q = $this->get_test_formulas_question('testsinglenum');
+        $this->start_attempt_at_question($q, 'immediatefeedback', 1);
+        $this->check_current_output(
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-tooltip-trigger', 'hover'),
+        );
+        set_config('tooltiptrigger', 'hover,focus', 'qtype_formulas');
+        $this->start_attempt_at_question($q, 'immediatefeedback', 1);
+        $this->check_current_output(
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-tooltip-trigger', 'hover,focus'),
+        );
+        set_config('tooltiptrigger', '', 'qtype_formulas');
+        $this->start_attempt_at_question($q, 'immediatefeedback', 1);
+        $this->check_current_output(
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-tooltip-trigger', ''),
+        );
+        set_config('tooltiptrigger', 'hover', 'qtype_formulas');
+        $this->start_attempt_at_question($q, 'immediatefeedback', 1);
+        $this->check_current_output(
+            new \question_contains_tag_with_attribute('input', 'data-qtype-formulas-tooltip-trigger', 'hover'),
         );
     }
 
