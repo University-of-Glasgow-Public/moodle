@@ -1,5 +1,20 @@
 ## Release notes
 
+### Version 5.2.4 (2026050300)
+* Fix color contrast on dark themes (#29)
+* Add missing cachedev_... string (#32)
+* Fix wrong pagination fieldset (#33)
+
+### Version 5.2.3 (2026031401)
+* Add support for derived relations in XMLDB and remove obsolete relations file (#31)
+
+### Version 5.2.2 (2026020101)
+* Add foreign key links support
+
+### Version 5.2.1 (2026020100)
+* Fix error "Invalid CSRF token" (#26)
+* Update Version to adminneo 5.2.1 [Releases notes](https://github.com/adminneo-org/adminneo/releases/tag/v5.2.1)
+
 ### Version 5.2.0 (2025110700)
 * add adminer user option (#24)
 * Update Version to adminneo [Releases notes](https://github.com/adminneo-org/adminneo/releases/tag/v5.2.0) (#25)

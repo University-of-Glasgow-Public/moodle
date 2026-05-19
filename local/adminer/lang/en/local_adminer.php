@@ -24,11 +24,14 @@
  */
 
 
+$string['additionalrelations'] = 'Additional relations';
+$string['additionalrelations_help'] = 'Additional relations to define that are not calculated from database files (install.xml). Put each relation on a new line. For example, see default value.';
 $string['adminer:useadminer'] = 'Use Adminer';
 $string['adminer_is_disabled_by_admin'] = 'Adminer is disabled by your administrator.';
 $string['adminer_secret'] = 'Adminer secret';
 $string['adminer_secret_note'] = 'Your administrator has defined an additional secret to use adminer. If you don\'t know it, please ask your administrator!';
 $string['blockinginfo'] = 'If you want to fully disable Adminer you can define "{$a}" as Adminer secret.';
+$string['cachedef_relations'] = 'Collected relations between tables';
 $string['config_startwithdb'] = 'Start adminer with current database';
 $string['example'] = 'Example';
 $string['example_key'] = 'your-secret-key';
@@ -39,4 +42,9 @@ $string['securitynote'] = 'Security note';
 $string['securitynote_text'] = 'Due to the high security risk of using Adminer, an additional key can be defined in <strong>config.php</strong>.';
 $string['showquicklink'] = 'Show quick link';
 $string['showquicklink_help'] = 'Show a small icon on the navigation bar to open Adminer in a new tab.';
+$string['showrelationlinks'] = 'Show table relations';
+$string['showrelationlinks_help'] = 'Show table relations in separate column.';
+$string['showrelationlist'] = 'Show calculated relations from XMLDB ...';
+$string['source_col'] = 'Source column';
+$string['target_col'] = 'Target column';
 $string['wrong_adminer_secret'] = 'Wrong Adminer secret!';
