@@ -1,3 +1,36 @@
+
+### Version 2.31 of the Moodle Gapfill question type April 2026
+Confirmed compatibility with Moodle 5.2
+Minor tweak to behat to run with Moodle 5.2
+
+### Version 2.3 of the Moodle Gapfill question type Feb 2026
+
+Ensure the Gap settings button can only ever appear when the user
+editor preference is set to either Tiny or Atto.
+
+### Version 2.2 of the Moodle Gapfill question type Jan 2026
+
+Thanks to Adam Jenkins for a CSS  reversion Fix.
+https://github.com/marcusgreen/moodle-qtype_gapfill/pull/131
+
+Linting of CSS
+
+### Version 2.15 of the Moodle Gapfill question type Dec 2025
+Thanks to  Dragos and Alistair from UCL for help with helping with fix
+to allow per gap feedback to be added with the default TinyMCE
+editor.https://github.com/marcusgreen/moodle-qtype_gapfill/issues/128
+
+Fixed issue where if dropdowns were selected each one had a carriage return
+after it. Thanks to Andrew Obermeier for reporting
+https://github.com/marcusgreen/moodle-qtype_gapfill/issues/130
+Fixed in CSS.
+
+### Version 2.144 of the Moodle Gapfill question type Oct 2025
+Moodle 5.1 compatibility confirmed by running automated tests.
+Belated thanks to Diego Corti for reporting this issue https://github.com/marcusgreen/moodle-qtype_gapfill/issues/111
+Assorted mass linting using phpcs (no functional changes).
+
+
 ### Version 2.143 of the Moodle Gapfill question type May 2025
 Moodle 5 compatibility confirmed by running automated tests.
 

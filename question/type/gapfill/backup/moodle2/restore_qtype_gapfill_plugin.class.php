@@ -32,7 +32,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_qtype_gapfill_plugin extends restore_qtype_plugin {
-
     /**
      * Returns the paths to be handled by the plugin at question level
      */
@@ -109,7 +108,6 @@ class restore_qtype_gapfill_plugin extends restore_qtype_plugin {
             // Create mapping (needed for decoding links).
             $this->set_mapping('question_gapfill_settings', $oldid, $newitemid);
         }
-
     }
     /**
      * Return the contents of this qtype to be processed by the links decoder
@@ -124,7 +122,16 @@ class restore_qtype_gapfill_plugin extends restore_qtype_plugin {
         return $contents;
     }
 
-    #[\Override]
+    /**
+     * Convert the backup structure of this question type into a structure
+     * matching its question data
+     *
+     * When qtype only supports Moodle 5+ an override attribute should  go here.
+     *
+     *
+     * @param array $backupdata
+     * @return \stdClass
+     */
     public static function convert_backup_to_questiondata(array $backupdata): \stdClass {
         $questiondata = parent::convert_backup_to_questiondata($backupdata);
         $questiondata->options->answers = array_map(
@@ -237,5 +244,4 @@ class restore_qtype_gapfill_plugin extends restore_qtype_plugin {
         /* Create mapping (we'll use this intensively when restoring question_states. And also answerfeedback files) */
         $this->set_mapping('question_answer', $oldid, $newitemid);
     }
-
 }
