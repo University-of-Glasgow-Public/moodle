@@ -252,6 +252,11 @@ class qtype_stack_question extends question_graded_automatically_with_countback
     public $pluginfiles = [];
 
     /**
+     * @var bool is this question marked as broken.
+     */
+    public $isbroken = false;
+
+    /**
      * Make sure the cache is valid for the current response. If not, clear it.
      *
      * @param array $response the response.
@@ -359,9 +364,13 @@ class qtype_stack_question extends question_graded_automatically_with_countback
      * Once we know the random seed, we can initialise all the other parts of the question.
      */
     public function initialise_question_from_seed() {
+        // If the question is marked as broken skip straight to error output.
         // We can detect a logically faulty question by checking if the cache can
         // return anything if it can't then we can simply skip to the output of errors.
-        if ($this->get_cached('units') !== null) {
+        if ($this->isbroken) {
+            // Question is marked as broken. Students should not see it.
+            $this->runtimeerrors[stack_string('questionbroken')] = true;
+        } else if ($this->get_cached('units') !== null) {
             // Build up the question session out of all the bits that need to go into it.
             // 1. question variables.
             $session = new stack_cas_session2([], $this->options, $this->seed);
@@ -761,7 +770,9 @@ class qtype_stack_question extends question_graded_automatically_with_countback
         $processor = new castext2_qa_processor(new stack_outofcontext_process());
         if ($this->questionnoteinstantiated !== null &&
             '' !== $this->questionnoteinstantiated->get_rendered($processor)) {
-            return $this->questionnoteinstantiated->get_rendered($processor);
+            return $this->questionnoteinstantiated->apply_placeholder_holder(
+                $this->questionnoteinstantiated->get_rendered($processor)
+            );
         }
         return stack_string('questionnote_missing');
     }
@@ -790,7 +801,7 @@ class qtype_stack_question extends question_graded_automatically_with_countback
     /**
      * The purpose of this function is to generate a human readable summary.
      * This is used by moodle in the anslaysis scripts.
-     * For download and offline analysis use the JSON version.
+     * For download and offline analysis use the JSON version below.
      * @param array $response the raw response array from students.
      */
     public function summarise_response(array $response) {
@@ -838,6 +849,36 @@ class qtype_stack_question extends question_graded_automatically_with_countback
             $bits[$name] = $state->status;
         }
         return $bits;
+    }
+
+    /**
+     * The purpose of this function is to generate a JSON summary for download and offline analysis.
+     * @param array $response reponse to summarise.
+     * @param array $metadata additional data to add to JSON.
+     * @return bool|string JSON
+     */
+    public function summarise_response_json(array $response, array $metadata = []) {
+        // Provide seed information on student's version via the normal moodle quiz report.
+        $bits = $metadata;
+        $bits['inputs'] = [];
+        $bits['prts'] = [];
+        $bits['seed'] = $this->seed;
+        foreach ($this->inputs as $name => $input) {
+            $state = $this->get_input_state($name, $response);
+            $bits['inputs'][$name] = $input->summarise_response_json($name, $state, $response);
+        }
+        // Add in the answer note for this response.
+        foreach ($this->prts as $name => $prt) {
+            $sum = [];
+            $state = $this->get_prt_result($name, $response, false);
+            // For offline analysis we return a score here even if the PRT is "formative".
+            $sum['score']   = $state->get_score();
+            $sum['penalty'] = $state->get_penalty();
+            $sum['note']    = array_map('trim', $state->get_answernotes());
+            $sum['errors']  = array_merge($state->get_errors(), $state->get_fverrors());
+            $bits['prts'][$name] = $sum;
+        }
+        return json_encode($bits);
     }
 
     // phpcs:ignore moodle.Commenting.MissingDocblock.Function
@@ -1750,17 +1791,18 @@ class qtype_stack_question extends question_graded_automatically_with_countback
         // 2. Check alt-text exists.
         // Reminder: previous approach in Oct 2021 tried to use libxml_use_internal_errors, but this was a dead end.
         $tocheck = [];
-        $text = '';
-        if ($this->questiontextinstantiated !== null) {
-            $text = trim($this->questiontextinstantiated->get_rendered());
-        }
-        if ($text !== '') {
-            $tocheck[stack_string('questiontext')] = $text;
-        }
-        $ct = $this->get_generalfeedback_castext();
-        $text = trim($ct->get_rendered($this->castextprocessor));
-        if ($text !== '') {
-            $tocheck[stack_string('generalfeedback')] = $text;
+        $fields = ['questiontext', 'specificfeedback', 'generalfeedback', 'questiondescription'];
+        foreach ($fields as $field) {
+            $text = '';
+            $fieldinstantiated = $field . 'instantiated';
+            if ($this->{$fieldinstantiated} !== null) {
+                $text = trim($this->{$fieldinstantiated}->get_rendered());
+            } else {
+                $text = trim($this->{$field} ?? '');
+            }
+            if ($text !== '') {
+                $tocheck[stack_string($field)] = $text;
+            }
         }
         // This is a compromise.  We concatinate all nodes and we don't instantiate this!
         foreach ($this->prts as $prt) {
@@ -2005,6 +2047,7 @@ class qtype_stack_question extends question_graded_automatically_with_countback
         $units = false;
         $forbiddenkeys = [];
         $sec = new stack_cas_security();
+        \stack_cas_castext2_block::$isinteractive = false;
 
         // Some counter resets to ensure that the result is the same even if
         // we for some reason would compile twice in a session.
@@ -2253,7 +2296,7 @@ class qtype_stack_question extends question_graded_automatically_with_countback
 
         // Remember to collect the extracted strings once all has been done.
         $cc['static-castext-strings'] = $map->get_map();
-
+        $cc['is-interactive'] = \stack_cas_castext2_block::$isinteractive;
         return $cc;
     }
 
@@ -2287,5 +2330,13 @@ class qtype_stack_question extends question_graded_automatically_with_countback
         $formatoptions->allowid = true;
         $text = $qa->rewrite_pluginfile_urls($text, $component, $filearea, $itemid);
         return format_text($text, $format, $formatoptions);
+    }
+
+    /**
+     * Is the question interactive?
+     * @return bool
+     */
+    public function is_interactive() {
+        return $this->get_cached('is-interactive');
     }
 }

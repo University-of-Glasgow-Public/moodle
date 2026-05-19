@@ -26,15 +26,17 @@ namespace qtype_stack;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once(__DIR__ . '../../stack/cas/castext2/blocks/iframe.block.php');
 require_once(__DIR__ . '/fixtures/apifixtures.class.php');
 require_once(__DIR__ . '/fixtures/test_base.php');
+require_once(__DIR__ . '../../api/controller/DiffController.php');
 require_once(__DIR__ . '../../api/controller/DownloadController.php');
 require_once(__DIR__ . '../../api/controller/GradingController.php');
 require_once(__DIR__ . '../../api/controller/RenderController.php');
 require_once(__DIR__ . '../../api/controller/ValidationController.php');
 require_once(__DIR__ . '../../api/controller/TestController.php');
 
-
+use api\controller\DiffController;
 use api\controller\DownloadController;
 use api\controller\GradingController;
 use api\controller\RenderController;
@@ -168,6 +170,7 @@ final class api_controller_test extends qtype_stack_testcase {
         $this->assertContains(1167893775, $this->output->questionvariants);
         $this->assertEquals(3, count($this->output->questionvariants));
         $this->assertEquals(0, count($this->output->iframes));
+        $this->assertEquals(false, $this->output->isinteractive);
     }
 
     public function test_render_specified_seed(): void {
@@ -190,6 +193,7 @@ final class api_controller_test extends qtype_stack_testcase {
         $this->assertEquals(true, isset($this->output->questionassets->{'input-ans1-2-0.svg'}));
         $this->assertEquals(true, isset($this->output->questionassets->{'input-ans1-3-0.svg'}));
         $this->assertEquals(true, isset($this->output->questionassets->{'input-ans1-4-0.svg'}));
+        $this->assertEquals(false, $this->output->isinteractive);
     }
 
     public function test_render_iframes(): void {
@@ -198,6 +202,7 @@ final class api_controller_test extends qtype_stack_testcase {
         $rc = new RenderController();
         $rc->__invoke($this->request, $this->response, []);
         $this->assertEquals(1, count($this->output->iframes));
+        $this->assertEquals(true, $this->output->isinteractive);
     }
 
     public function test_render_download(): void {
@@ -206,6 +211,7 @@ final class api_controller_test extends qtype_stack_testcase {
         $rc = new RenderController();
         $rc->__invoke($this->request, $this->response, []);
         $this->assertMatchesRegularExpression('/javascript\:download\(\'data.csv\'\, 1\)/s', $this->output->questionrender);
+        $this->assertEquals(true, $this->output->isinteractive);
     }
 
     public function test_validation(): void {
@@ -247,6 +253,7 @@ final class api_controller_test extends qtype_stack_testcase {
         $rc = new RenderController();
         $rc->__invoke($this->request, $this->response, []);
         $this->assertEquals('<p>Default question</p><p>[[input:ans1]] [[validation:ans1]]</p>', $this->output->questionrender);
+        $this->assertEquals(false, $this->output->isinteractive);
         $vc = new ValidationController();
         $vc->__invoke($this->request, $this->response, []);
         $this->assertStringContainsString('Your last answer was interpreted as follows:', $this->output->validation);
@@ -259,7 +266,7 @@ final class api_controller_test extends qtype_stack_testcase {
         $this->assertEquals(1, $this->output->scores->total);
         $this->assertEquals(1, $this->output->scoreweights->prt1);
         $this->assertEquals(1, $this->output->scoreweights->total);
-        $this->assertEquals('[[feedback:prt1]]', $this->output->specificfeedback);
+        $this->assertEquals('<p>[[feedback:prt1]]</p>', $this->output->specificfeedback);
         $this->assertStringContainsString('correct', $this->output->prts->prt1);
     }
 
@@ -338,7 +345,7 @@ final class api_controller_test extends qtype_stack_testcase {
         $this->assertEquals(1, count(get_object_vars($results->results)));
         $this->assertEquals(0, $results->results->noseed->passes);
         $this->assertEquals(2, $results->results->noseed->fails);
-        $this->assertEquals(stack_string('questiontestempty'), $results->results->noseed->messages);
+        $this->assertEquals('', $results->results->noseed->messages);
         $this->assertEquals('', $results->messages);
         $this->assertEquals(2, count(get_object_vars($results->results->noseed->outcomes)));
     }
@@ -395,5 +402,18 @@ final class api_controller_test extends qtype_stack_testcase {
         $this->assertEquals('', $results->results->noseed->messages);
         $this->assertEquals(0, $results->results->noseed->fails);
         $this->assertEquals(1, $results->results->noseed->passes);
+    }
+
+    public function test_diff(): void {
+        if (!defined('Symfony\Component\Yaml\Yaml::DUMP_COMPACT_NESTED_MAPPING')) {
+            $this->markTestSkipped('Symfony YAML extension is not available.');
+            return;
+        }
+        
+        $this->requestdata['questionDefinition'] = stack_api_test_data::get_question_string('test2');
+        $dc = new DiffController();
+        $dc->__invoke($this->request, $this->response, []);
+        $this->assertMatchesRegularExpression('/name: \'Algebraic input\'\nquestiontext: \|-\n/s',
+                $this->output->diff);
     }
 }

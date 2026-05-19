@@ -76,6 +76,10 @@ class stack_answertest_test_data {
         ['AlgEquiv', '', 'x1', 'x_1', 0, '', 'See docs on subscripts and different atoms.'],
         ['AlgEquiv', '', 'x_1', 'x[1]', 0, '', ''],
         ['AlgEquiv', '', 'x[1]', 'x1', 0, '', ''],
+        ['AlgEquiv', '', 'true', 'true', 1, 'ATLogic_True.', 'Logic'],
+        ['AlgEquiv', '', 'false', 'false', 1, 'ATLogic_True.', ''],
+        ['AlgEquiv', '', 'true', 'false', 0, '', ''],
+        ['AlgEquiv', '', 'false', 'true', 0, '', ''],
         ['AlgEquiv', '', 'integerp(3)', 'true', 1, 'ATLogic_True.', 'Predicates'],
         ['AlgEquiv', '', 'integerp(3.1)', 'true', 0, '', ''],
         ['AlgEquiv', '', 'integerp(3)', 'false', 0, '', ''],
@@ -103,6 +107,11 @@ class stack_answertest_test_data {
         ['AlgEquiv', '', '452', '4.52*10^2', 0, '', ''],
         ['AlgEquiv', '', '5.1e-2', '51/1000', 1, '', ''],
         ['AlgEquiv', '', '0.333333333333333', '1/3', 0, '', ''],
+        // Floats are evil: see issue #1581.
+        ['AlgEquiv', '', '0.99999999', '1', 0, '', ''],
+        ['AlgEquiv', '', '0.99999999', '99999999/10^8', 1, '', ''],
+        ['AlgEquiv', '', '0.99999999', '99999998/99999999', 1, '', ''],
+        ['AlgEquiv', '', '99999999/10^8', '99999998/99999999', 0, '', ''],
         ['AlgEquiv', '', '(0.5+x)*2', '2*x+1', 1, '', ''],
         ['AlgEquiv', '', '0.333333333333333*x^2', 'x^2/3', 0, '', ''],
         ['AlgEquiv', '', '0.1*(2.0*s^2+6.0*s-25.0)/s', '(2*s^2+6*s-25)/(10*s)', 1, '', ''],
@@ -117,6 +126,25 @@ class stack_answertest_test_data {
         ['AlgEquiv', '', '(4*sqrt(3)*%i+4)^(1/5)', 'polarform((4*sqrt(3)*%i+4)^(1/5))', 1, '', ''],
         ['AlgEquiv', '', '5/4*%e^(%i*%pi/6)', '5*sqrt(3)/8+5/8*%i', 1, '', ''],
         ['AlgEquiv', '', '%i/sqrt(x)', 'sqrt(-1/x)', 1, '', ''],
+        ['AlgEquiv', '', '%e^(%i*t)', 'cos(t)+%i*sin(t)', 1, '', ''],
+        ['AlgEquiv', '', '%e^(%i*t)', '%i*sin(t)', 0, '', ''],
+        ['AlgEquiv', '', '%e^(%i*200*t)', '%e^(%i*199*t)', 0, '', ''],
+        // Cases below illustrate the problem with trigexpand:true for complex exponentials with large powers.
+        ['AlgEquiv', '', '%i*sin(3*k)+cos(3*k)', '%e^(3*%i*k)', 1, '', ''],
+        ['AlgEquiv', '', '%i*(3*cos(k)^2*sin(k)-sin(k)^3)-3*cos(k)*sin(k)^2+cos(k)^3', '%e^(3*%i*k)', 1, '', ''],
+        ['AlgEquiv', '', '%i*(3*cos(k)^2*sin(k)-sin(k)^3)-3*cos(k)*sin(k)^2+cos(k)^3', '%e^(7*%i*k)', 0, '', ''],
+        ['AlgEquiv', '', 'F(k-3)*%e^(31*%i*k)', 'F(k-3)*%e^(30*%i*k)+F(k+3)*%e^(30*%i*k)', 0, '', ''],
+        ['AlgEquiv', '', 'F(k-3)*%e^(31*%i*k)',
+            '(algebraic_equivalence_trigexpandp:false,F(k-3)*%e^(300*%i*k)+F(k+3)*%e^(300*%i*k))', 0, '', ''],
+        ['AlgEquiv', '', 'F(k)*sin(1000*k)', '(algebraic_equivalence_trigexpandp:false,F(k)*cos(1000*x))', 0, '', ''],
+        ['AlgEquiv', '', '(-%i*k^3*%e^(800*%i*k)*F(k+3)-%i*F(k-3)*k^3*%e^(800*%i*k))/2',
+            '(algebraic_equivalence_trigexpandp:false,-(%i*F(k-3)*k^3*%e^(800*%i*k))/2)', 0, '', ''],
+
+        // Cases in which you can't use "factor".
+        ['AlgEquiv', '', 'F(k)*%e^(1000*k)', '(algebraic_equivalence_factorp:false,F(k)*%e^(1000*x))', 0, '', ''],
+        ['AlgEquiv', '', 'F(k)*%e^(1000*k)', 'F(k)*%e^(1000*k)', 1, '', ''],
+        ['AlgEquiv', '', 'sum(sin(n*x/6)*exp(-7*n^2*t/36),n,1,inf)', '%e^-(112*t)*sin(4*x)', 0, '', ''],
+        ['AlgEquiv', '', 'F(xi)', 'int(f(x)*%e^(-i*x*xi), x, -inf, inf)', 0, '', ''],
 
         ['AlgEquiv', '', 'inf', 'inf', 1, '', 'Infinity'],
         ['AlgEquiv', '', 'inf', '-inf', 0, '', ''],
@@ -127,9 +155,11 @@ class stack_answertest_test_data {
         ['AlgEquiv', '', 'x^(1/2)', 'sqrt(x)', 1, '', 'Powers and roots'],
         ['AlgEquiv', '', 'x', 'sqrt(x^2)', 0, '', ''],
         ['AlgEquiv', '', '\'root(x)', 'x^(1/2)', 1, '', ''],
+        ['AlgEquiv', '', '\'root(x)', 'sqrt(x)', 1, '', ''],
         ['AlgEquiv', '', '\'root(x,m)', 'x^(1/m)', 1, '', ''],
         ['AlgEquiv', '', 'x', '\'root(x^2)', 0, '', ''],
         ['AlgEquiv', '', 'abs(x)', 'sqrt(x^2)', 1, '', ''],
+        ['AlgEquiv', '', '(assume(a>0),a*sqrt(5))', 'sqrt(5*a^2)', 1, '', ''],
         ['AlgEquiv', '', '1/abs(x)^(1/3)', '(abs(x)^(1/3)/abs(x))^(1/2)', 1, '', ''],
         ['AlgEquiv', '', 'sqrt((x-3)*(x-5))', 'sqrt(x-3)*sqrt(x-5)', 0, '', ''],
         ['AlgEquiv', '', '1/sqrt(x)', 'sqrt(1/x)', 1, '', ''],
@@ -158,6 +188,7 @@ class stack_answertest_test_data {
         ['AlgEquiv', '', '(2*pi)/(k/m)^(1/2)', '(2*pi)/(k/m)^(1/2)', 1, '', ''],
         ['AlgEquiv', '', '(2*pi)*(m/k)^(1/2)', '(2*pi)/(k/m)^(1/2)', 1, '', ''],
         ['AlgEquiv', '', 'sqrt(2*x/10+1)', 'sqrt((2*x+10)/10)', 1, '', ''],
+        ['AlgEquiv', '', '\'root(2*x/10+1)', 'sqrt((2*x+10)/10)', 1, '', ''],
         ['AlgEquiv', '', '((x+3)^2*(x+3))^(1/3)', '((x+3)*(x^2+6*x+9))^(1/3)', 1, '', ''],
         ['AlgEquiv', '', '((x+3)^2*(x+3))^(1/3)', '((x+3)*(x^2+6*x+9))^(1/3)', 1, '', 'Need to factor internally.'],
 
@@ -193,6 +224,7 @@ class stack_answertest_test_data {
         ['AlgEquiv', '', 'cos(x)^2+sin(x)^2', '1', 1, '', ''],
         ['AlgEquiv', '', 'cos(x+y)', 'cos(x)*cos(y)-sin(x)*sin(y)', 1, '', ''],
         ['AlgEquiv', '', 'cos(x+y)', 'cos(x)*cos(y)+sin(x)*sin(y)', 0, '', ''],
+        ['AlgEquiv', '', '(-1)^n*cos(x)^n', '(-cos(x))^n', 1, '', ''],
         ['AlgEquiv', '', 'cos(x#pm#y)', 'cos(x)*cos(y)-(#pm#sin(x)*sin(y))', 1, 'ATLogic_True.', ''],
         ['AlgEquiv', '', 'sin(x#pm#y)', 'sin(x)*cos(y)#pm#cos(x)*sin(y)', 1, 'ATLogic_True.', ''],
         ['AlgEquiv', '', 'sin(x#pm#y)', 'cos(x)*sin(y)#pm#sin(x)*cos(y)', 0, '', ''],
@@ -269,10 +301,11 @@ class stack_answertest_test_data {
         // The log(x) function is base e.
         ['AlgEquiv', '', 'log(root(x,n))', 'lg(x,10)/n', 0, '', ''],
         ['AlgEquiv', '', 'x^log(y)', 'y^log(x)', 1, '', ''],
-        // Example where some pre-processing is needed.
-        ['AlgEquiv', '', 'log((x+1)/(1-x))', '-log((1-x)/(x+1))', 0, '', ''],
+        // Example where some pre-processing was needed, but not any more.
+        ['AlgEquiv', '', 'log((x+1)/(1-x))', '-log((1-x)/(x+1))', 1, '', ''],
         ['AlgEquiv', '', 'ratsimp(logcontract(log((x+1)/(1-x))))',
             'ratsimp(logcontract(-log((1-x)/(x+1))))', 1, '', '', ],
+        ['AlgEquiv', '', 'log((x+1)/(1-x))', '-log((1-x)/(x+2))', 0, '', ''],
 
         ['AlgEquiv', '', 'e^1-e^(-1)', '2*sinh(1)', 1, '', 'Hyperbolic trig'],
         ['AlgEquiv', '', 'x', '[1,2,3]', 0, 'ATAlgEquiv_SA_not_list.', 'Lists'],
@@ -524,6 +557,8 @@ class stack_answertest_test_data {
         ['AlgEquiv', '', 'g(x):=x^2', 'f(x):=x^2', 0, 'ATFunction_wrongname. ATFunction_true.', ''],
         ['AlgEquiv', '', 'f(y):=y^2', 'f(x):=x^2', 1, 'ATFunction_arguments_different. ATFunction_true.', ''],
         ['AlgEquiv', '', 'f(a,b):=a^2+b^2', 'f(x,y):=x^2+y^2', 1, 'ATFunction_arguments_different. ATFunction_true.', ''],
+        // F appears as both a variable and as a function name.
+        ['AlgEquiv', '', '-30*F', '6*F(l-5*x)', 0, '', ''],
 
         ['AlgEquiv', '', '1', 'x>1', 0, 'ATAlgEquiv_SA_not_inequality.', 'Inequalities'],
         ['AlgEquiv', '', 'x=1', 'x>1 and x<5', 0, 'ATAlgEquiv_TA_not_equation.', ''],
@@ -630,6 +665,17 @@ class stack_answertest_test_data {
             'AlgEquiv', '', 'sqrt(2)*sqrt(3)+2*(sqrt(2/3))*x-(2/3)*(sqrt(2/3))*x^2+(4/9)*(sqrt(2/3))*x^3',
             '4*sqrt(6)*x^3/27-(2*sqrt(6)*x^2)/9+(2*sqrt(6)*x)/3+sqrt(6)', 1, '', '',
         ],
+        ['AlgEquiv', '', 'x = -1/2 + sqrt(1/4 + 4/3)', 'x = (-3 + sqrt(9 + 48))/6', 1, 'ATEquation_sides', ''],
+        [
+            'AlgEquiv', '', '{x = -1/2 + sqrt(1/4 + 4/3), x = (-1/2 - sqrt(1/4 + 4/3))}',
+            '{x = (-3 + sqrt(9 + 48))/6, x = (-3 - sqrt(9 + 48))/6}', 0, 'ATSet_wrongentries.', '',
+        ],
+        // Not, to establish equivalence of sets of equations we need to manually pre-process.
+        [
+            'AlgEquiv', '', 'radcan(trigrat({x = -1/2 + sqrt(1/4 + 4/3), x = (-1/2 - sqrt(1/4 + 4/3))}))',
+            'radcan(trigrat({x = (-3 + sqrt(9 + 48))/6, x = (-3 - sqrt(9 + 48))/6}))', 1, '', '',
+        ],
+
         ['AlgEquiv', '', '(n+1)*n!', '(n+1)!', 1, '', 'Factorials and binomials'],
         ['AlgEquiv', '', 'n/n!', '1/(n-1)!', 1, '', ''],
         ['AlgEquiv', '', 'n/n!', '1/(n+1)!', 0, '', ''],
@@ -671,7 +717,6 @@ class stack_answertest_test_data {
         ],
         ['AlgEquiv', '', 'abs(x^2-4)/(abs(x-2)*abs(x+2))', '1', -3, '', ''],
         ['AlgEquiv', '', 'abs(x^2-4)', 'abs(x-2)*abs(x+2)', -3, '', ''],
-        ['AlgEquiv', '', '(-1)^n*cos(x)^n', '(-cos(x))^n', -3, '', ''],
         ['AlgEquiv', '', '(sqrt(108)+10)^(1/3)-(sqrt(108)-10)^(1/3)', '2', -3, '', ''],
         ['AlgEquiv', '', '(sqrt(2+sqrt(2))+sqrt(2-sqrt(2)))/(2*sqrt(2))', 'sqrt(sqrt(2)+2)/2', -3, '', ''],
         ['AlgEquiv', '', 'sqrt(2*x*sqrt(x^2+1)+2*x^2+1)-sqrt(x^2+1)-x', '0', -3, '', ''],
@@ -728,6 +773,11 @@ class stack_answertest_test_data {
         ['AlgEquiv', '', 'diff(y(x),x)', 'diff(y,x)', 0, '', ''],
         // Both get evaluated to zero.
         ['AlgEquiv', '', 'diff(y,x)', 'diff(y,x,2)', 1, '', ''],
+        // Tests with unevaluated integrals.
+        ['AlgEquiv', '', 'int(f(x)*%e^(-i*x*xi), x, -inf, inf)', 'int(f(x)*%e^(-i*x*xi), x, -inf, inf)', 1, '', ''],
+        ['AlgEquiv', '', 'int(f(t)*%e^(-i*t*xi), t, -inf, inf)', 'int(f(x)*%e^(-i*x*xi), x, -inf, inf)', -3, '', ''],
+        ['AlgEquiv', '', 'F(xi)', 'int(f(x)*%e^(-i*x*xi), x, -inf, inf)', 0, '', ''],
+        ['AlgEquiv', '', 'F(xi)^(-25*xi^2*t)', 't', 0, '', ''],
 
         ['AlgEquiv', '', '"Hello"', '"Hello"', 1, 'ATAlgEquiv_String', 'Basic support for strings'],
         ['AlgEquiv', '', '"hello"', '"Hello"', 0, 'ATAlgEquiv_String', ''],
@@ -861,6 +911,8 @@ class stack_answertest_test_data {
         ['EqualComAss', '', '1/0', '0', -1, 'ATEqualComAss_STACKERROR_SAns.', ''],
         ['EqualComAss', '', '0', '1/0', -1, 'ATEqualComAss_STACKERROR_TAns.', ''],
         ['EqualComAss', '', '2/4', '1/2', 0, 'ATEqualComAss (AlgEquiv-true).', 'Numbers'],
+        ['EqualComAss', '', '0.75', '3/4', 0, 'ATEqualComAss (AlgEquiv-true).', ''],
+        ['EqualComAss', '', 'num_ensure_rational(0.75)', '3/4', 1, '', ''],
         ['EqualComAss', '', '3^2', '8', 0, 'ATEqualComAss (AlgEquiv-false).', ''],
         ['EqualComAss', '', '3^2', '9', 0, 'ATEqualComAss (AlgEquiv-true).', ''],
         ['EqualComAss', '', 'cos(0)', '1', 0, 'ATEqualComAss (AlgEquiv-true).', ''],
@@ -931,6 +983,7 @@ class stack_answertest_test_data {
         ['EqualComAss', '', '(a+b)/1', '(b+a)/1', 1, '', ''],
         ['EqualComAss', '', '1*x', 'x', 0, 'ATEqualComAss (AlgEquiv-true).', 'No simplicifcation here'],
         ['EqualComAss', '', '23+0*x', '23', 0, 'ATEqualComAss (AlgEquiv-true).', ''],
+        ['EqualComAss', '', 'num_ensure_rational(7/6*x-0.75*y)', '(7/6)*x-3/4*y', 1, '', ''],
         ['EqualComAss', '', 'x+0', 'x', 0, 'ATEqualComAss (AlgEquiv-true).', ''],
         ['EqualComAss', '', 'x^1', 'x', 0, 'ATEqualComAss (AlgEquiv-true).', ''],
         ['EqualComAss', '', '(1/2)*(a+b)', '(a+b)/2', 0, 'ATEqualComAss (AlgEquiv-true).', ''],
@@ -1057,10 +1110,24 @@ class stack_answertest_test_data {
         ['EqualComAssRules', '[zeroAdd]', 'a*(b*c)', '(a*b)*c', 1, '', ''],
         ['EqualComAssRules', '[noncomAdd]', 'a+b', 'b+a', 0, '', ''],
         ['EqualComAssRules', '[noncomAdd]', 'a+(b+c)', '(a+b)+c', 1, '', ''],
+        ['EqualComAssRules', '[noncomMul]', '-(-a*b)', '(-a)*(-b)', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul,comNeg]', '-(-a*b)', '(-a)*(-b)', 1, '', ''],
+        ['EqualComAssRules', '[noncomMul]', '-(-a*b)', '(-a)*(-b)', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul,comNeg]', '-(-a*b)', '(-b)*(-a)', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul,comNeg]', '-(-1*2)', '(-2)*(-1)', 0, '', ''],
         ['EqualComAssRules', '[noncomMul]', 'a*b', 'b*a', 0, '', ''],
         ['EqualComAssRules', '[noncomMul]', 'a*(b*c)', '(a*b)*c', 1, '', ''],
         ['EqualComAssRules', '[noncomMul]', '-a*b', 'b*-a', 0, '', ''],
         ['EqualComAssRules', '[noncomMul]', '-a/b', 'a/-b', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul]', 'A^2+A*B+A*B+B^2', 'B^2+A*B+B*A+A^2', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul]', 'a*2*b*3', '2*3*b*a', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul,comMulNum]', 'a*2*b*3', '2*3*b*a', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul,comMulNum]', 'a*2*b*3', '2*3*a*b', 1, '', ''],
+        ['EqualComAssRules', '[noncomMul,comMulNum]', 'a*2*b*3', '6*b*a', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul,comMulNum]', 'a*2*-b*3', '-2*3*b*a', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul,comMulNum]', 'a*2*-b*3', '-2*3*a*b', 1, '', ''],
+        ['EqualComAssRules', '[noncomMul,comMulNum]', '-(-a*b)', '(-b)*(-a)', 0, '', ''],
+        ['EqualComAssRules', '[noncomMul,comMulNum]', '-(-a*b)', '(-a)*(-b)', 1, '', ''],
         ['EqualComAssRules', '[testdebug,zeroAdd]', '1*a', 'a', 0, 'ATEqualComAssRules: [1 nounmul a,a].', ''],
         // This is a common example where EqualComAss is not adequate.
         ['EqualComAssRules', '[zeroAdd]', '1/2*sin(3*x)', 'sin(3*x)/2', 0, '', ''],
@@ -1096,6 +1163,9 @@ class stack_answertest_test_data {
         ['EqualComAssRules', '[negNeg]', '-(-(-a))', '-a', 1, '', ''],
         ['EqualComAssRules', '[negNeg,noncomMul]', '-(-(-a))', '-a', 1, '', ''],
         ['EqualComAssRules', '[testdebug,negNeg]', '-(-(-a))', 'a', 0, 'ATEqualComAssRules (AlgEquiv-false).', ''],
+        ['EqualComAssRules', '[negNeg]', '(-b)*(-a)', 'a*b', 1, '', ''],
+        ['EqualComAssRules', '[negNeg,noncomMul]', '(-b)*(-a)', 'a*b', 0, '', ''],
+        ['EqualComAssRules', '[negNeg,noncomMul]', '(-b)*(-a)', 'b*a', 1, '', ''],
         ['EqualComAssRules', 'ID_TRANS', '3/(-x)', '-3/x', 0, '', ''],
         [
             'EqualComAssRules', '[testdebug,ID_TRANS]', '3/(-x)', '-3/x', 0,
@@ -1174,6 +1244,8 @@ class stack_answertest_test_data {
         ['EqualComAssRules', '[noncomMul,intMul]', '2*a*3', 'a*6', 1, '', ''],
         ['EqualComAssRules', '[noncomMul,intMul]', 'a*6', '6*a', 1, '', ''],
         ['EqualComAssRules', '[noncomMul,intMul]', 'A^2+2*A*B+B^2', 'B^2+A*2*B+A^2', 1, '', ''],
+        ['EqualComAssRules', '[intPow]', '2^3', '8', 1, '', ''],
+        ['EqualComAssRules', '[intPow]', '2*2*2', '8', 0, '', ''],
         // This next example is parsing rules.  In Maxima ev(a/b/c, simp)=a/(b*c).
         [
             'EqualComAssRules', '[testdebug,ID_TRANS]', 'a/b/c', 'a/(b*c)', 0,
@@ -1230,6 +1302,40 @@ class stack_answertest_test_data {
         ],
         ['EqualComAssRules', '[ID_TRANS,sqrtRem]', '1/sqrt(3)', '1/3^(1/2)', 1, '', ''],
         ['EqualComAssRules', '[ID_TRANS,sqrtRem]', '1/sqrt(3)', '3^(-1/2)', 0, '', ''],
+        ['EqualComAssRules', '[onePow]', '1^x', '1', 1, '', ''],
+        ['EqualComAssRules', '[onePow]', '(2-1)^x', '1', 0, '', ''],
+        ['EqualComAssRules', '[idPow]', 'x^1', 'x', 1, '', ''],
+        ['EqualComAssRules', '[idPow]', 'x^(2-1)', 'x', 0, '', ''],
+        ['EqualComAssRules', '[zPow]', 'x^0', '1', 1, '', ''],
+        ['EqualComAssRules', '[zPow]', 'x^(1-1)', '1', 0, '', ''],
+        ['EqualComAssRules', '[zeroPow]', '0^x', '0', 1, '', ''],
+        ['EqualComAssRules', '[zeroPow]', '(1-1)^x', '0', 0, '', ''],
+        ['EqualComAssRules', '[oneDiv]', 'x*y/1', 'x*y', 1, '', ''],
+        ['EqualComAssRules', '[oneDiv]', 'x/1', 'x', 1, '', ''],
+        ['EqualComAssRules', '[oneDiv]', 'x/1', 'x*1', 0, '', ''],
+        ['EqualComAssRules', '[oneDiv]', 'x+y/1', 'x+y', 1, '', ''],
+        ['EqualComAssRules', '[oneDiv]', 'x*y/(1*a)', 'x*y/a', 0, '', ''],
+        ['EqualComAssRules', '[oneMul]', 'x*y/(1*a)', 'x*y/a', 1, '', ''],
+        ['EqualComAssRules', '[oneMul]', 'x*y/(1*a)', 'x*y/a', 1, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,ratLow]', '2/4', '1/2', 1, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,NEG_TRANS,ratLow]', '2/-4', '-1/2', 1, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,NEG_TRANS,ratLow]', '7/-21+a', 'a-1/3', 1, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,NEG_TRANS,ratLow]', '7/-20+a', 'a-1/3', 0, 'ATEqualComAssRules (AlgEquiv-false).', ''],
+        ['EqualComAssRules', '[ID_TRANS,recipMul,intMul]', '(1/2)*(4/3)', '4/6', 1, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,recipMul,intMul,ratLow]', '(1/2)*(4/3)', '2/3', 1, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,NEG_TRANS,ratAdd]', '1/2+1/2', '1', 1, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,NEG_TRANS,ratAdd]', '(1/2+1/2)*x^2', 'x^2', 1, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,NEG_TRANS,ratAdd]', '2/3+1/-2', '1/6', 1, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,NEG_TRANS,ratAdd]', '2/3+1/-2-1/6', '0', 1, '', ''],
+        ['EqualComAssRules', '[NEG_TRANS,ratAdd]', '1/2+1/-1', '-1/2', 1, '', ''],
+        ['EqualComAssRules', '[NEG_TRANS,ratAdd]', '1/2-1/1', '-1/2', 1, '', ''],
+        // Including ID_TRANS has oneDiv which turns 1/1->1 which is an integer, before ratAdd gets a look.
+        ['EqualComAssRules', '[ID_TRANS,NEG_TRANS,ratAdd]', '1/2+1/-1', '-1/2', 0, '', ''],
+        ['EqualComAssRules', '[ID_TRANS,NEG_TRANS,ratAdd]', '1/2-1/1', '-1/2', 0, '', ''],
+        ['EqualComAssRules', '[oneDiv]', 'x=1', '1=x', 1, '', 'Equations'],
+        ['EqualComAssRules', '[noncomEq]', 'x=1', '1=x', 0, '', ''],
+        ['EqualComAssRules', '[zeroAdd]', '20*a+15*b+8*c+4*d-17', 'a*20+b*15+c*8+d*4=-17', 0, 'ATEqualComAssRules ATAlgEquiv_SA_not_equation.', ''],
+        ['EqualComAssRules', '[zeroAdd]', '20*a+15*b+8*c+4*d=-17', 'a*20+b*15+c*8+d*4=-17', 1, '', ''],
 
         ['CasEqual', '', '1/0', 'x^2-2*x+1', -1, 'ATCASEqual_STACKERROR_SAns.', ''],
         ['CasEqual', '', 'x', '1/0', -1, 'ATCASEqual_STACKERROR_TAns.', ''],
@@ -1755,6 +1861,9 @@ class stack_answertest_test_data {
         ['Diff', 'x', 'e^x+2', 'e^x', 0, 'ATDiff_int.', ''],
         ['Diff', 'x', 'n*x^n', 'n*x^(n-1)', -1, 'ATDiff_STACKERROR_SAns.', ''],
         ['Diff', 'x', 'n*x^n', '(assume(n>0), n*x^(n-1))', 0, '', ''],
+        ['Diff', 'x', '3*x/root(3*x^2+2)', '3*x/sqrt(3*x^2+2)', 1, 'ATDiff_true.', ''],
+        ['Diff', 'x', '3*x/\'root(3*x^2+2)', '3*x/sqrt(3*x^2+2)', 1, 'ATDiff_true.', ''],
+        ['Diff', 'x', '\'root(2*x/10+1)', 'sqrt((2*x+10)/10)', 1, 'ATDiff_true.', ''],
 
         ['Int', '', '1/0', '1', -1, 'STACKERROR_OPTION.', ''],
         ['Int', 'x', '1/0', '1', -1, 'ATInt_STACKERROR_SAns.', ''],
@@ -1975,6 +2084,7 @@ class stack_answertest_test_data {
             'Int', 'x', '2/3*sqrt(3)*(atan(sin(x)/(sqrt(3)*(cos(x)+1)))-(atan(sin(x)/(cos(x)+1))))+x/sqrt(3)',
             '2*atan(sin(x)/(sqrt(3)*(cos(x)+1)))/sqrt(3)', -3, 'ATInt_const.', 'Stoutemyer (currently fails)',
         ],
+        ['Int', 'x', '3*x/\'root(3*x^2+2)+c', '3*x/sqrt(3*x^2+2)', 1, 'ATInt_true.', ''],
 
         // This list is based on the test cases for ATInt.
         ['Antidiff', '', '1/0', '1', -1, 'STACKERROR_OPTION.', ''],
@@ -2388,9 +2498,12 @@ class stack_answertest_test_data {
         ],
         ['NumRelative', '0.1', '{1.414,3.1}', '{pi,sqrt(2)}', 1, '', ''],
         ['NumRelative', '0.1', '{0,1,2}', '{0,1,2}', 1, '', ''],
+        ['NumRelative', '0.01', '{-1,2,3}', '{-1,2,3}', 1, '', ''],
+        ['NumRelative', '0.01', '{-1.1,2,3}', '{-1,2,3}', 0, 'ATNumerical_wrongentries: TA/SA=[-1.0], SA/TA=[-1.1].', ''],
         // What happens with floating point complex numbers?
         // This is rejected as not a real number.
         ['NumRelative', '0.1', '0.99*%i', '%i', 0, 'ATNumerical_SA_not_number.', 'Complex numbers'],
+        ['NumRelative', '', 'displaydp(0.95,2)', '1', 1, '', ''],
 
         ['NumAbsolute', '', '1/0', '0', -1, 'ATNumAbsolute_STACKERROR_SAns.', 'Basic tests'],
         ['NumAbsolute', '', '0', '1/0', -1, 'ATNumAbsolute_STACKERROR_TAns.', ''],
@@ -2416,6 +2529,13 @@ class stack_answertest_test_data {
             'ATNumerical_wrongentries: TA/SA=[3.14159], SA/TA=[3.1].', '',
         ],
         ['NumAbsolute', '0.1', '{1,1.414,3.1,2}', '{1,2,pi,sqrt(2)}', 1, '', ''],
+        ['NumAbsolute', '0.01', '{-1,2,3}', '{-1,2,3}', 1, '', ''],
+        ['NumAbsolute', '0.01', '{-1.1,2,3}', '{-1,2,3}', 0, 'ATNumerical_wrongentries: TA/SA=[-1.0], SA/TA=[-1.1].', ''],
+        ['NumAbsolute', '0.02', 'dispdp(4.09,2)', '4.1', 1, '', ''],
+        ['NumAbsolute', '0.02', 'displaydp(4.09,2)', '4.1', 1, '', ''],
+        ['NumAbsolute', '0.02', 'remove_numerical_inert(dispdp(409/100,2))', '4.1', 1, '', ''],
+        ['NumAbsolute', '0.01', '[displaydp(-1,0),2,3]', '[-1,2,3]', 1, '', ''],
+        ['NumAbsolute', '0.01', '{displaydp(-1,0),2,3}', '{-1,2,3}', 1, '', ''],
 
         ['NumSigFigs', '', '3.141', '3.1415927', -1, 'STACKERROR_OPTION.', 'Basic tests'],
         ['NumSigFigs', '3', '1/0', '3', -1, 'ATNumSigFigs_STACKERROR_SAns.', ''],
@@ -3020,11 +3140,11 @@ class stack_answertest_test_data {
         // Functionality test.
         [
             'Levenshtein', '0.9', '"Hello"', '[["Hello"], ["Goodbye"]]', 1,
-            'ATLevenshtein_true: [[1.0,"Hello"],[0.0,"Goodbye"]].', 'Usage tests',
+            'ATLevenshtein_true: [[1,"Hello"],[0,"Goodbye"]].', 'Usage tests',
         ],
         [
             'Levenshtein', '[0.9]', '"hello"', '[["Hello"], ["Goodbye"]]', 1,
-            'ATLevenshtein_true: [[1.0,"Hello"],[0.0,"Goodbye"]].', '',
+            'ATLevenshtein_true: [[1,"Hello"],[0,"Goodbye"]].', '',
         ],
         // Also tests <= in comparisons, using a fine error.
         [
@@ -3062,12 +3182,12 @@ class stack_answertest_test_data {
         [
             'Levenshtein', '0.75', 'sremove_chars(".,!?", "Good, day!")',
             '[["Hello", "Good day", "Hi"], ["Goodbye", "Bye", "Fairwell"]]',
-            1, 'ATLevenshtein_true: [[1.0,"Good day"],[0.5,"Goodbye"]].', '',
+            1, 'ATLevenshtein_true: [[1,"Good day"],[0.5,"Goodbye"]].', '',
         ],
         [
             'Levenshtein', '0.75', '"   good     day  "',
             '[["Hello", "Good day", "Hi"], ["Goodbye", "Bye", "Fairwell"]]',
-            1, 'ATLevenshtein_true: [[1.0,"Good day"],[0.5,"Goodbye"]].', '',
+            1, 'ATLevenshtein_true: [[1,"Good day"],[0.5,"Goodbye"]].', '',
         ],
         [
             'Levenshtein', '[0.75, WHITESPACE]', '"   good     day  "',

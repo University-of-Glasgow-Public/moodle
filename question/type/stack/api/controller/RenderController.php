@@ -15,7 +15,7 @@
 // along with Stack.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This script handles the various deploy/undeploy actions from questiontestrun.php.
+ * This script handles rendering a question and inputs.
  *
  * @package    qtype_stack
  * @copyright  2023 RWTH Aachen
@@ -100,8 +100,10 @@ class RenderController {
         $inputs = [];
         foreach ($question->inputs as $name => $input) {
             $apiinput = new StackRenderInput();
-
-            $apiinput->samplesolution = $input->get_api_solution($question->get_ta_for_input($name));
+            $correctresponse = (isset($question->get_correct_response()[$name])) ? $question->get_correct_response()[$name] : null;
+            // Deal with matrix questions.
+            $correctresponse = (isset($correctresponse)) ? $correctresponse : $question->get_ta_for_input($name);
+            $apiinput->samplesolution = $input->get_api_solution($correctresponse);
             $apiinput->samplesolutionrender = $input->get_api_solution_render(
                 $question->get_ta_render_for_input($name), $question->get_ta_for_input($name));
 
@@ -135,6 +137,7 @@ class RenderController {
         $renderresponse->questionseed = $question->seed;
         $renderresponse->questionvariants = $question->deployedseeds;
         $renderresponse->iframes = StackIframeHolder::$iframes;
+        $renderresponse->isinteractive = $question->is_interactive();
 
         $response->getBody()->write(json_encode($renderresponse));
         return $response->withHeader('Content-Type', 'application/json');

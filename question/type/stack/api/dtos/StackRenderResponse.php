@@ -15,7 +15,7 @@
 // along with Stack.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This script handles the various deploy/undeploy actions from questiontestrun.php.
+ * Response to a question render request.
  *
  * @package    qtype_stack
  * @copyright  2023 RWTH Aachen
@@ -41,6 +41,8 @@ class StackRenderResponse {
     public $questionvariants;
     /** @var array */
     public $iframes;
+    /** @var bool */
+    public $isinteractive;
 }
 
 // phpcs:ignore moodle.Commenting.MissingDocblock.Class
