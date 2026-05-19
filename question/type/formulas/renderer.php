@@ -106,18 +106,15 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
      * @return string HTML fragment
      */
     public function head_code(question_attempt $qa): string {
-        global $CFG;
         $this->page->requires->js_call_amd(
             'qtype_formulas/answervalidation',
             'init',
             [get_config('qtype_formulas', 'debouncedelay')]
         );
-
-        // Include backwards-compatibility layer for Bootstrap 4 data attributes, if available.
-        // We may safely assume that if the uncompiled version is there, the minified one exists as well.
-        if (file_exists($CFG->dirroot . '/theme/boost/amd/src/bs4-compat.js')) {
-            $this->page->requires->js_call_amd('theme_boost/bs4-compat', 'init');
-        }
+        $this->page->requires->js_call_amd(
+            'qtype_formulas/tooltip',
+            'init',
+        );
 
         return '';
     }
@@ -166,8 +163,11 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
             $feedback .= $this->part_correct_response($part);
         }
 
-        // Put all feedback into a <div> with the appropriate CSS class and append it to the output.
-        $output .= html_writer::nonempty_tag('div', $feedback, ['class' => 'formulaspartoutcome outcome']);
+        // If the current response is a real submission (or identical to one), we put all feedback into a
+        // <div> with the appropriate CSS class and append it to the output.
+        if ($this->response_is_same_as_submitted($qa, $part)) {
+            $output .= html_writer::nonempty_tag('div', $feedback, ['class' => 'formulaspartoutcome outcome']);
+        }
 
         return html_writer::tag('div', $output, ['class' => 'formulaspart']);
     }
@@ -203,7 +203,9 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
         $result->feedbacksymbol = '';
         $result->feedbackclass = '';
         // ... unless correctness is requested in the display options.
-        if ($options->correctness) {
+        // Note that no feedback should be given, if the response has been modified since the last submission,
+        // i. e. it is just a response that was saved during page navigation.
+        if ($this->response_is_same_as_submitted($qa, $part) && $options->correctness) {
             $result->feedbacksymbol = $this->feedback_image($result->fraction);
             $result->feedbackclass = $this->feedback_class($result->fraction);
         }
@@ -282,6 +284,7 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
 
         // Inside the fieldset, we put the accessibility label, following the example of core's multichoice
         // question type, i. e. the label is inside a <span> with class 'sr-only', wrapped in a <legend>.
+        // TODO: we should use visually-hidden after dropping Moodle 4.5.
         $output .= html_writer::start_tag('legend', ['class' => 'sr-only']);
         $output .= html_writer::span(
             $this->generate_accessibility_label_text($answerindex, $part->numbox, $part->partindex, $question->numparts),
@@ -419,7 +422,7 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
     protected function create_label_for_input(string $text, string $inputid, array $additionalattributes = []): array {
         $labelid = 'lbl_' . str_replace(':', '__', $inputid);
         $attributes = [
-            'class' => 'subq accesshide',
+            'class' => 'subq sr-only',
             'for' => $inputid,
             'id' => $labelid,
         ];
@@ -657,13 +660,10 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
         $iscombined = $inputattributes['data-withunit'] === '1';
         $isnumber = !$iscombined && $inputattributes['data-answertype'] === qtype_formulas::ANSWER_TYPE_NUMBER;
         $shownumbertooltip = get_config('qtype_formulas', 'shownumbertooltip');
-        if (!$isnumber || $shownumbertooltip) {
-            $inputattributes += [
-                'data-toggle' => 'tooltip',
-                'data-title' => $title,
-                'data-custom-class' => 'qtype_formulas-tooltip',
-            ];
-        }
+        $inputattributes += [
+            'data-qtype-formulas-enable-tooltip' => (!$isnumber || $shownumbertooltip ? 'true' : 'false'),
+            'data-qtype-formulas-tooltip-trigger' => get_config('qtype_formulas', 'tooltiptrigger'),
+        ];
 
         if ($displayoptions->readonly) {
             $inputattributes['readonly'] = 'readonly';
@@ -675,6 +675,8 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
         );
         $inputattributes['aria-labelledby'] = $label['id'];
 
+        // We need to wrap our input field into a wrapper <div>, in order for the LaTeX preview
+        // to be correctly positioned even inside a table.
         $output = $label['html'];
         $output .= html_writer::empty_tag('input', $inputattributes);
 
@@ -858,8 +860,59 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
         return html_writer::nonempty_tag(
             'div',
             get_string($string, 'qtype_formulas', $answertext),
-            ['class' => 'formulaspartcorrectanswer'],
+            ['class' => 'formulaspartcorrectanswer filter_mathjaxloader_equation'],
         );
+    }
+
+    /**
+     * Check whether the last response of a question attempt is the same as the last submitted response, i. e. it
+     * was either submitted (e. g. using the "Check" button) or it was saved during page navigation in a quiz but
+     * still contains the same answers as the ones from the last regular submission.
+     *
+     * @param question_attempt $qa
+     * @param formulas_part|null $part
+     * @return bool
+     */
+    protected function response_is_same_as_submitted(question_attempt $qa, formulas_part|null $part = null): bool {
+        // If the last step contains the behaviour var 'submit', it was itself a submitted response.
+        // For the deferredfeedback behaviour, the step will contain 'finish' instead of 'submit'.
+        $laststep = $qa->get_last_step();
+        if ($laststep->has_behaviour_var('submit') || $laststep->has_behaviour_var('finish')) {
+            return true;
+        }
+
+        // Otherwise, we try to fetch the step containing the last submitted response.
+        $lastsubmitted = $qa->get_last_step_with_behaviour_var('submit');
+        $lastsubmitteddata = $lastsubmitted->get_qt_data();
+
+        // If there is no data, then no response has ever been submitted.
+        if (empty($lastsubmitteddata)) {
+            return false;
+        }
+
+        // If we have a part, we compare the last step's data to the one from the last submitted response,
+        // but only for the fields of the relevant part.
+        $lastdata = $laststep->get_qt_data();
+        if ($part !== null) {
+            return $part->is_same_response($lastsubmitteddata, $lastdata);
+        }
+
+        // If we do not have a part, we compare the reponse for the entire question.
+        /** @var qtype_formulas_question $question */
+        $question = $qa->get_question();
+
+        return $question->is_same_response($lastsubmitteddata, $lastdata);
+    }
+
+    #[\Override]
+    public function feedback(question_attempt $qa, question_display_options $options) {
+        // We should not give feedback if the response is not properly submitted, but rather just saved
+        // during navigation through the quiz.
+        if (!$this->response_is_same_as_submitted($qa)) {
+            return '';
+        }
+
+        return parent::feedback($qa, $options);
     }
 
     /**
@@ -982,9 +1035,9 @@ class qtype_formulas_renderer extends qtype_with_combined_feedback_renderer {
             $gradingdetailsdiv = $renderer->render_adaptive_marks($details, $options);
             $state = $details->state;
         }
-        // If the question is in a state that does not yet allow to give a feedback,
-        // we return an empty string.
-        if (empty($state->get_feedback_class())) {
+        // If the question is in a state that does not yet allow to give a feedback
+        // or if the response is not the last one to be checked, we return an empty string.
+        if (!$this->response_is_same_as_submitted($qa, $part) || empty($state->get_feedback_class())) {
             return '';
         }
 
