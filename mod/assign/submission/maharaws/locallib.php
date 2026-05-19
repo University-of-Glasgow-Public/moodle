@@ -368,7 +368,7 @@ class assign_submission_maharaws extends assign_submission_plugin {
      * @return bool
      */
     public function get_form_elements_for_user($submission, MoodleQuickForm $mform, stdClass $data, $userid) {
-        global $DB, $PAGE, $CFG;
+        global $DB, $PAGE, $CFG, $USER;
 
         $PAGE->requires->js('/mod/assign/submission/maharaws/js/popup.js');
         // Getting submission.
@@ -379,6 +379,14 @@ class assign_submission_maharaws extends assign_submission_plugin {
         if (!empty($maharasubmission)) {
             $selectedid = $maharasubmission->viewid;
             $selectediscollection = $maharasubmission->iscollection;
+            if ($submission->userid != $USER->id) {
+                // The submission does not belong to this user - display a message and prevent editing.
+                $mform->addElement('static', '', '', get_string('notyoursubmission', 'assignsubmission_maharaws'));
+                $mform->addElement('hidden', 'viewid', 'none');
+                $mform->setType('viewid', PARAM_ALPHANUM);
+                $mform->disabledIf('submitbutton', 'viewid', 'eq', 'none');
+                return true;
+            }
         } else {
             $selectedid = 0;
             $selectediscollection = null;
@@ -386,10 +394,13 @@ class assign_submission_maharaws extends assign_submission_plugin {
 
         // Getting views (pages) user have in linked site.
         $views = false;
-        try {
-            $views = $this->get_views();
-        } catch (moodle_exception $e) {
-            $error = $e->getMessage();
+        if ($USER->id == $userid) {
+            // Only get the list of views the user has access to if we are looking at this users own submission.
+            try {
+                $views = $this->get_views();
+            } catch (moodle_exception $e) {
+                $error = $e->getMessage();
+            }
         }
 
         if (!$views) {
@@ -772,11 +783,11 @@ class assign_submission_maharaws extends assign_submission_plugin {
         } else {
             $iscollection = ($data->viewid[0] == 'c');
             $data->viewid = substr($data->viewid, 1);
-        }
 
-        if ($viewdata = $this->get_view($data->viewid, $iscollection)) {
-            $url = $viewdata['url'];
-            $title = clean_text($viewdata['title']);
+            if ($viewdata = $this->get_view($data->viewid, $iscollection)) {
+                $url = $viewdata['url'];
+                $title = clean_text($viewdata['title']);
+            }
         }
 
         $maharasubmission = $this->get_mahara_submission($submission->id);
