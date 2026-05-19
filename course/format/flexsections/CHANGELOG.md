@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [4.1.5] - 2026-03-28
+### Fixed
+- Fixed "Attempt to read property id on null" warning in get_view_url() when viewing
+  a single section page #109
+- Fixed unit test failure (test_get_component_classes_in_namespace_provider) on Moodle versions
+  where parent classes for bulk edit tools do not exist #111
+- Hiding a section with subsections now recursively hides all subsections and their
+  activities from students #107
+- Partial course import no longer creates orphan "Topic N" sections when
+  subsections are excluded #17
+
 ## [4.1.4] - 2025-05-10
 ### Added
 - Bulk edit of activity modules (except for "Move" aciton) #103 #67
