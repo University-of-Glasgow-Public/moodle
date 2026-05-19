@@ -32,7 +32,7 @@ $subscribe = optional_param('subscribe', null, PARAM_INT);  // Subscribe/Unsubsc
 
 $config = get_config('hsuforum');
 
-$url = new moodle_url('/mod/hsuforum/index.php', array('id' => $id));
+$url = new \core\url('/mod/hsuforum/index.php', array('id' => $id));
 if ($subscribe !== null) {
     require_sesskey();
     $url->param('subscribe', $subscribe);
@@ -41,7 +41,7 @@ $PAGE->set_url($url);
 
 if ($id) {
     if (!$course = $DB->get_record('course', array('id' => $id))) {
-        throw new \moodle_exception('invalidcourseid');
+        throw new \core\exception\moodle_exception('invalidcourseid');
     }
 } else {
     $course = get_site();
@@ -78,7 +78,7 @@ $searchform = hsuforum_search_form($course);
 
 // Retrieve the list of forum digest options for later.
 $digestoptions = hsuforum_get_user_digest_options();
-$digestoptions_selector = new single_select(new moodle_url('/mod/hsuforum/maildigest.php',
+$digestoptions_selector = new \core\output\single_select(new \core\url('/mod/hsuforum/maildigest.php',
     array(
         'backtoindex' => 1,
     )),
@@ -89,7 +89,7 @@ $digestoptions_selector = new single_select(new moodle_url('/mod/hsuforum/maildi
 $digestoptions_selector->method = 'post';
 
 // Start of the table for General Forums.
-$generaltable = new html_table();
+$generaltable = new \core_table\output\html_table();
 $generaltable->head  = array ($strforum, $strdescription, $strdiscussions);
 $generaltable->align = array ('left', 'left', 'center');
 
@@ -116,7 +116,7 @@ if ($show_rss = (($can_subscribe || $course->id == SITEID) &&
 
 $usesections = course_format_uses_sections($course->format);
 
-$table = new html_table();
+$table = new \core_table\output\html_table();
 
 // Parse and organise all the forums.  Most forums are course modules but
 // some special ones are not.  These get placed in the general forums
@@ -195,7 +195,7 @@ if (!is_null($subscribe) && !isguestuser()) {
             }
         }
     }
-    $returnto = hsuforum_go_back_to(new moodle_url('/mod/hsuforum/index.php', array('id' => $course->id)));
+    $returnto = hsuforum_go_back_to(new \core\url('/mod/hsuforum/index.php', array('id' => $course->id)));
     $shortname = format_string($course->shortname, true, array('context' => context_course::instance($course->id)));
     if ($subscribe) {
         redirect(
@@ -274,7 +274,7 @@ if ($generalforums) {
 
 
 // Start of the table for Learning Forums
-$learningtable = new html_table();
+$learningtable = new \core_table\output\html_table();
 $learningtable->head  = array ($strforum, $strdescription, $strdiscussions);
 $learningtable->align = array ('left', 'left', 'center');
 
@@ -388,12 +388,12 @@ echo $OUTPUT->header();
 
 if (!isguestuser() && isloggedin()) {
     echo $OUTPUT->box_start('subscription');
-    echo html_writer::tag('div',
-        html_writer::link(new moodle_url('/mod/hsuforum/index.php', array('id'=>$course->id, 'subscribe'=>1, 'sesskey'=>sesskey())),
+    echo \core\output\html_writer::tag('div',
+        \core\output\html_writer::link(new \core\url('/mod/hsuforum/index.php', array('id'=>$course->id, 'subscribe'=>1, 'sesskey'=>sesskey())),
             get_string('allsubscribe', 'hsuforum')),
         array('class'=>'helplink'));
-    echo html_writer::tag('div',
-        html_writer::link(new moodle_url('/mod/hsuforum/index.php', array('id'=>$course->id, 'subscribe'=>0, 'sesskey'=>sesskey())),
+    echo \core\output\html_writer::tag('div',
+        \core\output\html_writer::link(new \core\url('/mod/hsuforum/index.php', array('id'=>$course->id, 'subscribe'=>0, 'sesskey'=>sesskey())),
             get_string('allunsubscribe', 'hsuforum')),
         array('class'=>'helplink'));
     echo $OUTPUT->box_end();
@@ -402,12 +402,12 @@ if (!isguestuser() && isloggedin()) {
 
 if ($generalforums) {
     echo $OUTPUT->heading(get_string('generalforums', 'hsuforum'), 2);
-    echo html_writer::table($generaltable);
+    echo \core\output\html_writer::table($generaltable);
 }
 
 if ($learningforums) {
     echo $OUTPUT->heading(get_string('learningforums', 'hsuforum'), 2);
-    echo html_writer::table($learningtable);
+    echo \core\output\html_writer::table($learningtable);
 }
 
 echo $OUTPUT->footer();

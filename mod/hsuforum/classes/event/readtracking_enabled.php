@@ -73,31 +73,31 @@ class readtracking_enabled extends \core\event\base {
     /**
      * Get URL related to the action
      *
-     * @return \moodle_url
+     * @return \core\url
      */
     public function get_url() {
-        return new \moodle_url('/mod/hsuforum/view.php', array('f' => $this->other['forumid']));
+        return new \core\url('/mod/hsuforum/view.php', array('f' => $this->other['forumid']));
     }
 
     /**
      * Custom validation.
      *
-     * @throws \coding_exception
+     * @throws \core\exception\coding_exception
      * @return void
      */
     protected function validate_data() {
         parent::validate_data();
 
         if (!isset($this->relateduserid)) {
-            throw new \coding_exception('The \'relateduserid\' must be set.');
+            throw new \core\exception\coding_exception('The \'relateduserid\' must be set.');
         }
 
         if (!isset($this->other['forumid'])) {
-            throw new \coding_exception('The \'forumid\' value must be set in other.');
+            throw new \core\exception\coding_exception('The \'forumid\' value must be set in other.');
         }
 
         if ($this->contextlevel != CONTEXT_MODULE) {
-            throw new \coding_exception('Context level must be CONTEXT_MODULE.');
+            throw new \core\exception\coding_exception('Context level must be CONTEXT_MODULE.');
         }
     }
 

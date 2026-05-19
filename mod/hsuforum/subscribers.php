@@ -31,7 +31,7 @@ $id    = required_param('id',PARAM_INT);           // forum
 $group = optional_param('group',0,PARAM_INT);      // change of group
 $edit  = optional_param('edit',-1,PARAM_BOOL);     // Turn editing on and off
 
-$url = new moodle_url('/mod/hsuforum/subscribers.php', array('id'=>$id));
+$url = new \core\url('/mod/hsuforum/subscribers.php', array('id'=>$id));
 if ($group !== 0) {
     $url->param('group', $group);
 }
@@ -50,7 +50,7 @@ require_login($course, false, $cm);
 
 $context = context_module::instance($cm->id);
 if (!has_capability('mod/hsuforum:viewsubscribers', $context)) {
-    throw new \moodle_exception('nopermissiontosubscribe', 'hsuforum');
+    throw new \core\exception\moodle_exception('nopermissiontosubscribe', 'hsuforum');
 }
 
 unset($SESSION->fromdiscussion);
@@ -75,20 +75,20 @@ if (data_submitted()) {
     $unsubscribe = (bool)optional_param('unsubscribe', false, PARAM_RAW);
     /** It has to be one or the other, not both or neither */
     if (!($subscribe xor $unsubscribe)) {
-        throw new \moodle_exception('invalidaction');
+        throw new \core\exception\moodle_exception('invalidaction');
     }
     if ($subscribe) {
         $users = $subscriberselector->get_selected_users();
         foreach ($users as $user) {
             if (!hsuforum_subscribe($user->id, $id)) {
-                throw new \moodle_exception('cannotaddsubscriber', 'hsuforum', '', $user->id);
+                throw new \core\exception\moodle_exception('cannotaddsubscriber', 'hsuforum', '', $user->id);
             }
         }
     } else if ($unsubscribe) {
         $users = $existingselector->get_selected_users();
         foreach ($users as $user) {
             if (!hsuforum_unsubscribe($user->id, $id)) {
-                throw new \moodle_exception('cannotremovesubscriber', 'hsuforum', '', $user->id);
+                throw new \core\exception\moodle_exception('cannotremovesubscriber', 'hsuforum', '', $user->id);
             }
         }
     }
@@ -113,7 +113,7 @@ if (has_capability('mod/hsuforum:managesubscriptions', $context) && hsuforum_is_
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('forum', 'hsuforum').' '.$strsubscribers);
 if (!empty($updatesubscriptionsbutton)) {
-    echo \html_writer::div($updatesubscriptionsbutton, 'pull-right');
+    echo \core\output\html_writer::div($updatesubscriptionsbutton, 'pull-right');
 }
 if (empty($USER->subscriptionsediting)) {
     $subscribers = hsuforum_subscribed_users($course, $forum, $currentgroup, $context);

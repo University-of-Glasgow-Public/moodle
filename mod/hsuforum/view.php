@@ -35,13 +35,13 @@
     $params = array();
 
     if (!$f && !$id) {
-        throw new \moodle_exception('missingparameter');
+        throw new \core\exception\moodle_exception('missingparameter');
     } else if ($f) {
         $forum = $DB->get_record('hsuforum', array('id' => $f));
         $params['f'] = $forum->id;
     } else {
         if (!$cm = get_coursemodule_from_id('hsuforum', $id)){
-            throw new \moodle_exception('missingparameter');
+            throw new \core\exception\moodle_exception('missingparameter');
         }
         $forum = $DB->get_record('hsuforum', array('id' => $cm->instance));
         $params['id'] = $cm->id;
@@ -58,7 +58,7 @@
     $course = $DB->get_record('course', array('id' => $forum->course));
 
     if (empty($cm) && !$cm = get_coursemodule_from_instance("hsuforum", $forum->id, $course->id)) {
-        throw new \moodle_exception('missingparameter');
+        throw new \core\exception\moodle_exception('missingparameter');
     }
 
     $discussion = false;
@@ -68,10 +68,10 @@
         $discussion = array_pop($discussions);
 
         if (empty($discussion)) {
-            throw new \moodle_exception('cannotfindfirstpost', 'hsuforum');
+            throw new \core\exception\moodle_exception('cannotfindfirstpost', 'hsuforum');
         }
 
-        redirect(new moodle_url('/mod/hsuforum/discuss.php', array('d' => $discussion->id)));
+        redirect(new \core\url('/mod/hsuforum/discuss.php', array('d' => $discussion->id)));
     }
 
 // move require_course_login here to use forced language for course
@@ -94,7 +94,7 @@
     echo ('<div id="discussionsview">');
 
     // Some capability checks.
-    $courselink = new moodle_url('/course/view.php', ['id' => $cm->course]);
+    $courselink = new \core\url('/course/view.php', ['id' => $cm->course]);
 
     if (empty($cm->visible) && !has_capability('moodle/course:viewhiddenactivities', $context)) {
         notice(get_string("activityiscurrentlyhidden"), $courselink);

@@ -54,7 +54,7 @@ class events_test extends \advanced_testcase {
             'context' => $coursectx,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('The \'searchterm\' value must be set in other');
         \mod_hsuforum\event\course_searched::create($params);
     }
@@ -71,7 +71,7 @@ class events_test extends \advanced_testcase {
             'other' => array('searchterm' => 'testing'),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_COURSE');
         \mod_hsuforum\event\course_searched::create($params);
     }
@@ -121,7 +121,7 @@ class events_test extends \advanced_testcase {
             'context' => $context,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\discussion_created::create($params);
     }
@@ -138,7 +138,7 @@ class events_test extends \advanced_testcase {
             'other' => array('forumid' => $forum->id),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\discussion_created::create($params);
     }
@@ -198,7 +198,7 @@ class events_test extends \advanced_testcase {
             'context' => $context,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\discussion_updated::create($params);
     }
@@ -215,7 +215,7 @@ class events_test extends \advanced_testcase {
             'other' => array('forumid' => $forum->id),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\discussion_updated::create($params);
     }
@@ -275,7 +275,7 @@ class events_test extends \advanced_testcase {
             'context' => $context,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\discussion_deleted::create($params);
     }
@@ -292,7 +292,7 @@ class events_test extends \advanced_testcase {
             'other' => array('forumid' => $forum->id),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\discussion_deleted::create($params);
     }
@@ -353,7 +353,7 @@ class events_test extends \advanced_testcase {
             'other' => array('toforumid' => $toforum->id),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'fromforumid' value must be set in other");
         \mod_hsuforum\event\discussion_moved::create($params);
     }
@@ -372,7 +372,7 @@ class events_test extends \advanced_testcase {
             'other' => array('fromforumid' => $fromforum->id),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'toforumid' value must be set in other");
         \mod_hsuforum\event\discussion_moved::create($params);
     }
@@ -399,7 +399,7 @@ class events_test extends \advanced_testcase {
             'other' => array('fromforumid' => $fromforum->id, 'toforumid' => $toforum->id),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\discussion_moved::create($params);
     }
@@ -467,7 +467,7 @@ class events_test extends \advanced_testcase {
             'objectid' => $discussion->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\discussion_viewed::create($params);
     }
@@ -524,7 +524,7 @@ class events_test extends \advanced_testcase {
             'objectid' => $forum->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\course_module_viewed::create($params);
     }
@@ -556,7 +556,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\course_module_viewed', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/view.php', array('f' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/view.php', array('f' => $forum->id));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
 
@@ -576,7 +576,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\subscription_created::create($params);
     }
@@ -593,7 +593,7 @@ class events_test extends \advanced_testcase {
             'objectid' => $forum->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'relateduserid' must be set");
         \mod_hsuforum\event\subscription_created::create($params);
     }
@@ -612,7 +612,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\subscription_created::create($params);
     }
@@ -654,7 +654,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\subscription_created', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/subscribers.php', array('id' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/subscribers.php', array('id' => $forum->id));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
 
@@ -674,7 +674,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\subscription_deleted::create($params);
     }
@@ -691,7 +691,7 @@ class events_test extends \advanced_testcase {
             'objectid' => $forum->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'relateduserid' must be set");
         \mod_hsuforum\event\subscription_deleted::create($params);
     }
@@ -710,7 +710,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\subscription_deleted::create($params);
     }
@@ -752,7 +752,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\subscription_deleted', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/subscribers.php', array('id' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/subscribers.php', array('id' => $forum->id));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
 
@@ -772,7 +772,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\readtracking_enabled::create($params);
     }
@@ -789,7 +789,7 @@ class events_test extends \advanced_testcase {
             'objectid' => $forum->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'relateduserid' must be set");
         \mod_hsuforum\event\readtracking_enabled::create($params);
     }
@@ -808,7 +808,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\readtracking_enabled::create($params);
     }
@@ -841,7 +841,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\readtracking_enabled', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/view.php', array('f' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/view.php', array('f' => $forum->id));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
 
@@ -861,7 +861,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\readtracking_disabled::create($params);
     }
@@ -878,7 +878,7 @@ class events_test extends \advanced_testcase {
             'objectid' => $forum->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'relateduserid' must be set");
         \mod_hsuforum\event\readtracking_disabled::create($params);
     }
@@ -897,7 +897,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\readtracking_disabled::create($params);
     }
@@ -930,7 +930,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\readtracking_disabled', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/view.php', array('f' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/view.php', array('f' => $forum->id));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
 
@@ -950,7 +950,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\subscribers_viewed::create($params);
     }
@@ -969,7 +969,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\subscribers_viewed::create($params);
     }
@@ -1017,7 +1017,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'reportmode' value must be set in other");
         \mod_hsuforum\event\user_report_viewed::create($params);
     }
@@ -1036,7 +1036,7 @@ class events_test extends \advanced_testcase {
             'relateduserid' => $user->id,
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be either CONTEXT_SYSTEM, CONTEXT_COURSE or CONTEXT_USER');
         \mod_hsuforum\event\user_report_viewed::create($params);
     }
@@ -1051,7 +1051,7 @@ class events_test extends \advanced_testcase {
             'other' => array('reportmode' => 'posts'),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'relateduserid' must be set");
         \mod_hsuforum\event\user_report_viewed::create($params);
     }
@@ -1138,7 +1138,7 @@ class events_test extends \advanced_testcase {
             'other' => array('forumid' => $forum->id, 'forumtype' => $forum->type),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'discussionid' value must be set in other");
         \mod_hsuforum\event\post_created::create($params);
     }
@@ -1170,7 +1170,7 @@ class events_test extends \advanced_testcase {
             'other' => array('discussionid' => $discussion->id, 'forumtype' => $forum->type),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\post_created::create($params);
     }
@@ -1202,7 +1202,7 @@ class events_test extends \advanced_testcase {
             'other' => array('discussionid' => $discussion->id, 'forumid' => $forum->id),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumtype' value must be set in other");
         \mod_hsuforum\event\post_created::create($params);
     }
@@ -1234,7 +1234,7 @@ class events_test extends \advanced_testcase {
             'other' => array('discussionid' => $discussion->id, 'forumid' => $forum->id, 'forumtype' => $forum->type),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\post_created::create($params);
     }
@@ -1281,7 +1281,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\post_created', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/discuss.php', array('d' => $discussion->id));
+        $url = new \core\url('/mod/hsuforum/discuss.php', array('d' => $discussion->id));
         $url->set_anchor('p'.$event->objectid);
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
@@ -1331,7 +1331,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\post_created', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/view.php', array('f' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/view.php', array('f' => $forum->id));
         $url->set_anchor('p'.$event->objectid);
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
@@ -1389,7 +1389,7 @@ class events_test extends \advanced_testcase {
             'other' => array('forumid' => $forum->id, 'forumtype' => $forum->type),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'discussionid' value must be set in other");
         \mod_hsuforum\event\post_deleted::create($params);
     }
@@ -1421,7 +1421,7 @@ class events_test extends \advanced_testcase {
             'other' => array('discussionid' => $discussion->id, 'forumtype' => $forum->type),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\post_deleted::create($params);
     }
@@ -1453,7 +1453,7 @@ class events_test extends \advanced_testcase {
             'other' => array('discussionid' => $discussion->id, 'forumid' => $forum->id),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumtype' value must be set in other");
         \mod_hsuforum\event\post_deleted::create($params);
     }
@@ -1485,7 +1485,7 @@ class events_test extends \advanced_testcase {
             'other' => array('discussionid' => $discussion->id, 'forumid' => $forum->id, 'forumtype' => $forum->type),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\post_deleted::create($params);
     }
@@ -1536,7 +1536,7 @@ class events_test extends \advanced_testcase {
         // Check that the events contain the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\post_deleted', $event);
         $this->assertEquals(\context_module::instance($forum->cmid), $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/discuss.php', array('d' => $discussion->id));
+        $url = new \core\url('/mod/hsuforum/discuss.php', array('d' => $discussion->id));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
 
@@ -1555,7 +1555,7 @@ class events_test extends \advanced_testcase {
             // Check that the event contains the expected values.
             $this->assertInstanceOf('\mod_hsuforum\event\post_deleted', $event);
             $this->assertEquals(\context_module::instance($forum->cmid), $event->get_context());
-            $url = new \moodle_url('/mod/hsuforum/discuss.php', array('d' => $discussion->id));
+            $url = new \core\url('/mod/hsuforum/discuss.php', array('d' => $discussion->id));
             $this->assertEquals($url, $event->get_url());
             $this->assertEventContextNotUsed($event);
             $this->assertNotEmpty($event->get_name());
@@ -1604,7 +1604,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\post_deleted', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/view.php', array('f' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/view.php', array('f' => $forum->id));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
 
@@ -1638,7 +1638,7 @@ class events_test extends \advanced_testcase {
             'other' => array('forumid' => $forum->id, 'forumtype' => $forum->type),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'discussionid' value must be set in other");
         \mod_hsuforum\event\post_updated::create($params);
     }
@@ -1670,7 +1670,7 @@ class events_test extends \advanced_testcase {
             'other' => array('discussionid' => $discussion->id, 'forumtype' => $forum->type),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumid' value must be set in other");
         \mod_hsuforum\event\post_updated::create($params);
     }
@@ -1702,7 +1702,7 @@ class events_test extends \advanced_testcase {
             'other' => array('discussionid' => $discussion->id, 'forumid' => $forum->id),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage("The 'forumtype' value must be set in other");
         \mod_hsuforum\event\post_updated::create($params);
     }
@@ -1734,7 +1734,7 @@ class events_test extends \advanced_testcase {
             'other' => array('discussionid' => $discussion->id, 'forumid' => $forum->id, 'forumtype' => $forum->type),
         );
 
-        $this->expectException(\coding_exception::class);
+        $this->expectException(\core\exception\coding_exception::class);
         $this->expectExceptionMessage('Context level must be CONTEXT_MODULE');
         \mod_hsuforum\event\post_updated::create($params);
     }
@@ -1781,7 +1781,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\post_updated', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/discuss.php', array('d' => $discussion->id));
+        $url = new \core\url('/mod/hsuforum/discuss.php', array('d' => $discussion->id));
         $url->set_anchor('p'.$event->objectid);
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
@@ -1831,7 +1831,7 @@ class events_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\post_updated', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/view.php', array('f' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/view.php', array('f' => $forum->id));
         $url->set_anchor('p'.$post->id);
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);

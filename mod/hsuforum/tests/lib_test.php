@@ -350,7 +350,7 @@ class lib_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\course_module_viewed', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/view.php', array('f' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/view.php', array('f' => $forum->id));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
         $this->assertNotEmpty($event->get_name());
@@ -1039,7 +1039,7 @@ class lib_test extends \advanced_testcase {
         $this->assertEmpty($neighbours['next']);
 
         // Querying the neighbours of a discussion passing the wrong CM.
-        $this->expectException('coding_exception');
+        $this->expectException('\\core\\exception\\coding_exception');
         hsuforum_get_discussion_neighbours($cm2, $disc11, $forum2);
     }
 
@@ -1239,7 +1239,7 @@ class lib_test extends \advanced_testcase {
         $this->assertEmpty($neighbours['next']);
 
         // Querying the neighbours of a discussion passing the wrong CM.
-        $this->expectException('coding_exception');
+        $this->expectException('\\core\\exception\\coding_exception');
         hsuforum_get_discussion_neighbours($cm2, $disc11, $forum2);
     }
 
@@ -1390,7 +1390,7 @@ class lib_test extends \advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_hsuforum\event\course_module_viewed', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new \moodle_url('/mod/hsuforum/view.php', array('f' => $forum->id));
+        $url = new \core\url('/mod/hsuforum/view.php', array('f' => $forum->id));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
         $this->assertNotEmpty($event->get_name());
@@ -1542,7 +1542,7 @@ class lib_test extends \advanced_testcase {
     /**
      * Tests for mod_hsuforum_rating_can_see_item_ratings().
      *
-     * @throws \coding_exception
+     * @throws \core\exception\coding_exception
      * @throws \rating_exception
      */
     public function test_mod_hsuforum_rating_can_see_item_ratings() {
@@ -2823,13 +2823,13 @@ class lib_test extends \advanced_testcase {
         $this->assertFalse(hsuforum_is_author_hidden($post, $forum));
 
         // Incorrect parameters: $post.
-        $this->expectException('coding_exception');
+        $this->expectException('\\core\\exception\\coding_exception');
         $this->expectExceptionMessage('$post->parent must be set.');
         unset($post->parent);
         hsuforum_is_author_hidden($post, $forum);
 
         // Incorrect parameters: $forum.
-        $this->expectException('coding_exception');
+        $this->expectException('\\core\\exception\\coding_exception');
         $this->expectExceptionMessage('$forum->type must be set.');
         unset($forum->type);
         hsuforum_is_author_hidden($post, $forum);
@@ -3167,7 +3167,7 @@ class lib_test extends \advanced_testcase {
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
         $this->assertEquals(get_string('view'), $actionevent->get_name());
-        $this->assertInstanceOf('moodle_url', $actionevent->get_url());
+        $this->assertInstanceOf('\core\url', $actionevent->get_url());
         $this->assertEquals(7, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
     }
@@ -3242,7 +3242,7 @@ class lib_test extends \advanced_testcase {
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
         $this->assertEquals(get_string('view'), $actionevent->get_name());
-        $this->assertInstanceOf('moodle_url', $actionevent->get_url());
+        $this->assertInstanceOf('\core\url', $actionevent->get_url());
         $this->assertEquals(7, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
     }

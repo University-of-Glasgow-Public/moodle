@@ -76,16 +76,16 @@ class post_updated extends \core\event\base {
     /**
      * Get URL related to the action
      *
-     * @return \moodle_url
+     * @return \core\url
      */
     public function get_url() {
         if ($this->other['forumtype'] == 'single') {
             // Single discussion forums are an exception. We show
             // the forum itself since it only has one discussion
             // thread.
-            $url = new \moodle_url('/mod/hsuforum/view.php', array('f' => $this->other['forumid']));
+            $url = new \core\url('/mod/hsuforum/view.php', array('f' => $this->other['forumid']));
         } else {
-            $url = new \moodle_url('/mod/hsuforum/discuss.php', array('d' => $this->other['discussionid']));
+            $url = new \core\url('/mod/hsuforum/discuss.php', array('d' => $this->other['discussionid']));
         }
         $url->set_anchor('p'.$this->objectid);
         return $url;
@@ -94,26 +94,26 @@ class post_updated extends \core\event\base {
     /**
      * Custom validation.
      *
-     * @throws \coding_exception
+     * @throws \core\exception\coding_exception
      * @return void
      */
     protected function validate_data() {
         parent::validate_data();
 
         if (!isset($this->other['discussionid'])) {
-            throw new \coding_exception('The \'discussionid\' value must be set in other.');
+            throw new \core\exception\coding_exception('The \'discussionid\' value must be set in other.');
         }
 
         if (!isset($this->other['forumid'])) {
-            throw new \coding_exception('The \'forumid\' value must be set in other.');
+            throw new \core\exception\coding_exception('The \'forumid\' value must be set in other.');
         }
 
         if (!isset($this->other['forumtype'])) {
-            throw new \coding_exception('The \'forumtype\' value must be set in other.');
+            throw new \core\exception\coding_exception('The \'forumtype\' value must be set in other.');
         }
 
         if ($this->contextlevel != CONTEXT_MODULE) {
-            throw new \coding_exception('Context level must be CONTEXT_MODULE.');
+            throw new \core\exception\coding_exception('Context level must be CONTEXT_MODULE.');
         }
     }
 

@@ -30,9 +30,9 @@ use mod_hsuforum\local\entities\forum as forum_entity;
 use mod_hsuforum\local\entities\discussion as discussion_entity;
 use mod_hsuforum\local\entities\post as post_entity;
 use mod_hsuforum\local\factories\legacy_data_mapper as legacy_data_mapper_factory;
-use moodle_url;
+use \core\url as moodle_url;
 use stored_file;
-use user_picture;
+use \core\output\user_picture;
 
 require_once($CFG->dirroot . '/mod/hsuforum/lib.php');
 
@@ -421,7 +421,7 @@ class url {
         $datamapper = $this->legacydatamapperfactory->get_author_data_mapper();
         $record = $datamapper->to_legacy_object($author);
         $record->contextid = $authorcontextid;
-        $userpicture = new user_picture($record);
+        $userpicture = new \core\output\user_picture($record);
         $userpicture->size = $size;
 
         return $userpicture->get_url($PAGE);
@@ -493,7 +493,7 @@ class url {
      *
      * @param discussion_entity $discussion
      * @return moodle_url
-     * @throws \moodle_exception
+     * @throws \core\exception\moodle_exception
      */
     public function get_pin_discussion_url_from_discussion(discussion_entity $discussion): moodle_url {
         return new moodle_url('discuss.php', [

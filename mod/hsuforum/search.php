@@ -116,7 +116,7 @@ if ($search) {
 }
 
 if (!$course = $DB->get_record('course', array('id'=>$id))) {
-    throw new \moodle_exception('invalidcourseid');
+    throw new \core\exception\moodle_exception('invalidcourseid');
 }
 
 require_course_login($course);
@@ -136,7 +136,7 @@ $strpage = get_string("page");
 
 if (!$search || $showform) {
 
-    $PAGE->navbar->add($strforums, new moodle_url('/mod/hsuforum/index.php', array('id'=>$course->id)));
+    $PAGE->navbar->add($strforums, new \core\url('/mod/hsuforum/index.php', array('id'=>$course->id)));
     $PAGE->navbar->add(get_string('advancedsearch', 'hsuforum'));
 
     $PAGE->set_title($strsearch);
@@ -158,7 +158,7 @@ $searchterms = explode(' ', $searchterms);
 
 $searchform = hsuforum_search_form($course, $forumid, $search);
 
-$PAGE->navbar->add($strsearch, new moodle_url('/mod/hsuforum/search.php', array('id'=>$course->id)));
+$PAGE->navbar->add($strsearch, new \core\url('/mod/hsuforum/search.php', array('id'=>$course->id)));
 $PAGE->navbar->add($strsearchresults);
 if (!$posts = hsuforum_search_posts($searchterms, $course->id, $page*$perpage, $perpage, $totalcount)) {
     $PAGE->set_title($strsearchresults);
@@ -212,17 +212,17 @@ $params = [
     'datefrom'  => $datefrom,
     'showform'  => 1,
 ];
-$url    = new moodle_url("/mod/hsuforum/search.php", $params);
+$url    = new \core\url("/mod/hsuforum/search.php", $params);
 foreach ($tags as $tag) {
     $url .= "&tags[]=$tag";
 }
-echo html_writer::link($url, get_string('advancedsearch', 'hsuforum').'...');
+echo \core\output\html_writer::link($url, get_string('advancedsearch', 'hsuforum').'...');
 
 echo '</div>';
 
 echo $OUTPUT->heading("$strsearchresults: $totalcount", 3);
 
-$url = new moodle_url('search.php', array('search' => $search, 'id' => $course->id, 'perpage' => $perpage));
+$url = new \core\url('search.php', array('search' => $search, 'id' => $course->id, 'perpage' => $perpage));
 
 //added to implement highlighting of search terms found only in HTML markup
 //fiedorow - 9/2/2005
@@ -240,7 +240,7 @@ foreach ($searchterms as $key => $searchterm) {
 $strippedsearch = implode(' ', $searchterms);    // Rebuild the string
 
 echo $OUTPUT->box_start("mod-hsuforum-posts-container article");
-echo html_writer::start_tag('ol', array('class' => 'hsuforum-thread-replies-list'));
+echo \core\output\html_writer::start_tag('ol', array('class' => 'hsuforum-thread-replies-list'));
 $resultnumber = ($page * $perpage) + 1;
 $modinfo = get_fast_modinfo($course);
 foreach ($posts as $post) {
@@ -249,14 +249,14 @@ foreach ($posts as $post) {
     // Replace the simple subject with the three items forum name -> thread name -> subject
     // (if all three are appropriate) each as a link.
     if (! $discussion = $DB->get_record('hsuforum_discussions', array('id' => $post->discussion))) {
-        throw new \moodle_exception('invaliddiscussionid', 'hsuforum');
+        throw new \core\exception\moodle_exception('invaliddiscussionid', 'hsuforum');
     }
     if (! $forum = $DB->get_record('hsuforum', array('id' => "$discussion->forum"))) {
-        throw new \moodle_exception('invalidforumid', 'hsuforum');
+        throw new \core\exception\moodle_exception('invalidforumid', 'hsuforum');
     }
 
     if (!$cm = get_coursemodule_from_instance('hsuforum', $forum->id)) {
-        throw new \moodle_exception('invalidcoursemodule');
+        throw new \core\exception\moodle_exception('invalidcoursemodule');
     }
 
     // TODO actually display if the search result has been read, for now just
@@ -341,9 +341,9 @@ foreach ($posts as $post) {
     $commands = array('seeincontext' => $fulllink);
     $postcm = $modinfo->instances['hsuforum'][$discussion->forum];
     $rendereredpost = $renderer->post($postcm, $discussion, $post, false, null, $commands, 0, $strippedsearch);
-    echo html_writer::tag('li', $rendereredpost, array('class' => 'hsuforum-post', 'data-count' => $resultnumber++));
+    echo \core\output\html_writer::tag('li', $rendereredpost, array('class' => 'hsuforum-post', 'data-count' => $resultnumber++));
 }
-echo html_writer::end_tag('ol');
+echo \core\output\html_writer::end_tag('ol');
 echo $OUTPUT->box_end(); // End mod-hsuforum-posts-container
 $pagingurl = $url;
 if ($search && $forumid) {

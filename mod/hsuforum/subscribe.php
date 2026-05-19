@@ -40,7 +40,7 @@ $mode    = optional_param('mode', null, PARAM_INT);     // the forum's subscript
 $user    = optional_param('user', 0, PARAM_INT);        // userid of the user to subscribe, defaults to $USER
 $sesskey = optional_param('sesskey', null, PARAM_RAW);  // sesskey
 
-$url = new moodle_url('/mod/hsuforum/subscribe.php', array('id'=>$id));
+$url = new \core\url('/mod/hsuforum/subscribe.php', array('id'=>$id));
 if (!is_null($mode)) {
     $url->param('mode', $mode);
 }
@@ -60,7 +60,7 @@ $context = context_module::instance($cm->id);
 if ($user) {
     require_sesskey();
     if (!has_capability('mod/hsuforum:managesubscriptions', $context)) {
-        throw new \moodle_exception('nopermissiontosubscribe', 'hsuforum');
+        throw new \core\exception\moodle_exception('nopermissiontosubscribe', 'hsuforum');
     }
     $user = $DB->get_record('user', array('id' => $user), '*', MUST_EXIST);
 } else {
@@ -74,7 +74,7 @@ if (isset($cm->groupmode) && empty($course->groupmodeforce)) {
 }
 if ($groupmode && !hsuforum_is_subscribed($user->id, $forum) && !has_capability('moodle/site:accessallgroups', $context)) {
     if (!groups_get_all_groups($course->id, $USER->id)) {
-        throw new \moodle_exception('cannotsubscribe', 'hsuforum');
+        throw new \core\exception\moodle_exception('cannotsubscribe', 'hsuforum');
     }
 }
 
@@ -86,13 +86,13 @@ if (is_null($mode) && !is_enrolled($context, $USER, '', true)) {   // Guests and
     if (isguestuser()) {
         echo $OUTPUT->header();
         echo $OUTPUT->confirm(get_string('subscribeenrolledonly', 'hsuforum').'<br /><br />'.get_string('liketologin'),
-                     get_login_url(), new moodle_url('/mod/hsuforum/view.php', array('f'=>$id)));
+                     get_login_url(), new \core\url('/mod/hsuforum/view.php', array('f'=>$id)));
         echo $OUTPUT->footer();
         exit;
     } else {
         // There should not be any links leading to this place, just redirect.
         redirect(
-                new moodle_url('/mod/hsuforum/view.php', array('f'=>$id)),
+                new \core\url('/mod/hsuforum/view.php', array('f'=>$id)),
                 get_string('subscribeenrolledonly', 'hsuforum'),
                 null,
                 \core\output\notification::NOTIFY_ERROR
@@ -150,7 +150,7 @@ if (!is_null($mode) && has_capability('mod/hsuforum:managesubscriptions', $conte
                 );
             break;
         default:
-            throw new \moodle_exception(get_string('invalidforcesubscribe', 'hsuforum'));
+            throw new \core\exception\moodle_exception(get_string('invalidforcesubscribe', 'hsuforum'));
     }
 }
 
@@ -173,7 +173,7 @@ if (hsuforum_is_subscribed($user->id, $forum->id)) {
         $PAGE->set_heading($course->fullname);
         echo $OUTPUT->header();
         echo $OUTPUT->confirm(get_string('confirmunsubscribe', 'hsuforum', format_string($forum->name)),
-                new moodle_url($PAGE->url, array('sesskey' => sesskey())), new moodle_url('/mod/hsuforum/view.php', array('f' => $id)));
+                new \core\url($PAGE->url, array('sesskey' => sesskey())), new \core\url('/mod/hsuforum/view.php', array('f' => $id)));
         echo $OUTPUT->footer();
         exit;
     }
@@ -186,23 +186,23 @@ if (hsuforum_is_subscribed($user->id, $forum->id)) {
             \core\output\notification::NOTIFY_SUCCESS
         );
     } else {
-        throw new \moodle_exception('cannotunsubscribe', 'hsuforum', get_local_referer(false));
+        throw new \core\exception\moodle_exception('cannotunsubscribe', 'hsuforum', get_local_referer(false));
     }
 
 } else {  // subscribe
     if ($forum->forcesubscribe == HSUFORUM_DISALLOWSUBSCRIBE &&
                 !has_capability('mod/hsuforum:managesubscriptions', $context)) {
-        throw new \moodle_exception('disallowsubscribe', 'hsuforum', get_local_referer(false));
+        throw new \core\exception\moodle_exception('disallowsubscribe', 'hsuforum', get_local_referer(false));
     }
     if (!has_capability('mod/hsuforum:viewdiscussion', $context)) {
-        throw new \moodle_exception('noviewdiscussionspermission', 'hsuforum', get_local_referer(false));
+        throw new \core\exception\moodle_exception('noviewdiscussionspermission', 'hsuforum', get_local_referer(false));
     }
     if (is_null($sesskey)) {    // we came here via link in email
         $PAGE->set_title($course->shortname);
         $PAGE->set_heading($course->fullname);
         echo $OUTPUT->header();
         echo $OUTPUT->confirm(get_string('confirmsubscribe', 'hsuforum', format_string($forum->name)),
-                new moodle_url($PAGE->url, array('sesskey' => sesskey())), new moodle_url('/mod/hsuforum/view.php', array('f' => $id)));
+                new \core\url($PAGE->url, array('sesskey' => sesskey())), new \core\url('/mod/hsuforum/view.php', array('f' => $id)));
         echo $OUTPUT->footer();
         exit;
     }

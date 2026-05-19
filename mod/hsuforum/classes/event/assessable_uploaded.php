@@ -66,10 +66,10 @@ class assessable_uploaded extends \core\event\assessable_uploaded {
     /**
      * Get URL related to the action.
      *
-     * @return \moodle_url
+     * @return \core\url
      */
     public function get_url() {
-        return new \moodle_url('/mod/hsuforum/discuss.php', array('d' => $this->other['discussionid'], 'parent' => $this->objectid));
+        return new \core\url('/mod/hsuforum/discuss.php', array('d' => $this->other['discussionid'], 'parent' => $this->objectid));
     }
 
     /**
@@ -85,16 +85,16 @@ class assessable_uploaded extends \core\event\assessable_uploaded {
     /**
      * Custom validation.
      *
-     * @throws \coding_exception
+     * @throws \core\exception\coding_exception
      * @return void
      */
     protected function validate_data() {
         parent::validate_data();
 
         if (!isset($this->other['discussionid'])) {
-            throw new \coding_exception('The \'discussionid\' value must be set in other.');
+            throw new \core\exception\coding_exception('The \'discussionid\' value must be set in other.');
         } else if (!isset($this->other['triggeredfrom'])) {
-            throw new \coding_exception('The \'triggeredfrom\' value must be set in other.');
+            throw new \core\exception\coding_exception('The \'triggeredfrom\' value must be set in other.');
         }
     }
 

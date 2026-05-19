@@ -55,7 +55,7 @@ class export_controller extends controller_abstract {
         require_capability('mod/hsuforum:viewdiscussion', $PAGE->context);
 
         if (is_guest($PAGE->context)) {
-            throw new \moodle_exception('noguest');
+            throw new \core\exception\moodle_exception('noguest');
         }
     }
 
@@ -73,7 +73,7 @@ class export_controller extends controller_abstract {
         ), 'post', '', array('onreset' => ''));
 
         if ($mform->is_cancelled()) {
-            redirect(new \moodle_url('/mod/hsuforum/view.php', array('id' => $cm->id)));
+            redirect(new \core\url('/mod/hsuforum/view.php', array('id' => $cm->id)));
         } else if ($data = $mform->get_data()) {
             if ($data->format == 'print') {
                 $adapter = new print_adapter($cm);
@@ -83,7 +83,7 @@ class export_controller extends controller_abstract {
                 } else if ($data->format == 'text') {
                     $format = new text_format();
                 } else {
-                    throw new \coding_exception('Unrecognized export format: '.$data->format);
+                    throw new \core\exception\coding_exception('Unrecognized export format: '.$data->format);
                 }
                 $adapter = new file_adapter($cm, $format, (boolean) $data->attachments);
             }

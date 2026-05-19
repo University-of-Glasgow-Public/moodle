@@ -289,7 +289,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
                     'filename' => $filename,
                     'filepath' => '/',
                     'filesize' => 27,
-                    'fileurl' => moodle_url::make_webservice_pluginfile_url($forum1context->id, 'mod_hsuforum', 'post',
+                    'fileurl' => \core\url::make_webservice_pluginfile_url($forum1context->id, 'mod_hsuforum', 'post',
                                     $discussion1reply1->id, '/', $filename)->out(false),
                     'timemodified' => $timepost,
                     'mimetype' => 'image/jpeg',
@@ -336,11 +336,11 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         $this->assertEquals(3, count($posts['posts']));
 
         // Generate here the pictures because we need to wait to the external function to init the theme.
-        $userpicture = new user_picture($user3);
+        $userpicture = new \core\output\user_picture($user3);
         $userpicture->size = 1; // Size f1.
         $expectedposts['posts'][0]['userpictureurl'] = $userpicture->get_url($PAGE)->out(false);
 
-        $userpicture = new user_picture($user2);
+        $userpicture = new \core\output\user_picture($user2);
         $userpicture->size = 1; // Size f1.
         $expectedposts['posts'][1]['userpictureurl'] = $userpicture->get_url($PAGE)->out(false);
         // Unset the initial discussion post.
@@ -580,11 +580,11 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         );
 
         // Wait the theme to be loaded (the external_api call does that) to generate the user profiles.
-        $userpicture = new user_picture($user1);
+        $userpicture = new \core\output\user_picture($user1);
         $userpicture->size = 1; // Size f1.
         $expectedreturn['discussions'][0]['userpictureurl'] = $userpicture->get_url($PAGE)->out(false);
 
-        $userpicture = new user_picture($user4);
+        $userpicture = new \core\output\user_picture($user4);
         $userpicture->size = 1; // Size f1.
         $expectedreturn['discussions'][0]['usermodifiedpictureurl'] = $userpicture->get_url($PAGE)->out(false);
 
@@ -595,7 +595,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::get_forum_discussions_paginated($forum1->id);
             $this->fail('Exception expected due to missing capability.');
-        } catch (moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('noviewdiscussionspermission', $e->errorcode);
         }
 
@@ -606,7 +606,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::get_forum_discussions_paginated($forum1->id);
             $this->fail('Exception expected due to being unenrolled from the course.');
-        } catch (moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('requireloginerror', $e->errorcode);
         }
     }
@@ -779,11 +779,11 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         );
 
         // Wait the theme to be loaded (the external_api call does that) to generate the user profiles.
-        $userpicture = new \user_picture($user1);
+        $userpicture = new \core\output\user_picture($user1);
         $userpicture->size = 2; // Size f2.
         $expectedreturn['discussions'][0]['userpictureurl'] = $userpicture->get_url($PAGE)->out(false);
 
-        $userpicture = new \user_picture($user4);
+        $userpicture = new \core\output\user_picture($user4);
         $userpicture->size = 2; // Size f2.
         $expectedreturn['discussions'][0]['usermodifiedpictureurl'] = $userpicture->get_url($PAGE)->out(false);
 
@@ -801,7 +801,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::get_forum_discussions($forum1->id);
             $this->fail('Exception expected due to missing capability.');
-        } catch (\moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('noviewdiscussionspermission', $e->errorcode);
         }
 
@@ -812,7 +812,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::get_forum_discussions($forum1->id);
             $this->fail('Exception expected due to being unenrolled from the course.');
-        } catch (\moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('requireloginerror', $e->errorcode);
         }
 
@@ -1045,7 +1045,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::add_discussion_post($discussion->firstpost, 'some subject', 'some text here...');
             $this->fail('Exception expected due to being unenrolled from the course.');
-        } catch (moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('requireloginerror', $e->errorcode);
         }
 
@@ -1139,7 +1139,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::add_discussion_post($discussion->firstpost, 'some subject', 'some text here...');
             $this->fail('Exception expected due to invalid permissions for posting.');
-        } catch (moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('nopostforum', $e->errorcode);
         }
 
@@ -1170,7 +1170,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::add_discussion($forum->id, 'the subject', 'some text here...');
             $this->fail('Exception expected due to invalid permissions.');
-        } catch (moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('cannotcreatediscussion', $e->errorcode);
         }
 
@@ -1338,14 +1338,14 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::add_discussion($forum->id, 'the subject', 'some text here...');
             $this->fail('Exception expected due to invalid group permissions.');
-        } catch (moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('cannotcreatediscussion', $e->errorcode);
         }
 
         try {
             mod_hsuforum_external::add_discussion($forum->id, 'the subject', 'some text here...', 0);
             $this->fail('Exception expected due to invalid group permissions.');
-        } catch (moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('cannotcreatediscussion', $e->errorcode);
         }
 
@@ -1356,7 +1356,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::add_discussion($forum->id, 'the subject', 'some text here...', $group->id);
             $this->fail('Exception expected due to invalid group permissions.');
-        } catch (moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('cannotcreatediscussion', $e->errorcode);
         }
 
@@ -1367,7 +1367,7 @@ class mod_hsuforum_external_test extends externallib_advanced_testcase {
         try {
             mod_hsuforum_external::add_discussion($forum->id, 'the subject', 'some text here...', $group->id + 1);
             $this->fail('Exception expected due to invalid group.');
-        } catch (moodle_exception $e) {
+        } catch (\core\exception\moodle_exception $e) {
             $this->assertEquals('cannotcreatediscussion', $e->errorcode);
         }
 

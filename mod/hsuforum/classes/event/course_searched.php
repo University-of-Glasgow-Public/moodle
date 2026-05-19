@@ -75,27 +75,27 @@ class course_searched extends \core\event\base {
     /**
      * Get URL related to the action
      *
-     * @return \moodle_url
+     * @return \core\url
      */
     public function get_url() {
-        return new \moodle_url('/mod/hsuforum/search.php',
+        return new \core\url('/mod/hsuforum/search.php',
             array('id' => $this->courseid, 'search' => $this->other['searchterm']));
     }
 
     /**
      * Custom validation.
      *
-     * @throws \coding_exception
+     * @throws \core\exception\coding_exception
      * @return void
      */
     protected function validate_data() {
         parent::validate_data();
         if (!isset($this->other['searchterm'])) {
-            throw new \coding_exception('The \'searchterm\' value must be set in other.');
+            throw new \core\exception\coding_exception('The \'searchterm\' value must be set in other.');
         }
 
         if ($this->contextlevel != CONTEXT_COURSE) {
-            throw new \coding_exception('Context level must be CONTEXT_COURSE.');
+            throw new \core\exception\coding_exception('Context level must be CONTEXT_COURSE.');
         }
     }
 

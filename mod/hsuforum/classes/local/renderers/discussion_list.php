@@ -35,7 +35,7 @@ use mod_hsuforum\local\managers\capability as capability_manager;
 use mod_hsuforum\local\renderers\cm_info;
 use mod_hsuforum\local\renderers\gradeitem;
 use mod_hsuforum\local\vaults\discussion_list as discussion_list_vault;
-use renderer_base;
+use \core\output\renderer_base;
 use stdClass;
 use core\output\notification;
 use mod_hsuforum\local\data_mappers\legacy\forum;
@@ -56,7 +56,7 @@ class discussion_list {
     /** @var stdClass The DB record for the forum being rendered */
     private $forumrecord;
 
-    /** @var renderer_base The renderer used to render the view */
+    /** @var \core\output\renderer_base The renderer used to render the view */
     private $renderer;
 
     /** @var legacy_data_mapper_factory $legacydatamapperfactory Legacy data mapper factory */
@@ -93,7 +93,7 @@ class discussion_list {
      * Constructor for a new discussion list renderer.
      *
      * @param   forum_entity        $forum The forum entity to be rendered
-     * @param   renderer_base       $renderer The renderer used to render the view
+     * @param   \core\output\renderer_base $renderer The renderer used to render the view
      * @param   legacy_data_mapper_factory $legacydatamapperfactory The factory used to fetch a legacy record
      * @param   exporter_factory    $exporterfactory The factory used to fetch exporter instances
      * @param   vault_factory       $vaultfactory The factory used to fetch the vault instances
@@ -106,7 +106,7 @@ class discussion_list {
      */
     public function __construct(
         forum_entity $forum,
-        renderer_base $renderer,
+        \core\output\renderer_base $renderer,
         legacy_data_mapper_factory $legacydatamapperfactory,
         exporter_factory $exporterfactory,
         vault_factory $vaultfactory,
@@ -230,12 +230,12 @@ class discussion_list {
             $exportedposts = ($this->postprocessfortemplate) ($discussions, $user, $forum);
         }
 
-        $baseurl = new \moodle_url($PAGE->url, ['o' => $sortorder, 's' => $pagesize]);
+        $baseurl = new \core\url($PAGE->url, ['o' => $sortorder, 's' => $pagesize]);
 
         $forumview = array_merge(
             $forumview,
             [
-                'pagination' => $this->renderer->render(new \paging_bar($alldiscussionscount, $pageno, $pagesize, $baseurl, 'p')),
+                'pagination' => $this->renderer->render(new \core\output\paging_bar($alldiscussionscount, $pageno, $pagesize, $baseurl, 'p')),
             ],
             $exportedposts
         );
@@ -308,7 +308,7 @@ class discussion_list {
             'inpagereply' => true,
             'edit' => 0
         );
-        $posturl = new \moodle_url('/mod/hsuforum/post.php');
+        $posturl = new \core\url('/mod/hsuforum/post.php');
         $mformpost = new \mod_hsuforum_post_form($posturl, $formparams, 'post', '', array('id' => 'mformforum'));
         $discussionsubscribe = \mod_hsuforum\subscriptions::get_user_default_subscription($forumrecord, $coursecontext, $cm, null);
 
