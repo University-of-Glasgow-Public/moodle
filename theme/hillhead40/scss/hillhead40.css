@@ -1,39 +1,32 @@
-$hillhead-blue: #011451;
-$hillhead-dark: darken($hillhead-blue, 10%);
-$hillhead-light: lighten($hillhead-blue, 10%);
-$hillhead-blue-eighty-percent: #344374;
-$hillhead-footer-color: #677297;
-$primary: $hillhead-blue;
-$login-text: #fff;
-
+@charset "UTF-8";
 h1 {
   font-size: 1.5rem;
-  color: $hillhead-blue-eighty-percent;
+  color: #344374;
 }
 
 h2 {
   font-size: 1.4rem;
-  color: $hillhead-blue-eighty-percent;
+  color: #344374;
 }
 
 h3 {
   font-size: 1.3rem;
-  color: $hillhead-blue-eighty-percent;
+  color: #344374;
 }
 
 h4 {
   font-size: 1.2rem;
-  color: $hillhead-blue-eighty-percent;
+  color: #344374;
 }
 
 h5 {
   font-size: 1.1rem;
-  color: $hillhead-blue-eighty-percent;
+  color: #344374;
 }
 
 h6 {
   font-size: 1rem;
-  color: $hillhead-blue-eighty-percent;
+  color: #344374;
 }
 
 #region-main {
@@ -43,9 +36,9 @@ h6 {
 }
 
 nav.navbar.fixed-top {
-  background-color: $hillhead-blue !important;
-  border-color: $hillhead-dark;
-  border-bottom: 1px solid $hillhead-blue-eighty-percent;
+  background-color: #011451 !important;
+  border-color: rgb(0.3780487805, 7.5609756098, 30.6219512195);
+  border-bottom: 1px solid #344374;
 }
 
 nav.navbar a.navbar-brand {
@@ -59,11 +52,11 @@ nav.navbar a.navbar-brand {
 }
 
 #searchform-navbar {
-  background-color: $hillhead-blue;
+  background-color: #011451;
 }
 
-.primary-navigation>nav>ul>li>a.nav-link, .navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:active, .input-group .mr-2 {
-  color: #fff !important;;
+.primary-navigation > nav > ul > li > a.nav-link, .navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:active, .input-group .mr-2 {
+  color: #fff !important;
 }
 
 #user-menu-toggle {
@@ -77,8 +70,8 @@ nav.navbar a.navbar-brand {
 }
 
 .primary-navigation .moremenu .nav-link.active, .primary-navigation .moremenu .nav-link:hover, .primary-navigation .moremenu .nav-link:visited, .btn-primary:hover {
-  background-color: $hillhead-light;
-  border-bottom-color: $hillhead-dark;
+  background-color: rgb(1.6219512195, 32.4390243902, 131.3780487805);
+  border-bottom-color: rgb(0.3780487805, 7.5609756098, 30.6219512195);
 }
 
 .popover-region-header-text {
@@ -96,7 +89,7 @@ nav.navbar a.navbar-brand {
 }
 
 #page-footer a {
-  color: $hillhead-footer-color;
+  color: #677297;
 }
 
 #page-footer p {
@@ -128,10 +121,10 @@ nav.navbar a.navbar-brand {
 
 .hillheadFooterLinks li::before {
   display: inline-block;
-  padding-right: .5rem;
-  padding-left: .5rem;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
   color: #ACBCCE;
-  content: "\b7";
+  content: "·";
 }
 
 .hillheadFooterLinks li:first-child::before {
@@ -157,11 +150,11 @@ nav.navbar a.navbar-brand {
 }
 
 .content-item-container .context-link, .empty-message {
-  color: $hillhead-blue-eighty-percent;
+  color: #344374;
 }
 
 .drawer, .message-app {
-    background-color: #E6E7EE;
+  background-color: #E6E7EE;
 }
 
 .course-section .summarytext img {
@@ -170,11 +163,11 @@ nav.navbar a.navbar-brand {
 
 .drawer-toggles .drawer-toggler .btn {
   padding: 20px;
-  background-color: $hillhead-blue;
-  color: $login-text;
+  background-color: #011451;
+  color: #fff;
 }
 
 .btn-icon.icons-collapse-expand, .btn.btn-icon.icons-collapse-expand {
-    color: $login-text;
-    background-color: $hillhead-blue-eighty-percent;
-}
+  color: #fff;
+  background-color: #344374;
+}/*# sourceMappingURL=hillhead40.css.map */
