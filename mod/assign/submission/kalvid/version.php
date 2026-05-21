@@ -1,6 +1,4 @@
 <?php
-// This file is part of Moodle - https://moodle.org/
-//
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -12,22 +10,23 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Kaltura version script
  *
- * @package     tiny_kalturamedia
- * @copyright   2023 Roi Levi <roi.levi@kaltura.com>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    assignsubmission_kalvid
+ * @copyright 2025 Kaltura Inc
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version = 2024100704;
-$plugin->release = 'Kaltura release 4.5.3';
-$plugin->requires  = 2024042200;
-$plugin->component = 'tiny_kalturamedia';
+$plugin->component  = 'assignsubmission_kalvid';
+$plugin->release    = 'Kaltura release 4.5.3';
+$plugin->requires = 2024042200;
+$plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = array(
-    'local_kaltura' => 2024100704
+    'local_kaltura' => 2024100704,
 );

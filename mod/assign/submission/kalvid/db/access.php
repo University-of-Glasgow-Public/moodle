@@ -1,5 +1,6 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,23 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Kaltura media gallery version file.
+ * Capability definitions for this module.
  *
- * @package    local_kalturamediagallery
- * @author     Remote-Learner.net Inc
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright  (C) 2014 Remote Learner.net Inc http://www.remote-learner.net
+ * @package   assignsubmission_kalvid
+ * @copyright 2025 Kaltura Inc
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.');
-}
+$capabilities = array(
 
-$plugin->version = 2024100704;
-$plugin->component = 'local_kalturamediagallery';
-$plugin->release = 'Kaltura release 4.5.3';
-$plugin->requires = 2024042200;
-$plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array(
-    'local_kaltura' => 2024100704
+
+
 );
