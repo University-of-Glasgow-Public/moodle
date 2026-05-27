@@ -37,7 +37,7 @@ class get_data extends external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
                 'since' => new external_value(PARAM_INT, 'Timestamp for incremental sync', VALUE_DEFAULT, 0),
-                'limit' => new external_value(PARAM_INT, 'Maximum number of records to return', VALUE_OPTIONAL, 0),
+                'limit' => new external_value(PARAM_INT, 'Maximum number of records to return', VALUE_DEFAULT, 0),
                 'lastcmid' => new external_value(PARAM_INT, 'Last course module ID for pagination', VALUE_DEFAULT, 0),
             ]);
     }
