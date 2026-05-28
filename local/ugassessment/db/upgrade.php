@@ -61,5 +61,18 @@ function xmldb_local_ugassessment_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026052701, 'local', 'ugassessment');
     }
 
+    if ($oldversion < 2026052801) {
+
+        $table = new xmldb_table('local_ugassessment_snapshot');
+
+        // New field: timestartorfrom.
+        $timestartorfrom = new xmldb_field('timeopenorfrom', XMLDB_TYPE_INTEGER, '19', null, null, null, 0, 'activityvisible');
+        if (!$dbman->field_exists($table, $timestartorfrom)) {
+            $dbman->add_field($table, $timestartorfrom);
+        }
+
+        upgrade_plugin_savepoint(true, 2026052801, 'local', 'ugassessment');
+    }
+
     return true;
 }
