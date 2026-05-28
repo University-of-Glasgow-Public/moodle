@@ -255,6 +255,7 @@ class snapshot_builder {
 
                 // Activity metadata.
                 $dates = self::get_activity_dates_from_cm($cm);
+                $record->timeopenorfrom = $dates['timeopenorfrom'];
                 $record->timecloseordue = $dates['timecloseordue'];
                 $record->tags = isset($tagmap[$cm->id])
                     ? implode(';', $tagmap[$cm->id])
@@ -481,9 +482,9 @@ class snapshot_builder {
         $data = (array)($cm->customdata ?? []);
 
         return [
-            'timeopen'          => $data['timeopen'] ?? $data['allowsubmissionsfromdate'] ?? null,
-            'timecloseordue'    => $data['timeclose'] ?? $data['duedate'] ?? null,
-            'cutoffdate'        => $data['cutoffdate'] ?? null,
+            'timeopenorfrom'          => $data['timeopen'] ?? $data['allowsubmissionsfromdate'] ?? 0,
+            'timecloseordue'    => $data['timeclose'] ?? $data['duedate'] ?? 0,
+            'cutoffdate'        => $data['cutoffdate'] ?? 0,
         ];
     }
 

@@ -137,6 +137,7 @@ class get_data extends external_api {
                 'assessmenttype' => new external_value(PARAM_TEXT, 'Module type'),
                 'activityname' => new external_value(PARAM_TEXT, 'Activity name'),
                 'activityvisible' => new external_value(PARAM_BOOL, 'Activity visible'),
+                'timeopenorfrom' => new external_value(PARAM_INT, 'Time open or from date', VALUE_OPTIONAL),
                 'timecloseordue' => new external_value(PARAM_INT, 'Time close or due date', VALUE_OPTIONAL),
                 'timelimit' => new external_value(PARAM_INT, 'Time limit in seconds', VALUE_OPTIONAL),
                 'teamsubmission' => new external_value(PARAM_BOOL, 'Team submission', VALUE_OPTIONAL),
