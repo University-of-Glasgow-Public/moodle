@@ -71,8 +71,35 @@ If an activity no longer matches filters:
 
 If it reappears:
 - `deleted = 0`
+- `timeextracted` is the current time
 
 ---
+
+
+## Course Codes Handling
+
+MyCampus Course Codes and Subjects are sourced from:
+
+mdl_enrol_gudatabase_codes
+
+Rules:
+
+- A course can have:
+  - ✅ 0 codes → `coursecode = null`
+  - ✅ 1 code → stored normally
+  - ❌ Multiple codes → `coursecode = MULTIPLE_CODES`
+
+- When multiple codes are detected:
+  - The course is still included in the extract
+  - `coursesubject` is set to null
+  - A warning is logged in cron output:
+    - Example:
+      UGAssessment WARNING: multiple codes found for courseids: 12,45,78
+
+This ensures:
+- Data consistency in the API
+- Visibility of data issues without dropping records
+
 
 ## Installation
 
@@ -161,31 +188,57 @@ Endpoint:
 
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "coursefullname": "Aggregated course",
-      "coursevisible": true,
-      "academicyear": "26/27",
-      "qualification": "UG",
-      "semester": "Semester 1",
-      "studentmygrades": "Yes",
-      "cmid": 318,
-      "assessmenttype": "assign",
-      "activityname": "Assign01",
-      "activityvisible": false,
-      "timecloseordue": 1762473600,
-      "teamsubmission": false,
-      "tags": "!testtag1;!testtag2",
-      "url": "http://localhost/mygrades-gu45/mod/assign/view.php?id=318",
-      "timeextracted": 1779464679,
-      "deleted": false,
-    }
-  ],
-  "lastcmid": 326,
-  "lasttime": 1779698232,
-  "hasmore": true
+    "data": [
+        {
+            "id": 2,
+            "coursefullname": "MyGrades Test course for UofG user grade report",
+            "coursecode": "ENG2025",
+            "coursesubject": "ENG",
+            "coursevisible": true,
+            "academicyear": "26/27",
+            "qualification": "UG",
+            "semester": "Semester 1",
+            "studentmygrades": "Yes",
+            "cmid": 52115,
+            "assessmenttype": "assign",
+            "activityname": "Assign02",
+            "activityvisible": true,
+            "timecloseordue": 1760569200,
+            "timelimit": 0,
+            "teamsubmission": false,
+            "tags": "",
+            "url": "https://learntest5.gla.ac.uk/mod/assign/view.php?id=52115",
+            "timeextracted": 1779972574,
+            "deleted": false
+        },
+        {
+            "id": 1,
+            "coursefullname": "MyGrades Test course for UofG user grade report",
+            "coursecode": "ENG2025",
+            "coursesubject": "ENG",
+            "coursevisible": true,
+            "academicyear": "26/27",
+            "qualification": "UG",
+            "semester": "Semester 1",
+            "studentmygrades": "Yes",
+            "cmid": 47034,
+            "assessmenttype": "assign",
+            "activityname": "Assign01",
+            "activityvisible": true,
+            "timecloseordue": 1760569200,
+            "timelimit": 3600,
+            "teamsubmission": false,
+            "tags": "",
+            "url": "https://learntest5.gla.ac.uk/mod/assign/view.php?id=47034",
+            "timeextracted": 1779972662,
+            "deleted": false
+        }
+    ],
+    "hasmore": false,
+    "lasttime": 1779972662,
+    "lastcmid": 47034
 }
+
 ```
 
 ---
