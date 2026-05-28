@@ -39,7 +39,7 @@ class snapshot_builder {
         $updated = 0; // Counter for updated records.
         $unchanged = 0; // Counter for unchanged records.
         $deleted = 0; // Counter for deleted records.
-
+        $multiplecodecourses = []; // List of courses with multiple MyCampus codes.
 
         // If reset is true, clear existing snapshot.
         if ($reset) {
@@ -66,6 +66,19 @@ class snapshot_builder {
         if (empty($courseids)) {
             // Nothing to process.
             return;
+        }
+
+        // Preload MyCampus enrolment codes to minimize DB queries in the loop.
+        $gucodemap = [];
+        $gucodes = $DB->get_records_list('enrol_gudatabase_codes', 'courseid', $courseids);
+
+        foreach ($gucodes as $g) {
+            $gucodemap[$g->courseid][] = $g;
+        }
+        foreach ($gucodemap as $cid => $records) {
+            if (count($records) > 1) {
+                $multiplecodecourses[] = $cid;
+            }
         }
 
         // Preload grade items for all courses to minimize DB queries in the loop.
@@ -109,14 +122,6 @@ class snapshot_builder {
             foreach ($quizzes as $q) {
                 $quizmap[$q->id] = $q;
             }
-        }
-
-        // Preload MyCampus enrolment codes to minimize DB queries in the loop.
-        $gucodemap = [];
-        $gucodes = $DB->get_records_list('enrol_gudatabase_codes', 'courseid', $courseids);
-
-        foreach ($gucodes as $g) {
-            $gucodemap[$g->courseid][] = $g;
         }
 
         // Preload the full snapshot to minimize DB queries in the loop.
@@ -365,6 +370,9 @@ class snapshot_builder {
             . ', updated=' . $updated
             . ', unchanged=' . $unchanged
             . ', deleted=' . $deleted . ')');
+        if (!empty($multiplecodecourses)) {
+            mtrace('UGAssessment WARNING: courses with multiple MyCampus codes = ' . implode(', ', $multiplecodecourses));
+        }
     }
 
     /**
