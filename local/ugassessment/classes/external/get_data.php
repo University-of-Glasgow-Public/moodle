@@ -136,6 +136,7 @@ class get_data extends external_api {
                 'activityname' => new external_value(PARAM_TEXT, 'Activity name'),
                 'activityvisible' => new external_value(PARAM_BOOL, 'Activity visible'),
                 'timecloseordue' => new external_value(PARAM_INT, 'Time close or due date'),
+                'timelimit' => new external_value(PARAM_INT, 'Time limit in seconds'),
                 'teamsubmission' => new external_value(PARAM_BOOL, 'Team submission'),
                 'tags' => new external_value(PARAM_TEXT, 'Comma-separated list of tags'),
                 'url' => new external_value(PARAM_URL, 'Activity URL'),

@@ -100,6 +100,25 @@ class snapshot_builder {
             }
         }
 
+        // Preload quiz data if quizzes are enabled to minimize DB queries in the loop.
+        $quizmap = [];
+
+        if (in_array('quiz', $enabledtypes)) {
+            $quizzes = $DB->get_records_list('quiz', 'course', $courseids);
+
+            foreach ($quizzes as $q) {
+                $quizmap[$q->id] = $q;
+            }
+        }
+
+        // Preload MyCampus enrolment codes to minimize DB queries in the loop.
+        $gucodemap = [];
+        $gucodes = $DB->get_records_list('enrol_gudatabase_codes', 'courseid', $courseids);
+
+        foreach ($gucodes as $g) {
+            $gucodemap[$g->courseid][] = $g;
+        }
+
         // Preload the full snapshot to minimize DB queries in the loop.
         // We will compare against this to determine if anything has changed.
         $snapshot = $DB->get_records('local_ugassessment_snapshot');
@@ -152,6 +171,21 @@ class snapshot_builder {
                 $fieldmap[$shortname] = $fielddata->export_value();
             }
 
+            // Get the MyCampus enrolment codes and subjects for this course.
+            $gucodes = $gucodemap[$course->id] ?? [];
+
+            $codes = [];
+            $subjects = [];
+
+            foreach ($gucodes as $g) {
+                if (!empty($g->code)) {
+                    $codes[] = $g->code;
+                }
+                if (!empty($g->subject)) {
+                    $subjects[] = $g->subject;
+                }
+            }
+
             $modinfo = get_fast_modinfo($course);
 
             foreach ($modinfo->get_cms() as $cm) {
@@ -191,6 +225,23 @@ class snapshot_builder {
                 // Course metadata.
                 $record->coursefullname   = $course->fullname;
                 $record->coursevisible = $course->visible;
+
+                // Course MyCampus codes and subjects as comma-separated values.
+                if (count($gucodes) === 1) {
+                    // Only one code should be there.
+                    $g = reset($gucodes);
+                    $record->coursecode = $g->code ?? null;
+                    $record->coursesubject = $g->subject ?? null;
+                } else if (count($gucodes) > 1) {
+                    // Flag clearly.
+                    $record->coursecode = 'MULTIPLE_CODES';
+                    $record->coursesubject = null;
+                } else {
+                    // No codes.
+                    $record->coursecode = null;
+                    $record->coursesubject = null;
+                }
+
                 // Course custom field values.
                 $record->academicyear = $fieldmap['academicyear'] ?? null;
                 $record->qualification = $fieldmap['qualification'] ?? null;
@@ -223,6 +274,16 @@ class snapshot_builder {
 
                     if ($assign) {
                         $record->teamsubmission = $assign->teamsubmission;
+                        $record->timelimit = $assign->timelimit;
+                    }
+                }
+
+                // Quiz specific data.
+                if ($cm->modname === 'quiz') {
+                    $quiz = $quizmap[$cm->instance] ?? null;
+
+                    if ($quiz) {
+                        $record->timelimit = $quiz->timelimit;
                     }
                 }
 
