@@ -371,7 +371,7 @@ class snapshot_builder {
             . ', unchanged=' . $unchanged
             . ', deleted=' . $deleted . ')');
         if (!empty($multiplecodecourses)) {
-            mtrace('UGAssessment WARNING: courses with multiple MyCampus codes = ' . implode(', ', $multiplecodecourses));
+            mtrace('UGAssessment WARNING: courseids with multiple MyCampus codes = ' . implode(', ', $multiplecodecourses));
         }
     }
 
