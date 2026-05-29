@@ -1,38 +1,39 @@
-$hillhead-blue: #005398;
+$hillhead-blue: #011451;
 $hillhead-dark: darken($hillhead-blue, 10%);
 $hillhead-light: lighten($hillhead-blue, 10%);
-$hillhead-main: #003865;
-$hillhead-footer-color: #005e8d;
+$hillhead-blue-eighty-percent: #344374;
+$hillhead-footer-color: #677297;
 $primary: $hillhead-blue;
+$login-text: #fff;
 
 h1 {
   font-size: 1.5rem;
-  color: #003865;
+  color: $hillhead-blue-eighty-percent;
 }
 
 h2 {
   font-size: 1.4rem;
-  color: #003865;
+  color: $hillhead-blue-eighty-percent;
 }
 
 h3 {
   font-size: 1.3rem;
-  color: #003865;
+  color: $hillhead-blue-eighty-percent;
 }
 
 h4 {
   font-size: 1.2rem;
-  color: #003865;
+  color: $hillhead-blue-eighty-percent;
 }
 
 h5 {
   font-size: 1.1rem;
-  color: #003865;
+  color: $hillhead-blue-eighty-percent;
 }
 
 h6 {
   font-size: 1rem;
-  color: #003865;
+  color: $hillhead-blue-eighty-percent;
 }
 
 #region-main {
@@ -44,7 +45,7 @@ h6 {
 nav.navbar.fixed-top {
   background-color: $hillhead-blue !important;
   border-color: $hillhead-dark;
-  border-bottom: 1px solid $hillhead-main;
+  border-bottom: 1px solid $hillhead-blue-eighty-percent;
 }
 
 nav.navbar a.navbar-brand {
@@ -155,12 +156,25 @@ nav.navbar a.navbar-brand {
   text-decoration: underline;
 }
 
+.content-item-container .context-link, .empty-message {
+  color: $hillhead-blue-eighty-percent;
+}
+
+.drawer, .message-app {
+    background-color: #E6E7EE;
+}
+
 .course-section .summarytext img {
   border-radius: 0rem;
 }
 
 .drawer-toggles .drawer-toggler .btn {
   padding: 20px;
-  background-color: #cce6ea;
-  color: #00434e;
+  background-color: $hillhead-blue;
+  color: $login-text;
+}
+
+.btn-icon.icons-collapse-expand, .btn.btn-icon.icons-collapse-expand {
+    color: $login-text;
+    background-color: $hillhead-blue-eighty-percent;
 }
