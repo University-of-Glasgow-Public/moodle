@@ -74,5 +74,19 @@ function xmldb_local_ugassessment_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026052801, 'local', 'ugassessment');
     }
 
+    if ($oldversion < 2026052900) {
+
+        $table = new xmldb_table('local_ugassessment_snapshot');
+
+        // Update time fields with default values.
+
+        $timecloseordue = new xmldb_field('timecloseordue', XMLDB_TYPE_INTEGER, '19', null, null, null, 0, 'timeopenorfrom');
+        if (!$dbman->field_exists($table, $timecloseordue)) {
+                $dbman->change_field_default($table, $timecloseordue);
+        }
+
+        upgrade_plugin_savepoint(true, 2026052900, 'local', 'ugassessment');
+    }
+
     return true;
 }

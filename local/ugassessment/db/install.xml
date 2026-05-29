@@ -5,6 +5,8 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key"/>
         <FIELD NAME="coursefullname" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Course name"/>
+        <FIELD NAME="coursecode" TYPE="char" LENGTH="20" NOTNULL="false" COMMENT="Course code"/>
+        <FIELD NAME="coursesubject" TYPE="char" LENGTH="15" NOTNULL="false" COMMENT="Course subject"/>
         <FIELD NAME="coursevisible" TYPE="int" LENGTH="1" NOTNULL="true" COMMENT="Course visibility"/>
         <FIELD NAME="academicyear" TYPE="char" LENGTH="20" NOTNULL="false" COMMENT="Academic year"/>
         <FIELD NAME="qualification" TYPE="char" LENGTH="10" NOTNULL="false" COMMENT="Qualification"/>
@@ -14,7 +16,9 @@
         <FIELD NAME="assessmenttype" TYPE="char" LENGTH="20" NOTNULL="true" COMMENT="Module type"/>
         <FIELD NAME="activityname" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Activity name"/>
         <FIELD NAME="activityvisible" TYPE="int" LENGTH="1" NOTNULL="true" COMMENT="Activity visibility"/>
-        <FIELD NAME="timecloseordue" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Close or due date"/>
+        <FIELD NAME="timeopenorfrom" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Open or start date"/>
+        <FIELD NAME="timecloseordue" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0"COMMENT="Close or due date"/>
+        <FIELD NAME="timelimit" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Time limit in seconds"/>
         <FIELD NAME="teamsubmission" TYPE="int" LENGTH="1" NOTNULL="false" COMMENT="Team submission flag - assignment"/>
         <FIELD NAME="tags" TYPE="char" LENGTH="255" NOTNULL="false" COMMENT="Activity tags"/>
         <FIELD NAME="url" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Activity URL"/>
