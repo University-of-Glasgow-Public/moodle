@@ -87,6 +87,7 @@ class template extends \core\form\persistent {
         $context = models\template::get_context();
         $record = file_prepare_standard_editor($record, 'summary', $summaryeditoroptions, $context, models\template::TABLE, models\template::FILEAREA_SUMMARY, $record->id);
         $record = file_prepare_standard_filemanager($record, 'overviewfiles', $courseoverviewfilesoptions, $context, models\template::TABLE, models\template::FILEAREA_OVERVIEWFILES, $record->id);
+        // We'll set_data again later after custom fields are defined/prepared.
         $this->set_data($record);
 
         // View Changer.
@@ -211,6 +212,51 @@ class template extends \core\form\persistent {
         $mform->addElement('text', 'idnumber', get_string('idnumbercourse'), 'maxlength="100"  size="10"');
         $mform->addHelpButton('idnumber', 'idnumbercourse');
         $mform->setType('idnumber', PARAM_RAW);
+
+        // Course custom fields.
+        $handler = \core_course\customfield\course_handler::create();
+        $parentcategoryid = 0;
+        if (!empty($record->category)) {
+            $parentcategoryid = (int)$record->category;
+        } else if (!empty($defaultcategoryid)) {
+            $parentcategoryid = (int)$defaultcategoryid;
+        }
+        if ($parentcategoryid) {
+            $handler->set_parent_context(\context_coursecat::instance($parentcategoryid));
+        } else {
+            $handler->set_parent_context(\context_system::instance());
+        }
+
+        $instanceid = !empty($record->createdcourseid) ? (int)$record->createdcourseid : 0;
+        // We intentionally do not call $handler->instance_form_definition() because it adds 'header' elements
+        // (fieldsets) per customfield category. In stepper mode the next section boundaries are rendered via
+        // raw HTML, so those fieldsets would not be properly closed and can break the stepper DOM.
+        $editablefields = $handler->get_editable_fields($instanceid);
+        $fieldswithdata = \core_customfield\api::get_instance_fields_data($editablefields, $instanceid);
+        foreach ($fieldswithdata as $datactrl) {
+            // Hide selected fields from the wizard UI.
+            if ($datactrl->get_field()->get('shortname') === 'studentmygrades') {
+                continue;
+            }
+            $datactrl->instance_form_definition($mform);
+        }
+
+        // Populate customfield_* values back onto the record from stored JSON, if present.
+        if (!empty($record->customfielddata) && is_string($record->customfielddata)) {
+            $saved = json_decode($record->customfielddata, true);
+            if (is_array($saved)) {
+                foreach ($saved as $key => $value) {
+                    if (is_string($key) && substr($key, 0, 12) === 'customfield_') {
+                        if ($key === 'customfield_studentmygrades') {
+                            continue;
+                        }
+                        $record->{$key} = $value;
+                    }
+                }
+            }
+        }
+        $handler->instance_form_before_set_data($record);
+        $this->set_data($record);
 
         // Stepper section: Description.
 
@@ -427,6 +473,18 @@ class template extends \core\form\persistent {
         if ($errorcode = course_validate_dates((array)$data)) {
             $errors['enddate'] = get_string($errorcode, 'error');
         }
+
+        // Validate course custom fields.
+        $handler = \core_course\customfield\course_handler::create();
+        $categoryid = !empty($data->category) ? (int)$data->category : 0;
+        if ($categoryid) {
+            $handler->set_parent_context(\context_coursecat::instance($categoryid));
+        } else {
+            $handler->set_parent_context(\context_system::instance());
+        }
+        $customdata = (array)$data;
+        unset($customdata['customfield_studentmygrades']);
+        $errors = array_merge($errors, $handler->instance_form_validation($customdata, $files));
 
        return $errors;
     }

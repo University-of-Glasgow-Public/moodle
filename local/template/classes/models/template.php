@@ -193,6 +193,13 @@ class template extends \core\persistent implements renderable, templatable {
                 'null' => NULL_NOT_ALLOWED,
                 'default' => true,
             ],
+            'customfielddata' => [
+                'type' => PARAM_RAW,
+                'description' => 'JSON blob of course custom field values (customfield_*) captured during wizard and applied to created course',
+                'null' => NULL_ALLOWED,
+                'optional' => true,
+                'default' => null,
+            ],
             'gudbenrolment' => [
                 'type' => PARAM_BOOL,
                 'description' => 'Boolean flag for whether a gudatabase enrolment method should be added to the course.',
@@ -1175,6 +1182,7 @@ class template extends \core\persistent implements renderable, templatable {
         $this->process_import();
         $this->process_enrolment();
         $this->process_summary_and_files();
+        $this->process_customfields();
 
         return true;
 
@@ -1526,6 +1534,38 @@ class template extends \core\persistent implements renderable, templatable {
         }
         $this->move_course_files($course, 'overviewfiles');
 
+    }
+
+    private function process_customfields(): void {
+        $courseid = (int)$this->raw_get('createdcourseid');
+        if (!$courseid) {
+            return;
+        }
+
+        $customfieldjson = $this->raw_get('customfielddata');
+        if (empty($customfieldjson) || !is_string($customfieldjson)) {
+            return;
+        }
+
+        $customfielddata = json_decode($customfieldjson, true);
+        if (!is_array($customfielddata) || empty($customfielddata)) {
+            return;
+        }
+
+        unset($customfielddata['customfield_studentmygrades']);
+
+        // Build a minimal "form data" object for the handler.
+        $course = (object)(['id' => $courseid] + $customfielddata);
+
+        $handler = \core_course\customfield\course_handler::create();
+        $categoryid = (int)$this->raw_get('category');
+        if ($categoryid) {
+            $handler->set_parent_context(\context_coursecat::instance($categoryid));
+        } else {
+            $handler->set_parent_context(\context_system::instance());
+        }
+
+        $handler->instance_form_save($course, false);
     }
 
     private function move_course_files($course, $filearea) {

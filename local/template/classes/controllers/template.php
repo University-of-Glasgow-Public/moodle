@@ -230,6 +230,24 @@ class template {
         if ($data) {
 
             unset($data->action);
+
+            // Persist course custom fields (customfield_*) into the template record so they can be applied
+            // after the course copy/restore has completed.
+            $customfields = [];
+            foreach ((array)$data as $key => $value) {
+                if (is_string($key) && substr($key, 0, 12) === 'customfield_') {
+                    if ($key === 'customfield_studentmygrades') {
+                        continue;
+                    }
+                    $customfields[$key] = $value;
+                }
+            }
+            if (!empty($customfields)) {
+                $data->customfielddata = json_encode($customfields);
+            } else {
+                $data->customfielddata = null;
+            }
+
             $process = false;
             $redirect = false;
             if (isset($data->createandredirect)) {

@@ -26,6 +26,7 @@
           <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Desination course start date"/>
           <FIELD NAME="enddate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Desination course end date"/>
           <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Desination course visible"/>
+          <FIELD NAME="customfielddata" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON blob of course custom field values (customfield_*) captured during wizard and applied to created course"/>
 
           <FIELD NAME="gudbenrolment" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Boolean flag for whether a gudatabase enrolment method should be added to the course."/>
           <FIELD NAME="gudbstatus" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="gudatabase status 0..9 are system constants, 0 means active enrolment, see ENROL_STATUS_* constants, plugins may define own status greater than 10"/>
