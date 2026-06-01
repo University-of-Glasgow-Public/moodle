@@ -48,10 +48,26 @@ global $DB;
 $count = $DB->count_records('local_ugassessment_snapshot');
 $deletedcount = $DB->count_records('local_ugassessment_snapshot', ['deleted' => 1]);
 
-echo html_writer::div(
-    "Current snapshot record count: $count (total), $deletedcount (deleted)",
-    'm-5'
-);
+
+$sql = "SELECT COUNT(DISTINCT coursefullname)
+          FROM {local_ugassessment_snapshot}
+         WHERE coursecode = :code";
+
+$params = [
+    'code' => 'MULTIPLE_CODES',
+];
+
+$multiplecodes = $DB->count_records_sql($sql, $params);
+
+$title = html_writer::tag('h4', 'Current snapshot record');
+
+$list = html_writer::alist([
+    '<i class="fa fa-database text-primary mr-2"></i> Total records: ' . $count,
+    '<i class="fa fa-trash text-danger mr-2"></i> Deleted records: ' . $deletedcount,
+    '<i class="fa fa-clone text-warning mr-2"></i> Courses with multiple codes: ' . $multiplecodes
+], ['class' => 'ml-4']);
+
+echo html_writer::div($title . $list, 'm-5');
 
 // Export link only if there are records in the snapshot.
 if ($count > 0) {

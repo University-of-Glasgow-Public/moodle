@@ -137,12 +137,6 @@ Site administration → Server → Scheduled tasks
 
 ---
 
-## CLI Script
-
-php local/ugassessment/cli/update_snapshot.php
-
----
-
 ## Web Service Setup
 
 1. Enable web services
