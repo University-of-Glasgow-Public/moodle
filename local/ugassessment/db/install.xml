@@ -17,7 +17,7 @@
         <FIELD NAME="activityname" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Activity name"/>
         <FIELD NAME="activityvisible" TYPE="int" LENGTH="1" NOTNULL="true" COMMENT="Activity visibility"/>
         <FIELD NAME="timeopenorfrom" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Open or start date"/>
-        <FIELD NAME="timecloseordue" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0"COMMENT="Close or due date"/>
+        <FIELD NAME="timecloseordue" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Close or due date"/>
         <FIELD NAME="timelimit" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Time limit in seconds"/>
         <FIELD NAME="teamsubmission" TYPE="int" LENGTH="1" NOTNULL="false" COMMENT="Team submission flag - assignment"/>
         <FIELD NAME="tags" TYPE="char" LENGTH="255" NOTNULL="false" COMMENT="Activity tags"/>
