@@ -34,83 +34,106 @@ if ($hassiteconfig) {
         get_string('settingpagename', 'local_ugassessment')
     );
 
-    /*
-     * Step 1 Dropdown: select custom field (type = select)
-     */
-    $fields = $DB->get_records_sql("
-        SELECT f.id, f.shortname, f.name
-        FROM {customfield_field} f
-        JOIN {customfield_category} c ON c.id = f.categoryid
-        WHERE c.component = :component
-        AND f.type = :type
-        ORDER BY f.name ASC
-    ", [
-        'component' => 'core_course',
-        'type'      => 'select',
-    ]);
-
-
+    $valuesoptions = [];
     $fieldoptions = [];
 
-    foreach ($fields as $field) {
-        // Store shortname, display readable name.
-        $fieldoptions[$field->shortname] = $field->name;
-    }
-
-    $settings->add(new admin_setting_configselect(
-        'local_ugassessment/fieldshortname',
-        get_string('fieldshortname', 'local_ugassessment'),
-        get_string('fieldshortname_desc', 'local_ugassessment'),
-        '',
-        $fieldoptions
-    ));
-
-    /*
-     * Step 2 Dropdown: values for selected field
-     */
-    $valuesoptions = [];
-
-    $selectedfield = get_config('local_ugassessment', 'fieldshortname');
-
-    if (!empty($selectedfield)) {
-        $field = $DB->get_record_sql("
-            SELECT f.id, f.configdata
+    if (!during_initial_install()) {
+        /*
+        * Step 1 Dropdown: select custom field (type = select)
+        */
+        $fields = $DB->get_records_sql("
+            SELECT f.id, f.shortname, f.name
             FROM {customfield_field} f
             JOIN {customfield_category} c ON c.id = f.categoryid
-            WHERE f.shortname = :shortname
-            AND c.component = :component
+            WHERE c.component = :component
+            AND f.type = :type
+            ORDER BY f.name ASC
         ", [
-            'shortname' => $selectedfield,
             'component' => 'core_course',
+            'type'      => 'select',
         ]);
 
-        if ($field && !empty($field->configdata)) {
+        foreach ($fields as $field) {
+            // Store shortname, display readable name.
+            $fieldoptions[$field->shortname] = $field->name;
+        }
 
-            $config = json_decode($field->configdata);
+        if (empty($fieldoptions)) {
+            $settings->add(new admin_setting_heading(
+                'local_ugassessment/nofields',
+                '',
+                '<div class="alert alert-warning">
+                    No course <strong>dropdown custom fields</strong> exist.<br>
+                    Please create one first in:<br>
+                    <em>Site administration → Courses → Custom fields</em>.
+                </div>'
+            ));
+        } else {
+            $settings->add(new admin_setting_configselect(
+                'local_ugassessment/fieldshortname',
+                get_string('fieldshortname', 'local_ugassessment'),
+                get_string('fieldshortname_desc', 'local_ugassessment'),
+                '',
+                $fieldoptions
+            ));
+        }
 
-            if (!empty($config->options)) {
+        /*
+        * Step 2 Dropdown: values for selected field
+        */
 
-                // Options are newline separated.
-                $options = preg_split('/\r\n|\r|\n/', $config->options);
+        $selectedfield = get_config('local_ugassessment', 'fieldshortname');
 
-                $options = array_map('trim', $options);
-                $options = array_values(array_filter($options));
+        if (!empty($selectedfield)) {
+            $field = $DB->get_record_sql("
+                SELECT f.id, f.configdata
+                FROM {customfield_field} f
+                JOIN {customfield_category} c ON c.id = f.categoryid
+                WHERE f.shortname = :shortname
+                AND c.component = :component
+            ", [
+                'shortname' => $selectedfield,
+                'component' => 'core_course',
+            ]);
 
-                foreach ($options as $index => $option) {
-                    $valuesoptions[(string)$index + 1] = $option;
+            if ($field && !empty($field->configdata)) {
+
+                $config = json_decode($field->configdata);
+
+                if (!empty($config->options)) {
+
+                    // Options are newline separated.
+                    $options = preg_split('/\r\n|\r|\n/', $config->options);
+
+                    $options = array_map('trim', $options);
+                    $options = array_values(array_filter($options));
+
+                    foreach ($options as $index => $option) {
+                        $valuesoptions[(string)$index + 1] = $option;
+                    }
                 }
             }
         }
-    }
 
-    // Expected value. Only courses with this value in the specified custom field will be included in the snapshot.
-    $settings->add(new admin_setting_configselect(
-        'local_ugassessment/fieldvalue',
-        get_string('fieldvalue', 'local_ugassessment'),
-        get_string('fieldvalue_desc', 'local_ugassessment'),
-        '',
-        $valuesoptions
-    ));
+        if (empty($valuesoptions)) {
+            $settings->add(new admin_setting_heading(
+                'local_ugassessment/novalues',
+                '',
+                '<div class="alert alert-warning">
+                    No options found for the selected custom field. Please add some first.
+                </div>'
+            ));
+        } else {
+            // Expected value. Only courses with this value in the specified custom field will be included in the snapshot.
+            $settings->add(new admin_setting_configselect(
+                'local_ugassessment/fieldvalue',
+                get_string('fieldvalue', 'local_ugassessment'),
+                get_string('fieldvalue_desc', 'local_ugassessment'),
+                '',
+                $valuesoptions
+            ));
+        }
+    }
 
     // Keyword for identifying summative grade categories.
     $settings->add(new admin_setting_configtext(
