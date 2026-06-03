@@ -4,36 +4,35 @@
     <TABLE NAME="local_ugassessment_snapshot" COMMENT="Assessment metadata snapshot">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key"/>
-        <FIELD NAME="coursefullname" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Course name"/>
-        <FIELD NAME="coursecode" TYPE="char" LENGTH="20" NOTNULL="false" COMMENT="Course code"/>
-        <FIELD NAME="coursesubject" TYPE="char" LENGTH="15" NOTNULL="false" COMMENT="Course subject"/>
-        <FIELD NAME="coursevisible" TYPE="int" LENGTH="1" NOTNULL="true" COMMENT="Course visibility"/>
-        <FIELD NAME="academicyear" TYPE="char" LENGTH="20" NOTNULL="false" COMMENT="Academic year"/>
-        <FIELD NAME="qualification" TYPE="char" LENGTH="10" NOTNULL="false" COMMENT="Qualification"/>
-        <FIELD NAME="semester" TYPE="char" LENGTH="30" NOTNULL="false" COMMENT="Semester"/>
-        <FIELD NAME="studentmygrades" TYPE="char" LENGTH="3" NOTNULL="false" COMMENT="Student My Grades boolean"/>
-        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Course module ID"/>
-        <FIELD NAME="assessmenttype" TYPE="char" LENGTH="20" NOTNULL="true" COMMENT="Module type"/>
-        <FIELD NAME="activityname" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Activity name"/>
-        <FIELD NAME="activityvisible" TYPE="int" LENGTH="1" NOTNULL="true" COMMENT="Activity visibility"/>
-        <FIELD NAME="timeopenorfrom" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Open or start date"/>
-        <FIELD NAME="timecloseordue" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Close or due date"/>
-        <FIELD NAME="timelimit" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" COMMENT="Time limit in seconds"/>
-        <FIELD NAME="teamsubmission" TYPE="int" LENGTH="1" NOTNULL="false" COMMENT="Team submission flag - assignment"/>
-        <FIELD NAME="tags" TYPE="char" LENGTH="255" NOTNULL="false" COMMENT="Activity tags"/>
-        <FIELD NAME="url" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Activity URL"/>
-        <FIELD NAME="timeextracted" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Last extracted timestamp"/>
-        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="Soft delete flag"/>
+        <FIELD NAME="coursefullname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Course name"/>
+        <FIELD NAME="coursecode" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Course code"/>
+        <FIELD NAME="coursesubject" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false" COMMENT="Course subject"/>
+        <FIELD NAME="coursevisible" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Course visibility"/>
+        <FIELD NAME="academicyear" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Academic year"/>
+        <FIELD NAME="qualification" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Qualification"/>
+        <FIELD NAME="semester" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="Semester"/>
+        <FIELD NAME="studentmygrades" TYPE="char" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Student My Grades boolean"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course module ID"/>
+        <FIELD NAME="assessmenttype" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Module type"/>
+        <FIELD NAME="activityname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Activity name"/>
+        <FIELD NAME="activityvisible" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Activity visibility"/>
+        <FIELD NAME="timeopenorfrom" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Open or start date"/>
+        <FIELD NAME="timecloseordue" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Close or due date"/>
+        <FIELD NAME="timelimit" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Time limit in seconds"/>
+        <FIELD NAME="teamsubmission" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Team submission flag - assignment"/>
+        <FIELD NAME="tags" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Activity tags"/>
+        <FIELD NAME="url" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Activity URL"/>
+        <FIELD NAME="timeextracted" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Last extracted timestamp"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Soft delete flag"/>
       </FIELDS>
-
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="cmid_unique" TYPE="unique" FIELDS="cmid"/>
       </KEYS>
-
       <INDEXES>
         <INDEX NAME="timeextracted_idx" UNIQUE="false" FIELDS="timeextracted"/>
         <INDEX NAME="deleted_idx" UNIQUE="false" FIELDS="deleted"/>
+        <INDEX NAME="timeextracted_cmid_idx" UNIQUE="false" FIELDS="timeextracted, cmid"/>
       </INDEXES>
     </TABLE>
   </TABLES>

@@ -74,18 +74,55 @@ function xmldb_local_ugassessment_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026052801, 'local', 'ugassessment');
     }
 
-    if ($oldversion < 2026052900) {
+    if ($oldversion < 2026060300) {
 
         $table = new xmldb_table('local_ugassessment_snapshot');
 
-        // Update time fields with default values.
+        // 1. Fix teamsubmission default.
+        $field = new xmldb_field(
+            'teamsubmission',
+            XMLDB_TYPE_INTEGER,
+            '1',
+            null,
+            null,
+            null,
+            '0',
+            'timelimit'
+        );
 
-        $timecloseordue = new xmldb_field('timecloseordue', XMLDB_TYPE_INTEGER, '19', null, null, null, 0, 'timeopenorfrom');
-        if (!$dbman->field_exists($table, $timecloseordue)) {
-                $dbman->change_field_default($table, $timecloseordue);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->change_field_default($table, $field);
         }
 
-        upgrade_plugin_savepoint(true, 2026052900, 'local', 'ugassessment');
+        // 2. Add NON-UNIQUE index (timeextracted, cmid).
+        $index = new xmldb_index(
+            'timeextracted_cmid_idx',
+            XMLDB_INDEX_NOTUNIQUE,
+            ['timeextracted', 'cmid']
+        );
+
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // 3. Fix timecloseordue default (retroactive fix).
+        $timecloseordue = new xmldb_field(
+            'timecloseordue',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            null,
+            null,
+            null,
+            '0',
+            'timeopenorfrom'
+        );
+
+        if ($dbman->field_exists($table, $timecloseordue)) {
+            $dbman->change_field_default($table, $timecloseordue);
+        }
+
+        // Savepoint.
+        upgrade_plugin_savepoint(true, 2026060300, 'local', 'ugassessment');
     }
 
     return true;
