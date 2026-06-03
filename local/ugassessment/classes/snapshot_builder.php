@@ -69,15 +69,20 @@ class snapshot_builder {
         }
 
         // Preload MyCampus enrolment codes to minimize DB queries in the loop.
+        $dbman = $DB->get_manager();
         $gucodemap = [];
-        $gucodes = $DB->get_records_list('enrol_gudatabase_codes', 'courseid', $courseids);
+        $multiplecodecourses = [];
 
-        foreach ($gucodes as $g) {
-            $gucodemap[$g->courseid][] = $g;
-        }
-        foreach ($gucodemap as $cid => $records) {
-            if (count($records) > 1) {
-                $multiplecodecourses[] = $cid;
+        if ($dbman->table_exists('enrol_gudatabase_codes')) {
+            $gucodes = $DB->get_records_list('enrol_gudatabase_codes', 'courseid', $courseids);
+
+            foreach ($gucodes as $g) {
+                $gucodemap[$g->courseid][] = $g;
+            }
+            foreach ($gucodemap as $cid => $records) {
+                if (count($records) > 1) {
+                    $multiplecodecourses[] = $cid;
+                }
             }
         }
 
