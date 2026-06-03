@@ -57,6 +57,15 @@ if ($confirm) {
     echo $OUTPUT->notification(get_string('snapshotrebuildsuccess', 'local_ugassessment'), 'notifysuccess');
 
     echo $OUTPUT->continue_button(new moodle_url('/local/ugassessment/manage.php', []));
+
+    // Trigger event.
+    $event = \local_ugassessment\event\snapshot_rebuilt::create([
+        'context' => \context_system::instance(),
+        'other' => [
+                'mode' => 'full rebuild',
+            ],
+    ]);
+    $event->trigger();
 } else {
     $confirmurl = new moodle_url('/local/ugassessment/rebuild.php', ['confirm' => 1]);
     $cancelurl = new moodle_url('/local/ugassessment/manage.php', [

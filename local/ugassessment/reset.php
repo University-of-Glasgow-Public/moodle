@@ -51,6 +51,15 @@ if ($confirm) {
     echo $OUTPUT->notification(get_string('resetsuccess', 'local_ugassessment'), 'notifysuccess');
 
     echo $OUTPUT->continue_button(new moodle_url('/local/ugassessment/manage.php', []));
+
+    // Trigger event.
+    $event = \local_ugassessment\event\snapshot_reset::create([
+        'context' => \context_system::instance(),
+        'other' => [
+            'mode' => 'reset',
+        ],
+    ]);
+    $event->trigger();
 } else {
     $confirmurl = new moodle_url('/local/ugassessment/reset.php', ['confirm' => 1]);
     $cancelurl = new moodle_url('/local/ugassessment/reset.php', [
