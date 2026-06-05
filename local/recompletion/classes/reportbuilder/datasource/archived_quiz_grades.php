@@ -27,10 +27,10 @@ use local_recompletion\reportbuilder\entities\quiz_grades;
  *
  * @package    local_recompletion
  * @author     Dmitrii Metelkin <dmitriim@catalyst-au.net>
+ * @copyright Copyright Dan Marsden
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class archived_quiz_grades extends datasource {
-
     /**
      * Return user friendly name of the datasource
      *

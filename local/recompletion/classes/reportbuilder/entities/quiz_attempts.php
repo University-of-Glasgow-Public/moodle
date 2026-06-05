@@ -28,18 +28,18 @@ use lang_string;
  *
  * @package    local_recompletion
  * @author     Dmitrii Metelkin <dmitriim@catalyst-au.net>
+ * @copyright Copyright Dan Marsden
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class quiz_attempts extends base {
-
     /**
-     * Database tables that this entity uses and their default aliases
+     * Database tables that this entity uses
      *
-     * @return string[] Array of $tablename => $alias
+     * @return string[]
      */
-    protected function get_default_table_aliases(): array {
+    protected function get_default_tables(): array {
         return [
-            'local_recompletion_qa' => 'qa'
+            'local_recompletion_qa',
         ];
     }
 
@@ -83,14 +83,16 @@ class quiz_attempts extends base {
             ->set_type(column::TYPE_INTEGER)
             ->add_fields("{$alias}.quiz, {$alias}.course")
             ->set_is_sortable(true)
-            ->add_callback(static function($value, $row): string {
+            ->add_callback(static function ($value, $row): string {
                 global $PAGE;
 
                 $renderer = new core_renderer($PAGE, RENDERER_TARGET_GENERAL);
                 $modinfo = get_fast_modinfo($row->course);
 
-                if (!empty($modinfo) && !empty($modinfo->get_instances_of('quiz')
-                        && !empty($modinfo->get_instances_of('quiz')[$row->quiz]))) {
+                if (
+                    !empty($modinfo) && !empty($modinfo->get_instances_of('quiz')
+                        && !empty($modinfo->get_instances_of('quiz')[$row->quiz]))
+                ) {
                     $cm = $modinfo->get_instances_of('quiz')[$row->quiz];
                     $modulename = get_string('modulename', $cm->modname);
                     $activityicon = $renderer->pix_icon('monologo', $modulename, $cm->modname, ['class' => 'icon']);
@@ -120,7 +122,7 @@ class quiz_attempts extends base {
             ->set_type(column::TYPE_TEXT)
             ->add_field("{$alias}.state")
             ->set_is_sortable(true)
-            ->add_callback(static function($state): string {
+            ->add_callback(static function ($state): string {
                 $states = [
                     'inprogress' => get_string('stateinprogress', 'quiz'),
                     'overdue' => get_string('stateoverdue', 'quiz'),

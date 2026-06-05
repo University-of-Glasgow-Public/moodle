@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use core\clock;
+use core\di;
+
 /**
  * Course recompletion settings form.
  *
@@ -91,14 +94,14 @@ class local_recompletion_recompletion_form extends moodleform {
         $mform->hideIf('recompletionnotify', 'recompletiontype', 'eq', self::RECOMPLETION_TYPE_DISABLED);
 
         $mform->addElement('checkbox', 'recompletionunenrolenable', get_string('recompletionunenrolenable', 'local_recompletion'));
-        $mform->setDefault('recompletionunenrolenable', $config->recompletionunenrolenable);
+        $mform->setDefault('recompletionunenrolenable', $config->recompletionunenrolenable ?? 0);
         $mform->addHelpButton('recompletionunenrolenable', 'recompletionunenrolenable', 'local_recompletion');
         $mform->hideIf('recompletionunenrolenable', 'recompletiontype', 'eq', self::RECOMPLETION_TYPE_DISABLED);
 
         $options = ['optional' => false, 'defaultunit' => 86400];
         $mform->addElement('duration', 'recompletionduration', get_string('recompletionrange', 'local_recompletion'), $options);
         $mform->addHelpButton('recompletionduration', 'recompletionrange', 'local_recompletion');
-        $mform->setDefault('recompletionduration', $config->recompletionduration);
+        $mform->setDefault('recompletionduration', $config->recompletionduration ?? 0);
         $mform->hideif('recompletionduration', 'recompletiontype', 'neq', self::RECOMPLETION_TYPE_PERIOD);
 
         // Schedule / cron settings.
@@ -109,33 +112,49 @@ class local_recompletion_recompletion_form extends moodleform {
         $mform->hideIf('recompletionschedule', 'recompletiontype', 'neq', 'schedule');
 
         $options = ['startyear' => date('Y'), 'optional' => 1];
-        $mform->addElement('date_selector', 'recompletionschedulestart',
-                get_string('recompletionschedulestart', 'local_recompletion'), $options);
+        $mform->addElement(
+            'date_selector',
+            'recompletionschedulestart',
+            get_string('recompletionschedulestart', 'local_recompletion'),
+            $options
+        );
         $mform->addHelpButton('recompletionschedulestart', 'recompletionschedulestart', 'local_recompletion');
         $mform->hideIf('recompletionschedulestart', 'recompletiontype', 'neq', self::RECOMPLETION_TYPE_SCHEDULE);
 
         $nextresettime = $this->_customdata['instance']['nextresettime'] ?? '';
         if (!empty($nextresettime)) {
             $formatted = userdate($nextresettime, get_string('strftimedatetime', 'langconfig'));
-            $mform->addElement('static', 'calculatedtime', '',
-                               get_string('recompletioncalculateddate', 'local_recompletion', $formatted));
+            $mform->addElement(
+                'static',
+                'calculatedtime',
+                '',
+                get_string('recompletioncalculateddate', 'local_recompletion', $formatted)
+            );
             $mform->hideIf('calculatedtime', 'recompletiontype', 'noteq', self::RECOMPLETION_TYPE_SCHEDULE);
         }
 
         // Email Notification settings.
         $mform->addElement('header', 'emailheader', get_string('emailrecompletiontitle', 'local_recompletion'));
         $mform->setExpanded('emailheader', false);
-        $mform->addElement('text', 'recompletionemailsubject', get_string('recompletionemailsubject', 'local_recompletion'),
-                'size = "80"');
+        $mform->addElement(
+            'text',
+            'recompletionemailsubject',
+            get_string('recompletionemailsubject', 'local_recompletion'),
+            'size = "80"'
+        );
         $mform->setType('recompletionemailsubject', PARAM_TEXT);
         $mform->addHelpButton('recompletionemailsubject', 'recompletionemailsubject', 'local_recompletion');
         $mform->disabledIf('recompletionemailsubject', 'recompletiontype', 'eq', '');
         $mform->disabledIf('recompletionemailsubject', 'recompletionnotify', 'eq', self::RECOMPLETION_NOTIFY_DISABLED);
-        $mform->setDefault('recompletionemailsubject', $config->recompletionemailsubject);
+        $mform->setDefault('recompletionemailsubject', $config->recompletionemailsubject ?? '');
 
-        $mform->addElement('editor', 'recompletionemailbody', get_string('recompletionemailbody', 'local_recompletion'),
-            $editoroptions);
-        $mform->setDefault('recompletionemailbody', ['text' => $config->recompletionemailbody, 'format' => FORMAT_HTML]);
+        $mform->addElement(
+            'editor',
+            'recompletionemailbody',
+            get_string('recompletionemailbody', 'local_recompletion'),
+            $editoroptions
+        );
+        $mform->setDefault('recompletionemailbody', ['text' => $config->recompletionemailbody ?? '', 'format' => FORMAT_HTML]);
         $mform->addHelpButton('recompletionemailbody', 'recompletionemailbody', 'local_recompletion');
         $mform->disabledIf('recompletionemailbody', 'recompletiontype', 'eq', '');
         $mform->disabledIf('recompletionemailbody', 'recompletionnotify', 'eq', self::RECOMPLETION_NOTIFY_DISABLED);
@@ -146,12 +165,12 @@ class local_recompletion_recompletion_form extends moodleform {
         $mform->setExpanded('advancedheader', false);
 
         $mform->addElement('checkbox', 'deletegradedata', get_string('deletegradedata', 'local_recompletion'));
-        $mform->setDefault('deletegradedata', $config->deletegradedata);
+        $mform->setDefault('deletegradedata', $config->deletegradedata ?? 0);
         $mform->addHelpButton('deletegradedata', 'deletegradedata', 'local_recompletion');
 
         $mform->addElement('checkbox', 'archivecompletiondata', get_string('archivecompletiondata', 'local_recompletion'));
         // If we are forcing completion data archive, always be ticked.
-        $archivedefault = $config->forcearchivecompletiondata ? 1 : $config->archivecompletiondata;
+        $archivedefault = !empty($config->forcearchivecompletiondata) ? 1 : ($config->archivecompletiondata ?? 0);
         $mform->setDefault('archivecompletiondata', $archivedefault);
         $mform->addHelpButton('archivecompletiondata', 'archivecompletiondata', 'local_recompletion');
 
@@ -178,7 +197,7 @@ class local_recompletion_recompletion_form extends moodleform {
         // Add hidden fields.
         $mform->addElement('hidden', 'course', $course->id);
         $mform->setType('course', PARAM_INT);
-        $mform->addElement('hidden', 'forcearchive', $config->forcearchivecompletiondata);
+        $mform->addElement('hidden', 'forcearchive', $config->forcearchivecompletiondata ?? 0);
         $mform->setType('forcearchive', PARAM_BOOL);
     }
 
@@ -192,6 +211,8 @@ class local_recompletion_recompletion_form extends moodleform {
     public function validation($data, $files): array {
         $errors = [];
 
+        $clock = di::get(clock::class);
+
         // Validate 'recompletionschedule' field.
         if (!empty($data['recompletionschedule'])) {
             // Check if the input is compatible with strtotime().
@@ -203,7 +224,7 @@ class local_recompletion_recompletion_form extends moodleform {
 
         // Validate 'recompletionschedulestart' field.
         if (!empty($data['recompletionschedulestart'])) {
-            $today = strtotime(date('Y-m-d'));
+            $today = $clock->now()->modify('midnight')->getTimestamp();
             if ($data['recompletionschedulestart'] < $today) {
                 $errors['recompletionschedulestart'] = get_string('invalidschedulestartdate', 'local_recompletion');
             }

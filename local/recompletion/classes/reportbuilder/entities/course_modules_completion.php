@@ -18,6 +18,7 @@ namespace local_recompletion\reportbuilder\entities;
 
 use core_reportbuilder\local\entities\base;
 use core_reportbuilder\local\filters\course_selector;
+use core_reportbuilder\local\filters\date;
 use core_reportbuilder\local\filters\select;
 use core_reportbuilder\local\helpers\format;
 use core_reportbuilder\local\report\column;
@@ -31,18 +32,18 @@ use lang_string;
  *
  * @package    local_recompletion
  * @author     Dmitrii Metelkin <dmitriim@catalyst-au.net>
+ * @copyright Copyright Dan Marsden
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_modules_completion extends base {
-
     /**
-     * Database tables that this entity uses and their default aliases
+     * Database tables that this entity uses
      *
-     * @return string[] Array of $tablename => $alias
+     * @return string[]
      */
-    protected function get_default_table_aliases(): array {
+    protected function get_default_tables(): array {
         return [
-            'local_recompletion_cmc' => 'cmc'
+            'local_recompletion_cmc',
         ];
     }
 
@@ -91,7 +92,7 @@ class course_modules_completion extends base {
             ->set_type(column::TYPE_INTEGER)
             ->add_field("{$completion}.completionstate")
             ->set_is_sortable(true)
-            ->add_callback(static function($completionstate): string {
+            ->add_callback(static function ($completionstate): string {
                 $states = [
                     0 => get_string('notcompleted', 'completion'),
                     1 => get_string('completion-y', 'completion'),
@@ -112,7 +113,7 @@ class course_modules_completion extends base {
             ->set_type(column::TYPE_INTEGER)
             ->add_fields("{$completion}.coursemoduleid, {$completion}.course")
             ->set_is_sortable(true)
-            ->add_callback(static function($value, $row): string {
+            ->add_callback(static function ($value, $row): string {
                 global $PAGE;
 
                 $renderer = new core_renderer($PAGE, RENDERER_TARGET_GENERAL);
@@ -152,7 +153,25 @@ class course_modules_completion extends base {
     protected function get_all_filters(): array {
         $coursecompletion = $this->get_table_alias('local_recompletion_cmc');
 
-        // Time completed filter.
+        // Time modified filter.
+        $filters[] = (new filter(
+            date::class,
+            'timemodified',
+            new lang_string('timemodified', 'core_reportbuilder'),
+            $this->get_entity_name(),
+            "{$coursecompletion}.timemodified"
+        ))
+            ->add_joins($this->get_joins())
+            ->set_limited_operators([
+                date::DATE_ANY,
+                date::DATE_NOT_EMPTY,
+                date::DATE_EMPTY,
+                date::DATE_RANGE,
+                date::DATE_LAST,
+                date::DATE_CURRENT,
+            ]);
+
+        // Completion state filter.
         $filters[] = (new filter(
             select::class,
             'completionstate',

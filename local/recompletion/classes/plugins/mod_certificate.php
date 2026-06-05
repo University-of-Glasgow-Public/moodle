@@ -26,17 +26,17 @@ use MoodleQuickForm;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/recompletion/locallib.php');
+require_once($CFG->dirroot . '/local/recompletion/locallib.php');
 
 /**
  * Certificate handler event.
  *
  * @package    local_recompletion
  * @author     2023 Dmitrii Metelkin
+ * @copyright Copyright Dan Marsden
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_certificate {
-
     /**
      * Add params to form.
      *
@@ -51,23 +51,37 @@ class mod_certificate {
         $config = get_config('local_recompletion');
 
         $cba = [];
-        $cba[] = $mform->createElement('radio', 'certificate', '',
-                get_string('donothing', 'local_recompletion'), LOCAL_RECOMPLETION_NOTHING);
-        $cba[] = $mform->createElement('radio', 'certificate', '',
-                get_string('deletecertificate', 'local_recompletion'), LOCAL_RECOMPLETION_DELETE);
+        $cba[] = $mform->createElement(
+            'radio',
+            'certificate',
+            '',
+            get_string('donothing', 'local_recompletion'),
+            LOCAL_RECOMPLETION_NOTHING
+        );
+        $cba[] = $mform->createElement(
+            'radio',
+            'certificate',
+            '',
+            get_string('deletecertificate', 'local_recompletion'),
+            LOCAL_RECOMPLETION_DELETE
+        );
 
         $mform->addGroup($cba, 'certificate', get_string('certificate', 'local_recompletion'), [' '], false);
         $mform->addHelpButton('certificate', 'certificate', 'local_recompletion');
         $mform->setDefault('certificate', $config->certificate);
 
-        $mform->addElement('checkbox', 'archivecertificate',
-                get_string('archivecertificate', 'local_recompletion'));
+        $mform->addElement(
+            'checkbox',
+            'archivecertificate',
+            get_string('archivecertificate', 'local_recompletion')
+        );
         $mform->setDefault('archivecertificate', $config->archivecertificate);
 
         $verifywarngroup = [];
         $verifywarn = new notification(
-                get_string('certificateverifywarn', 'local_recompletion'),
-                notification::NOTIFY_WARNING);
+            get_string('certificateverifywarn', 'local_recompletion'),
+            notification::NOTIFY_WARNING
+        );
         $verifywarn->set_show_closebutton(false);
         $verifywarngroup[] =
                 $mform->createElement('static', 'certificateverifywarn', '', $OUTPUT->render($verifywarn));
@@ -92,16 +106,23 @@ class mod_certificate {
 
         $choices = [
             LOCAL_RECOMPLETION_NOTHING => get_string('donothing', 'local_recompletion'),
-            LOCAL_RECOMPLETION_DELETE => get_string('customcertresetcertificates', 'local_recompletion')
+            LOCAL_RECOMPLETION_DELETE => get_string('customcertresetcertificates', 'local_recompletion'),
         ];
 
-        $settings->add(new admin_setting_configselect('local_recompletion/certificate',
-                new lang_string('certificate', 'local_recompletion'),
-                new lang_string('certificate_help', 'local_recompletion'), LOCAL_RECOMPLETION_NOTHING, $choices));
+        $settings->add(new admin_setting_configselect(
+            'local_recompletion/certificate',
+            new lang_string('certificate', 'local_recompletion'),
+            new lang_string('certificate_help', 'local_recompletion'),
+            LOCAL_RECOMPLETION_NOTHING,
+            $choices
+        ));
 
-        $settings->add(new admin_setting_configcheckbox('local_recompletion/archivecertificate',
-                new lang_string('archivecertificate', 'local_recompletion'),
-                new lang_string('archivecertificate_help', 'local_recompletion'), 1));
+        $settings->add(new admin_setting_configcheckbox(
+            'local_recompletion/archivecertificate',
+            new lang_string('archivecertificate', 'local_recompletion'),
+            new lang_string('archivecertificate_help', 'local_recompletion'),
+            1
+        ));
     }
 
     /**
@@ -129,7 +150,6 @@ class mod_certificate {
             ];
 
             if ($config->archivecertificate) {
-
                 // Archive the issued certificates.
                 $sql = "SELECT ci.*, c.printdate
                           FROM {certificate_issues} ci

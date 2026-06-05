@@ -25,17 +25,17 @@ use MoodleQuickForm;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/local/recompletion/locallib.php');
+require_once($CFG->dirroot . '/local/recompletion/locallib.php');
 
 /**
  * Hotpot handler event.
  *
  * @package    local_recompletion
  * @author     2023 Dmitrii Metelkin
+ * @copyright Copyright Dan Marsden
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_hotpot {
-
     /**
      * Add params to form.
      *
@@ -49,10 +49,20 @@ class mod_hotpot {
         $config = get_config('local_recompletion');
 
         $cba = [];
-        $cba[] = $mform->createElement('radio', 'hotpot', '',
-                get_string('donothing', 'local_recompletion'), LOCAL_RECOMPLETION_NOTHING);
-        $cba[] = $mform->createElement('radio', 'hotpot', '',
-                get_string('delete', 'local_recompletion'), LOCAL_RECOMPLETION_DELETE);
+        $cba[] = $mform->createElement(
+            'radio',
+            'hotpot',
+            '',
+            get_string('donothing', 'local_recompletion'),
+            LOCAL_RECOMPLETION_NOTHING
+        );
+        $cba[] = $mform->createElement(
+            'radio',
+            'hotpot',
+            '',
+            get_string('delete', 'local_recompletion'),
+            LOCAL_RECOMPLETION_DELETE
+        );
 
         $mform->addGroup($cba, 'hotpot', get_string('hotpotattempts', 'local_recompletion'), [' '], false);
         $mform->addHelpButton('hotpot', 'hotpotattempts', 'local_recompletion');
@@ -78,15 +88,23 @@ class mod_hotpot {
 
         $choices = [
             LOCAL_RECOMPLETION_NOTHING => get_string('donothing', 'local_recompletion'),
-            LOCAL_RECOMPLETION_DELETE => get_string('delete', 'local_recompletion')
+            LOCAL_RECOMPLETION_DELETE => get_string('delete', 'local_recompletion'),
         ];
 
-        $settings->add(new admin_setting_configselect('local_recompletion/hotpot',
-                new lang_string('hotpotattempts', 'local_recompletion'),
-                new lang_string('hotpotattempts_help', 'local_recompletion'), LOCAL_RECOMPLETION_NOTHING, $choices));
+        $settings->add(new admin_setting_configselect(
+            'local_recompletion/hotpot',
+            new lang_string('hotpotattempts', 'local_recompletion'),
+            new lang_string('hotpotattempts_help', 'local_recompletion'),
+            LOCAL_RECOMPLETION_NOTHING,
+            $choices
+        ));
 
-        $settings->add(new admin_setting_configcheckbox('local_recompletion/archivehotpot',
-            new lang_string('archivehotpot', 'local_recompletion'), '', 1));
+        $settings->add(new admin_setting_configcheckbox(
+            'local_recompletion/archivehotpot',
+            new lang_string('archivehotpot', 'local_recompletion'),
+            '',
+            1
+        ));
     }
 
     /**
@@ -110,7 +128,7 @@ class mod_hotpot {
         if ($config->hotpot == LOCAL_RECOMPLETION_DELETE) {
             $params = [
                 'userid' => $userid,
-                'course' => $course->id
+                'course' => $course->id,
             ];
 
             $attemptsselectsql = 'userid = :userid AND hotpotid IN (SELECT id FROM {hotpot} WHERE course = :course)';

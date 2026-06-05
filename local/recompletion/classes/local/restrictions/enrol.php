@@ -26,10 +26,10 @@ use stdClass;
  *
  * @package    local_recompletion
  * @author     Dmitrii Metelkin <dmitriim@catalyst-au.net>
+ * @copyright Copyright Dan Marsden
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol extends base {
-
     /**
      * Add params to form.
      *
@@ -55,8 +55,10 @@ class enrol extends base {
             $enrolplugins,
             $options
         );
+        if (!empty($config->restrictenrol)) {
+            $mform->setDefault('restrictenrol', $config->restrictenrol);
+        }
 
-        $mform->setDefault('restrictenrol', $config->restrictenrol);
         $mform->addHelpButton('restrictenrol', 'restrictenrol', 'local_recompletion');
     }
 
@@ -109,7 +111,7 @@ class enrol extends base {
         $allowedenrols = explode(',', $config->restrictenrol);
         $courseinstances = enrol_get_instances($course->id, false);
 
-        $courseallowedinstances = array_filter($courseinstances, function ($courseinstance) use ($allowedenrols){
+        $courseallowedinstances = array_filter($courseinstances, function ($courseinstance) use ($allowedenrols) {
             return in_array($courseinstance->enrol, $allowedenrols);
         });
 
@@ -119,7 +121,7 @@ class enrol extends base {
         }
 
         // Check if a user is enrolled using one of the allowed instances.
-        list($sql, $params) = $DB->get_in_or_equal(array_keys($courseallowedinstances), SQL_PARAMS_NAMED);
+        [$sql, $params] = $DB->get_in_or_equal(array_keys($courseallowedinstances), SQL_PARAMS_NAMED);
         $params['userid'] = $userid;
         $userenrolments = $DB->get_records_select('user_enrolments', "enrolid $sql AND userid = :userid", $params);
 

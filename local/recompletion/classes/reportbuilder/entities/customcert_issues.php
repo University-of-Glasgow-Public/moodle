@@ -28,18 +28,18 @@ use lang_string;
  *
  * @package    local_recompletion
  * @author     Dmitrii Metelkin <dmitriim@catalyst-au.net>
+ * @copyright Copyright Dan Marsden
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class customcert_issues extends base {
-
     /**
-     * Database tables that this entity uses and their default aliases
+     * Database tables that this entity uses
      *
-     * @return string[] Array of $tablename => $alias
+     * @return string[]
      */
-    protected function get_default_table_aliases(): array {
+    protected function get_default_tables(): array {
         return [
-            'local_recompletion_ccert_is' => 'ccert'
+            'local_recompletion_ccert_is',
         ];
     }
 
@@ -84,14 +84,16 @@ class customcert_issues extends base {
             ->set_type(column::TYPE_INTEGER)
             ->add_fields("{$tablealias}.customcertid, {$tablealias}.course")
             ->set_is_sortable(true)
-            ->add_callback(static function($value, $row): string {
+            ->add_callback(static function ($value, $row): string {
                 global $PAGE;
 
                 $renderer = new core_renderer($PAGE, RENDERER_TARGET_GENERAL);
                 $modinfo = get_fast_modinfo($row->course);
 
-                if (!empty($modinfo) && !empty($modinfo->get_instances_of('customcert')
-                        && !empty($modinfo->get_instances_of('customcert')[$row->customcertid]))) {
+                if (
+                    !empty($modinfo) && !empty($modinfo->get_instances_of('customcert')
+                        && !empty($modinfo->get_instances_of('customcert')[$row->customcertid]))
+                ) {
                     $cm = $modinfo->get_instances_of('customcert')[$row->customcertid];
                     $modulename = get_string('modulename', $cm->modname);
                     $activityicon = $renderer->pix_icon('monologo', $modulename, $cm->modname, ['class' => 'icon']);
