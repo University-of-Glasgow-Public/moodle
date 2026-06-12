@@ -274,6 +274,21 @@ class enrol_gudatabase_plugin extends enrol_database_plugin {
     }
 
     /**
+     * Extract a course code from the course shortname.
+     * Uses only the leading letters and numbers, stopping at the first
+     * special character (e.g. space, underscore, hyphen).
+     *
+     * @param string $shortname
+     * @return string|null
+     */
+    protected function shortname_code($shortname) {
+        if (preg_match('/^([[:alnum:]]+)/', $shortname, $matches)) {
+            return $matches[1];
+        }
+        return null;
+    }
+
+    /**
      * get enrollment data from external table
      * @param array $codes list of course codes
      * @param string $userid user id
@@ -993,9 +1008,10 @@ class enrol_gudatabase_plugin extends enrol_database_plugin {
             $idnumber = $course->idnumber;
             $codes = $this->split_code($idnumber);
             $this->log_codes($advcodes, $codes, 'idnumber');
-            $shortnamecode = clean_param($shortname, PARAM_RAW);
-            $this->log_codes($advcodes, $shortnamecode, 'shortname');
-            $codes[] = $shortnamecode;
+            if ($shortnamecode = $this->shortname_code($shortname)) {
+                $this->log_codes($advcodes, $shortnamecode, 'shortname');
+                $codes[] = $shortnamecode;
+            }
         } else {
             $codes = array();
         }
