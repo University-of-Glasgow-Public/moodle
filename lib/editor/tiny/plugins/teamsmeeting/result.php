@@ -25,6 +25,27 @@
 
 require_once(__DIR__ . '/../../../../../config.php');
 
+// Cross-site repost handshake for SameSite=Lax compatibility (MDL-83526).
+// The external Teams app POSTs back cross-site; the browser withholds the session cookie on
+// that request. Rendering a same-site auto-submit form causes the browser to include it on
+// the second request, after which require_login() succeeds normally.
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST['repost'])) {
+        unset($_POST['repost']);
+    } elseif (!isloggedin() && class_exists(\mod_lti\output\repost_crosssite_page::class)) {
+        $PAGE->set_context(context_system::instance());
+        $PAGE->set_url(new moodle_url($_SERVER['REQUEST_URI']));
+        $PAGE->set_pagelayout('popup');
+        header_remove('Set-Cookie');
+        $output = $PAGE->get_renderer('mod_lti');
+        $page = new \mod_lti\output\repost_crosssite_page($_SERVER['REQUEST_URI'], $_POST);
+        echo $output->header();
+        echo $output->render($page);
+        echo $output->footer();
+        exit;
+    }
+}
+
 require_login();
 
 $courseid = optional_param('courseid', 0, PARAM_INT);
@@ -44,6 +65,11 @@ if ($viewexisting) {
 }
 
 $meetinglink = optional_param('link', null, PARAM_URL);
+// Normalise percent-encoding to uppercase (RFC 3986) so stored links and
+// lookups remain consistent after Moodle re-saves HTML (which uppercases %xx).
+if ($meetinglink !== null) {
+    $meetinglink = preg_replace_callback('/%[0-9a-f]{2}/i', fn($m) => strtoupper($m[0]), $meetinglink);
+}
 $title = optional_param('title', null, PARAM_TEXT);
 $preview = optional_param('preview', null, PARAM_CLEANHTML);
 $optionslink = optional_param('options', null, PARAM_URL);
