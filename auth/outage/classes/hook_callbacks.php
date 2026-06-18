@@ -28,13 +28,19 @@ use core\hook\output\before_standard_top_of_body_html_generation;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hook_callbacks {
-
     /**
      * Inject the warning bar into the page if there is currently an outage.
      *
      * @param before_standard_top_of_body_html_generation $hook
      */
     public static function before_standard_top_of_body_html_generation(before_standard_top_of_body_html_generation $hook): void {
+        global $CFG;
+
+        if (during_initial_install() || isset($CFG->upgraderunning)) {
+            // Do nothing during installation or upgrade.
+            return;
+        }
+
         // Get code to inject.
         $hook->add_html(outagelib::get_inject_code());
     }

@@ -14,18 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * outagedb class.
- *
- * The DB Context to manipulate Outages.
- * It will also commit changes to the calendar as you change outages.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\dml;
 
 use auth_outage\calendar\calendar;
@@ -38,7 +26,7 @@ use coding_exception;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/calendar/lib.php');
+require_once($CFG->dirroot . '/calendar/lib.php');
 
 /**
  * outagedb class.
@@ -130,7 +118,6 @@ class outagedb {
             // Create calendar entry.
             calendar::create($outage);
         } else {
-
             $other = (array) $outage;
             $other['title'] = $outage->get_title();
             $event = outage_updated::create([
@@ -220,8 +207,10 @@ class outagedb {
             $outagecache = new outage(json_decode($outageinfo));
         }
 
-        if ($outagecache && $outagecache->warntime <= $time && $outagecache->stoptime >= $time
-            && (!$outagecache->finished || $outagecache->finished >= $time)) {
+        if (
+            $outagecache && $outagecache->warntime <= $time && $outagecache->stoptime >= $time
+            && (!$outagecache->finished || $outagecache->finished >= $time)
+        ) {
             return  $outagecache;
         }
         return null;
@@ -250,7 +239,8 @@ class outagedb {
             ':datetime1 < stoptime AND (finished IS NULL OR :datetime2 < finished)',
             ['datetime1' => $time, 'datetime2' => $time],
             'starttime ASC, stoptime DESC, title ASC',
-            '*');
+            '*'
+        );
         foreach ($rs as $r) {
             $outages[] = new outage($r);
         }
@@ -282,7 +272,8 @@ class outagedb {
             'NOT (:datetime1 < stoptime AND (finished IS NULL OR :datetime2 < finished))',
             ['datetime1' => $time, 'datetime2' => $time],
             'stoptime DESC, starttime DESC, title ASC',
-            '*');
+            '*'
+        );
         foreach ($rs as $r) {
             $outages[] = new outage($r);
         }
@@ -307,12 +298,12 @@ class outagedb {
 
         $outage = self::get_by_id($id);
         if (is_null($outage)) {
-            debugging('Cannot finish outage #'.$id.': outage not found.');
+            debugging('Cannot finish outage #' . $id . ': outage not found.');
             return;
         }
 
         if (!$outage->is_ongoing($time)) {
-            debugging('Cannot finish outage #'.$id.': outage not ongoing.');
+            debugging('Cannot finish outage #' . $id . ': outage not ongoing.');
             return;
         }
 
@@ -339,37 +330,6 @@ class outagedb {
         $data = $DB->get_records_select(
             'auth_outage',
             ':datetime <= starttime',
-            ['datetime' => $time],
-            'starttime ASC',
-            '*',
-            0,
-            1
-        );
-
-        // Not using $DB->get_record_select instead because there is no 'limit' parameter.
-        // Allowing multiple records still raises an internal error.
-        return (count($data) == 0) ? null : new outage(array_shift($data));
-    }
-
-    /**
-     * Gets the next outage which has not started yet and has the autostart flag set to true.
-     * @param null $time Timestamp reference for current time.
-     * @return outage|null The outage or null if not found.
-     * @throws coding_exception
-     */
-    public static function get_next_autostarting($time = null) {
-        global $DB;
-
-        if ($time === null) {
-            $time = time();
-        }
-        if (!is_int($time) || ($time <= 0)) {
-            throw new coding_exception('$time must be null or a positive int.', $time);
-        }
-
-        $data = $DB->get_records_select(
-            'auth_outage',
-            '(:datetime <= starttime) AND (autostart = 1)',
             ['datetime' => $time],
             'starttime ASC',
             '*',

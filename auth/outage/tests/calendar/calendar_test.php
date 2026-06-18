@@ -39,7 +39,7 @@ use auth_outage\local\outage;
  * @license         http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers          \auth_outage\calendar\calendar
  */
-class calendar_test extends \advanced_testcase {
+final class calendar_test extends \advanced_testcase {
     /**
      * @var outage|null The calendar entry owner.
      */
@@ -48,14 +48,13 @@ class calendar_test extends \advanced_testcase {
     /**
      * Creates an outage and checks if its in the calendar.
      */
-    public function test_create() {
+    public function test_create(): void {
         $this->resetAfterTest(true);
         self::setAdminUser();
 
         $time = time();
         self::$outage = new outage([
             'id' => 1,
-            'autostart' => false,
             'warntime' => $time - 100,
             'starttime' => $time,
             'stoptime' => $time + (2 * 60 * 60),
@@ -69,14 +68,13 @@ class calendar_test extends \advanced_testcase {
     /**
      * Updates an outage and checks the calendar.
      */
-    public function test_update() {
+    public function test_update(): void {
         $this->resetAfterTest(true);
         self::setAdminUser();
 
         $time = time();
         self::$outage = new outage([
             'id' => 1,
-            'autostart' => false,
             'warntime' => $time - 100,
             'starttime' => $time,
             'stoptime' => $time + (2 * 60 * 60),
@@ -93,14 +91,13 @@ class calendar_test extends \advanced_testcase {
     /**
      * Deletes an outage and checks the calendar.
      */
-    public function test_delete() {
+    public function test_delete(): void {
         $this->resetAfterTest(true);
         self::setAdminUser();
 
         $time = time();
         self::$outage = new outage([
             'id' => 1,
-            'autostart' => false,
             'warntime' => $time - 100,
             'starttime' => $time,
             'stoptime' => $time + (2 * 60 * 60),
@@ -118,14 +115,13 @@ class calendar_test extends \advanced_testcase {
     /**
      * Try to update a non existing outage.
      */
-    public function test_update_notfound() {
+    public function test_update_notfound(): void {
         $this->resetAfterTest(true);
         self::setAdminUser();
 
         $time = time();
         $outage = new outage([
             'id' => 1,
-            'autostart' => false,
             'warntime' => $time - 100,
             'starttime' => $time,
             'stoptime' => $time + (2 * 60 * 60),
@@ -141,7 +137,7 @@ class calendar_test extends \advanced_testcase {
     /**
      * Try to delete a non existing outage.
      */
-    public function test_delete_notfound() {
+    public function test_delete_notfound(): void {
         $this->resetAfterTest(true);
         self::setAdminUser();
 

@@ -1,16 +1,21 @@
-![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/catalyst/moodle-auth_outage/ci.yml?branch=MOODLE_39_STABLE)
+[![ci](https://github.com/catalyst/moodle-auth_outage/actions/workflows/ci.yml/badge.svg?branch=MOODLE_39_STABLE)](https://github.com/catalyst/moodle-auth_outage/actions/workflows/ci.yml?branch=MOODLE_39_STABLE)
 
 # Moodle Outage manager plugin
-* [Version Support](#version-support)
-* [What is this?](#what-is-this)
-* [Moodle Requirements](#moodle-requirements)
-* [Screenshots](#screenshots)
-* [Installation](#installation)
-* [Theme configuration](#theme-configuration)
-* [How to use](#how-to-use)
-* [Quick Guide](#quick-guide)
-* [Why is it an auth plugin?](#why-it-is-an-auth-plugin)
-* [Feedback and issues](#feedback-and-issues)
+- [Moodle Outage manager plugin](#moodle-outage-manager-plugin)
+  - [What is this?](#what-is-this)
+  - [Moodle Requirements](#moodle-requirements)
+  - [Branches](#branches)
+  - [Screenshots](#screenshots)
+  - [Installation](#installation)
+  - [Theme configuration](#theme-configuration)
+  - [Custom Theme Additional SCSS](#custom-theme-additional-scss)
+  - [How to use](#how-to-use)
+  - [Quick Guide](#quick-guide)
+  - [Why it is an auth plugin?](#why-it-is-an-auth-plugin)
+  - [Tester restriction options](#tester-restriction-options)
+  - [IP restriction](#ip-restriction)
+  - [Access key](#access-key)
+  - [Feedback and issues](#feedback-and-issues)
 
 What is this?
 -------------
@@ -35,14 +40,19 @@ If you have an older version of Moodle you can still make it work but you will
 need to manually add one extra plugin, please check:
 * https://github.com/catalyst/moodle-local_outage
 
-Branches
+Moodle supported branches
 --------
-| Moodle version     | Totara          | Branch           | PHP  |
-| ------------------ | --------------- | ---------------- | ---- |
-| Moodle 3.9+        | Totara 13+      | MOODLE_39_STABLE | 7.2+ |
-| Moodle 3.3 to 3.8  | Totara 11 to 12 | MOODLE_38_STABLE | 7.1+ |
-| Moodle 2.7 to 3.2  |                 | MOODLE_32_STABLE | 5.5+ |
-|                    | Totara up to 10 | TOTARA_10        | 5.5+ |
+| Version     | Branch            | PHP  |
+|-------------|-------------------|------|
+| Moodle 3.9+ | MOODLE_39_STABLE  | 7.2+ |
+
+Totara supported branches
+--------
+| Version         | Branch           | PHP  |
+| --------------- | ---------------- | ---- |
+| Totara 19       | TOTARA_19 | 7.2+ |
+| Totara 13-18    | MOODLE_39_STABLE | 7.2+ |
+
 
 Screenshots
 -----------
@@ -157,7 +167,6 @@ Creates a new outage.
 
   -h,  --help               shows parameters help.
   -c,  --clone              clone another outage except for the start time.
-  -a,  --autostart          must be Y or N, sets if the outage automatically triggers maintenance mode.
   -w,  --warn               how many seconds before it starts to display a warning.
   -s,  --start              in how many seconds should this outage start or unix time to start outage. Required.
   -d,  --duration           how many seconds should the outage last.
@@ -177,6 +186,18 @@ Why it is an auth plugin?
 -------------------------
 
 One of the graduated stages this plugin introduces is a 'tester only' mode which disables login for most normal users. This is conceptually similar to the maintenance mode but enables testers to login and confirm the state after an upgrade without needing full admin privileges. 
+
+Tester restriction options
+------------
+Two options are available to restrict the site to only let testers in during the tester phase.
+Note: these restrictions build on each other; If both are enabled, users must meet both criteria to be allowed in.
+
+## IP restriction
+Only allow users from a certain IP or range of ips to enter.
+## Access key
+Users provide an access key in the URL params on first page load, which is then stored as a cookie for 24 hours. If the access key matches the one setup for the outage, they are allowed in.
+## Using IP restriction with access key
+Users will be allowed if they are from the configured allowed ips OR if they provide the correct access key.
 
 
 Feedback and issues

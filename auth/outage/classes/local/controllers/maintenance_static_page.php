@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * maintenance_static_page class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\local\controllers;
 
 use auth_outage\local\outage;
@@ -58,8 +49,15 @@ class maintenance_static_page {
         } else if (PHPUNIT_TEST || defined('BEHAT_SITE_RUNNING')) {
             $html = '<html></html>';
         } else {
+            // Inject metadata into the header before output.
+            if (!empty($outage->metadata)) {
+                header('X-Outage-Metadata: ' . $outage->metadata);
+                header('X-Outage-StartTime: ' . $outage->starttime);
+                header('X-Outage-EndTime: ' . $outage->stoptime);
+            }
             $data = maintenance_static_page_io::file_get_data(
-                $CFG->wwwroot.'/auth/outage/info.php?auth_outage_hide_warning=1&static=1&id='.$outage->id);
+                $CFG->wwwroot . '/auth/outage/info.php?auth_outage_hide_warning=1&static=1&id=' . $outage->id
+            );
             $html = $data['contents'];
         }
 

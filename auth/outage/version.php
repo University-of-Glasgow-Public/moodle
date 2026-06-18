@@ -28,8 +28,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = "auth_outage";
-$plugin->version = 2024052400;                  // The current plugin version (Date: YYYYMMDDXX).
-$plugin->release = 2024052400;                  // Human-readable release information.
+$plugin->version = 2024081905;                  // The current plugin version (Date: YYYYMMDDXX).
+$plugin->release = 2024081905;                  // Human-readable release information.
 $plugin->requires = 2017111309;                 // 2017111309 = T13, but this really requires 3.9 and higher.
 $plugin->maturity = MATURITY_STABLE;            // Suitable for PRODUCTION environments!
-$plugin->supported = [39, 404];                 // A range of branch numbers of supported moodle versions.
+$plugin->supported = [39, 405];                 // A range of branch numbers of supported moodle versions.
+$plugin->incompatible = 501;

@@ -43,13 +43,6 @@ if ($hassiteconfig) {
         get_string('settingssectiondefaultsdescription', 'auth_outage') . $description
     ));
 
-    $settings->add(new admin_setting_configcheckbox(
-        'auth_outage/default_autostart',
-        get_string('defaultoutageautostart', 'auth_outage'),
-        get_string('defaultoutageautostartdescription', 'auth_outage'),
-        $defaults['default_autostart']
-    ));
-
     $settings->add(new admin_setting_configduration(
         'auth_outage/default_warning_duration',
         get_string('defaultwarningduration', 'auth_outage'),
@@ -78,6 +71,16 @@ if ($hassiteconfig) {
         $defaults['default_title'],
         PARAM_TEXT
     ));
+    $settings->add(
+        new admin_setting_configtext(
+            'auth_outage/default_metadata',
+            get_string('defaultmetadata', 'auth_outage'),
+            get_string('defaultmetadatadescription', 'auth_outage'),
+            '',
+            PARAM_TEXT
+        )
+    );
+
     $settings->add(new admin_setting_configtextarea(
         'auth_outage/default_description',
         get_string('defaultdescription', 'auth_outage'),
@@ -89,7 +92,8 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_heading(
         'plugin',
         get_string('settingssectionplugin', 'auth_outage'),
-        get_string('settingssectionplugindescription', 'auth_outage')));
+        get_string('settingssectionplugindescription', 'auth_outage')
+    ));
 
     $settings->add(new admin_setting_configtextarea(
         'auth_outage/css',
@@ -152,7 +156,8 @@ if ($hassiteconfig) {
     // Clear '$settings' to prevent adding again outsite category.
     $settings = null;
     // Add options.
-    $ADMIN->add('auth_outage',
+    $ADMIN->add(
+        'auth_outage',
         new admin_externalpage(
             'auth_outage_manage',
             get_string('menumanage', 'auth_outage'),

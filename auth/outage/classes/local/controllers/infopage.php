@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * infopage class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\local\controllers;
 
 use auth_outage\dml\outagedb;
@@ -53,9 +44,9 @@ class infopage {
 
     /**
      * infopage_controller constructor.
-     * @param array $params Parameters to use or null to get from Moodle API (request).
+     * @param array|null $params Parameters to use or null to get from Moodle API (request).
      */
-    public function __construct(array $params = null) {
+    public function __construct(?array $params = null) {
         global $CFG;
         // Enable SVG support here to make sure all SVG files
         // used in the current theme are served properly.
@@ -118,12 +109,19 @@ class infopage {
         // No hooks injecting into this page, do it manually.
         echo outagelib::get_inject_code();
 
+        // Inject metadata into the header before output.
+        if (!empty($this->outage->metadata)) {
+            header('X-Outage-Metadata: ' . $this->outage->metadata);
+            header('X-Outage-StartTime: ' . $this->outage->starttime);
+            header('X-Outage-EndTime: ' . $this->outage->stoptime);
+        }
+
         echo $OUTPUT->header();
         $viewbag = [
             'admin' => is_siteadmin(),
             'outage' => $this->outage,
         ];
-        require($CFG->dirroot.'/auth/outage/views/info/content.php');
+        require($CFG->dirroot . '/auth/outage/views/info/content.php');
 
         // Moodle 2.7 did not check for CLI mode, which was fixed later.
         if (!($CFG->branch == '27' && CLI_SCRIPT)) {
@@ -142,7 +140,7 @@ class infopage {
         }
 
         if (!is_null($params['id']) && !is_null($params['outage']) && ($params['id'] !== $params['outage']->id)) {
-            throw new coding_exception('Provided id and outage->id do not match.', $params['id'].'/'.$params['outage']->id);
+            throw new coding_exception('Provided id and outage->id do not match.', $params['id'] . '/' . $params['outage']->id);
         }
 
         if (is_null($params['id']) && is_null($params['outage'])) {

@@ -27,11 +27,11 @@ use auth_outage\dml\outagedb;
 use auth_outage\form\outage\edit;
 use auth_outage\local\outage;
 use auth_outage\local\outagelib;
-use auth_outage\output\renderer;
 
-require_once(__DIR__.'/../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once($CFG->libdir.'/formslib.php');
+
+require_once(__DIR__ . '/../../config.php');
+require_once($CFG->libdir . '/adminlib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 admin_externalpage_setup('auth_outage_manage');
 $output = $PAGE->get_renderer('auth_outage');
@@ -48,7 +48,24 @@ if ($mform->is_cancelled()) {
 
 $clone = optional_param('clone', 0, PARAM_INT);
 $edit = optional_param('edit', 0, PARAM_INT);
-$time = optional_param('starttime', 0, PARAM_INT);
+if (array_key_exists('starttime', $_POST) && is_array($_POST['starttime'])) {
+    $start = optional_param_array('starttime', [], PARAM_INT);
+} else {
+    $start = optional_param('starttime', 0, PARAM_INT);
+}
+if (!empty($start['year']) && !empty($start['month']) && !empty($start['day'])) {
+    $hour = $start['hour'] ?? 0;
+    $minute = $start['minute'] ?? 0;
+    $time = make_timestamp(
+        (int) $start['year'],
+        (int) $start['month'],
+        (int) $start['day'],
+        (int) $hour,
+        (int) $minute
+    );
+} else {
+    $time = 0;
+}
 if ($clone && $edit) {
     throw new invalid_parameter_exception('Cannot provide both clone and edit ids.');
 }
@@ -67,12 +84,12 @@ if ($clone) {
     }
 
     $outage = new outage([
-        'autostart' => $config->default_autostart,
         'starttime' => $time,
         'stoptime' => $time + $config->default_duration,
         'warntime' => $time - $config->default_warning_duration,
         'title' => $config->default_title,
         'description' => $config->default_description,
+        'metadata' => $config->default_metadata,
     ]);
     $action = 'outagecreate';
 }
@@ -83,7 +100,7 @@ if ($outage == null) {
 
 $mform->set_data($outage);
 
-$PAGE->navbar->add(get_string($action.'crumb', 'auth_outage'));
+$PAGE->navbar->add(get_string($action . 'crumb', 'auth_outage'));
 echo $output->header();
 echo $output->rendersubtitle($action);
 $mform->display();

@@ -22,6 +22,7 @@
  * @copyright  2016 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+// phpcs:disable moodle.Commenting.MissingDocblock.File
 
 use auth_outage\output\manage\history_table;
 use auth_outage\output\manage\planned_table;
@@ -40,11 +41,11 @@ echo $viewbag['warning'];
 
 <section id="section_planned_outages">
     <?php echo $output->rendersubtitle('outageslistfuture'); ?>
-    <?php if (empty($viewbag['unended'])): ?>
+    <?php if (empty($viewbag['unended'])) : ?>
         <p>
             <small><?php echo get_string('notfound', 'auth_outage'); ?></small>
         </p>
-    <?php else: ?>
+    <?php else : ?>
         <?php
         $table = new planned_table();
         $table->show_data($viewbag['unended']);
@@ -64,7 +65,7 @@ echo $viewbag['warning'];
             $urlnew->param('starttime', $next);
             echo $output->single_button($urlnew, get_string('outagecreate', 'auth_outage'));
             if ($default) {
-                echo ' ' . userdate( $next, get_string('datetimeformat', 'auth_outage'));
+                echo ' ' . userdate($next, get_string('datetimeformat', 'auth_outage'));
             }
         }
     endif; ?>
@@ -72,11 +73,11 @@ echo $viewbag['warning'];
 
 <section id="section_outage_history">
     <?php echo $output->rendersubtitle('outageslistpast'); ?>
-    <?php if (empty($viewbag['ended'])): ?>
+    <?php if (empty($viewbag['ended'])) : ?>
         <p>
             <small><?php echo get_string('notfound', 'auth_outage'); ?></small>
         </p>
-    <?php else: ?>
+    <?php else : ?>
         <?php
         $table = new history_table();
         $table->show_data($viewbag['ended']);

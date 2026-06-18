@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * maintenance_static_page_generator class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\local\controllers;
 
 use auth_outage\local\outagelib;
@@ -83,7 +74,6 @@ class maintenance_static_page_generator {
         $this->io->cleanup();
 
         if (!is_null($this->dom)) {
-
             // This can take a while to process using repeated curls.
             core_php_time_limit::raise();
 
@@ -193,9 +183,9 @@ class maintenance_static_page_generator {
                 $fullurl = $originalurl;
             } else if ($originalurl[0] == '/') {
                 $rooturl = parse_url($CFG->wwwroot);
-                $fullurl = $rooturl['scheme'].'://'.$rooturl['host'].$originalurl;
+                $fullurl = $rooturl['scheme'] . '://' . $rooturl['host'] . $originalurl;
             } else {
-                $fullurl = $baseref.'/'.$originalurl;
+                $fullurl = $baseref . '/' . $originalurl;
             }
 
             $saved = $this->io->save_url_file($fullurl);
@@ -262,7 +252,7 @@ class maintenance_static_page_generator {
                     $fullurl = (string) new moodle_url($matches[1]);
                 }
                 $newurl = $this->io->generate_file_url($fullurl);
-                $updated = preg_replace(self::PATTERN, ' url('.$newurl.') ', $style);
+                $updated = preg_replace(self::PATTERN, ' url(' . $newurl . ') ', $style);
                 $element->setAttribute('style', $updated);
             }
         }

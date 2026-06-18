@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * finish class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\local\cli;
 
 use auth_outage\dml\outagedb;
@@ -75,16 +66,20 @@ class finish extends clibase {
 
         // Cannot run during CLI_MAINTENANCE mode.
         if (CLI_MAINTENANCE) {
-            throw new cli_exception(get_string('cliinmaintenancemode', 'auth_outage'),
-                cli_exception::ERROR_MAINTENANCE_MODE);
+            throw new cli_exception(
+                get_string('cliinmaintenancemode', 'auth_outage'),
+                cli_exception::ERROR_MAINTENANCE_MODE
+            );
         }
 
         // Requires outageid or active but not both at the same time.
         $byid = !is_null($this->options['outageid']);
         $byactive = $this->options['active'];
         if ($byid == $byactive) {
-            throw new cli_exception(get_string('cliwaitforiterroridxoractive', 'auth_outage'),
-                cli_exception::ERROR_PARAMETER_MISSING);
+            throw new cli_exception(
+                get_string('cliwaitforiterroridxoractive', 'auth_outage'),
+                cli_exception::ERROR_PARAMETER_MISSING
+            );
         }
 
         $outage = $this->get_outage();
@@ -106,8 +101,10 @@ class finish extends clibase {
         } else {
             $id = $this->options['outageid'];
             if (!is_number($id) || ($id <= 0)) {
-                throw new cli_exception(get_string('clierrorinvalidvalue', 'auth_outage', ['param' => 'outageid']),
-                    cli_exception::ERROR_PARAMETER_INVALID);
+                throw new cli_exception(
+                    get_string('clierrorinvalidvalue', 'auth_outage', ['param' => 'outageid']),
+                    cli_exception::ERROR_PARAMETER_INVALID
+                );
             }
             $outage = outagedb::get_by_id((int)$id);
         }

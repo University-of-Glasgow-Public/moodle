@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * planned_table class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <danielroperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\output\manage;
 
 use auth_outage\local\outage;
@@ -30,8 +21,7 @@ use html_writer;
 use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->libdir.'/tablelib.php');
+require_once($CFG->libdir . '/tablelib.php');
 
 /**
  * planned_table class.
@@ -48,13 +38,15 @@ class planned_table extends base_table {
     public function __construct() {
         parent::__construct();
 
-        $this->define_columns(['warning', 'starts', 'duration', 'title', 'actions']);
+        $this->define_columns(['warning', 'starts', 'duration', 'title', 'created', 'modified', 'actions']);
 
         $this->define_headers([
             get_string('tableheaderwarnbefore', 'auth_outage'),
             get_string('tableheaderstarttime', 'auth_outage'),
             get_string('tableheaderduration', 'auth_outage'),
             get_string('tableheadertitle', 'auth_outage'),
+            get_string('tableheadercreatedby', 'auth_outage'),
+            get_string('tableheadermodifiedby', 'auth_outage'),
             get_string('actions'),
         ]);
 
@@ -68,7 +60,7 @@ class planned_table extends base_table {
     public function show_data(array $outages) {
         foreach ($outages as $outage) {
             $title = html_writer::link(
-                new moodle_url('/auth/outage/edit.php', ['id' => $outage->id]),
+                new moodle_url('/auth/outage/edit.php', ['edit' => $outage->id]),
                 $outage->get_title(),
                 ['title' => get_string('edit')]
             );
@@ -78,6 +70,8 @@ class planned_table extends base_table {
                 self::create_starttime_string($outage->starttime),
                 format_time($outage->get_duration_planned()),
                 $title,
+                $this->format_created($outage),
+                $this->format_modified($outage),
                 $this->create_data_buttons($outage, true),
             ]);
         }

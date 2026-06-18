@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * edit class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\form\outage;
 
 use auth_outage\local\outage;
@@ -31,7 +22,7 @@ use moodleform;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * edit class.
@@ -57,9 +48,6 @@ class edit extends moodleform {
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
 
-        $mform->addElement('checkbox', 'autostart', get_string('autostart', 'auth_outage'));
-        $mform->addHelpButton('autostart', 'autostart', 'auth_outage');
-
         $mform->addElement('duration', 'warningduration', get_string('warningduration', 'auth_outage'));
         $mform->addHelpButton('warningduration', 'warningduration', 'auth_outage');
 
@@ -73,7 +61,7 @@ class edit extends moodleform {
             'text',
             'title',
             get_string('title', 'auth_outage'),
-            'maxlength="'.self::TITLE_MAX_CHARS.'" size="60"'
+            'maxlength="' . self::TITLE_MAX_CHARS . '" size="60"'
         );
         $mform->setType('title', PARAM_TEXT);
         $mform->addHelpButton('title', 'title', 'auth_outage');
@@ -83,6 +71,23 @@ class edit extends moodleform {
 
         $mform->addElement('static', 'usagehints', '', get_string('textplaceholdershint', 'auth_outage'));
         $mform->addElement('static', 'warningreenablemaintenancemode', '');
+
+        $mform->addElement(
+            'advcheckbox',
+            'useaccesskey',
+            get_string('useaccesskey', 'auth_outage'),
+            get_string('useaccesskey:desc', 'auth_outage'),
+            0
+        );
+
+        $mform->addElement('text', 'accesskey', get_string('accesskey', 'auth_outage'));
+        $mform->setType('accesskey', PARAM_TEXT);
+        $mform->disabledIf('accesskey', 'useaccesskey');
+        $mform->addHelpButton('accesskey', 'accesskey', 'auth_outage');
+
+        $mform->addElement('text', 'metadata', get_string('metadata', 'auth_outage'));
+        $mform->setType('metadata', PARAM_TEXT);
+        $mform->addHelpButton('metadata', 'metadata', 'auth_outage');
 
         $this->add_action_buttons();
     }
@@ -126,17 +131,18 @@ class edit extends moodleform {
             return null;
         }
         if ($data->description['format'] != '1') {
-            debugging('Not implemented for format '.$data->description['format'], DEBUG_DEVELOPER);
+            debugging('Not implemented for format ' . $data->description['format'], DEBUG_DEVELOPER);
             return null;
         }
         $outagedata = [
             'id' => ($data->id === 0) ? null : $data->id,
-            'autostart' => (isset($data->autostart) && ($data->autostart == 1)),
             'starttime' => $data->starttime,
             'stoptime' => $data->starttime + $data->outageduration,
             'warntime' => $data->starttime - $data->warningduration,
             'title' => $data->title,
             'description' => $data->description['text'],
+            'accesskey' => $data->useaccesskey ? $data->accesskey : null,
+            'metadata' => $data->metadata ?? null,
         ];
         return new outage($outagedata);
     }
@@ -154,27 +160,33 @@ class edit extends moodleform {
         if ($outage instanceof outage) {
             $this->_form->setDefaults([
                 'id' => $outage->id,
-                'autostart' => $outage->autostart,
                 'starttime' => $outage->starttime,
                 'outageduration' => $outage->get_duration_planned(),
                 'warningduration' => $outage->get_warning_duration(),
                 'title' => $outage->title,
                 'description' => ['text' => $outage->description, 'format' => '1'],
+                'accesskey' => $outage->accesskey,
+                'useaccesskey' => !empty($outage->accesskey),
+                'metadata' => $outage->metadata,
             ]);
 
             // If the default_autostart is configured in config, then force autostart to be the default value.
-            if (array_key_exists('auth_outage', $CFG->forced_plugin_settings)
-                && array_key_exists('default_autostart', $CFG->forced_plugin_settings['auth_outage'])) {
+            if (
+                array_key_exists('auth_outage', $CFG->forced_plugin_settings)
+                && array_key_exists('default_autostart', $CFG->forced_plugin_settings['auth_outage'])
+            ) {
                 $this->_form->setDefaults([
-                    'autostart' => $CFG->forced_plugin_settings['auth_outage']['default_autostart']
+                    'autostart' => $CFG->forced_plugin_settings['auth_outage']['default_autostart'],
                 ]);
                 $mform->freeze('autostart');
             }
 
             if (!empty($outage->id) && $outage->autostart && $outage->starttime < time() && $outage->stoptime > time()) {
                 $warning = $mform->getElement('warningreenablemaintenancemode');
-                $warning->setValue($OUTPUT->notification(get_string('warningreenablemaintenancemode', 'auth_outage'),
-                    'notifywarning'));
+                $warning->setValue($OUTPUT->notification(
+                    get_string('warningreenablemaintenancemode', 'auth_outage'),
+                    'notifywarning'
+                ));
             }
         } else {
             throw new coding_exception('$outage must be an outage object.', $outage);
