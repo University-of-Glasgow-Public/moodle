@@ -1,7 +1,8 @@
 @quiz @quiz_essaydownload @javascript
-Feature: Show notification, if ZIP archive will be empty
+Feature: Show notification, if ZIP archive will be empty pre-5.2
 
   Background:
+    Given the site is running Moodle version 5.1 or lower
     Given the following "course" exist:
       | fullname | shortname | category |
       | Course 1 | C1        | 0        |

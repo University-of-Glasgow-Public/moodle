@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * outage class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\local;
 
 use coding_exception;
@@ -68,11 +59,6 @@ class outage {
     public $id = null;
 
     /**
-     * @var bool|null Maintenance mode auto start flag.
-     */
-    public $autostart = null;
-
-    /**
      * @var int|null Start Time timestamp.
      */
     public $starttime = null;
@@ -116,6 +102,16 @@ class outage {
      * @var int|null Timestamp of when this outage was last modified.
      */
     public $lastmodified = null;
+
+    /**
+     * @var string|null access key, or null if not enabled.
+     */
+    public $accesskey = null;
+
+    /**
+     * @var string|null metadata string, or null if not enabled.
+     */
+    public $metadata = null;
 
     /**
      * outage constructor.
@@ -293,9 +289,6 @@ class outage {
         foreach ($fs as $f) {
             $this->$f = ($this->$f === null) ? null : (int)$this->$f;
         }
-
-        // Adjust bool fields.
-        $this->autostart = ($this->autostart === null) ? null : (bool)$this->autostart;
     }
 
     /**

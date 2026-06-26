@@ -14,22 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * calendar class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\calendar;
 
 use auth_outage\local\outage;
 use calendar_event;
 
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot.'/calendar/lib.php');
+require_once($CFG->dirroot . '/calendar/lib.php');
 
 /**
  * calendar class.
@@ -62,7 +53,7 @@ class calendar {
         $event = self::load($outage->id);
 
         if (is_null($event)) {
-            debugging('Cannot update calendar entry for outage #'.$outage->id.', event not found. Creating it...');
+            debugging('Cannot update calendar entry for outage #' . $outage->id . ', event not found. Creating it...');
             self::create($outage);
         } else {
             $event->update(self::create_data($outage), false);
@@ -78,7 +69,7 @@ class calendar {
 
         // If not found (was not created before) ignore it.
         if (is_null($event)) {
-            debugging('Cannot delete calendar entry for outage #'.$outageid.', event not found. Ignoring it...');
+            debugging('Cannot delete calendar entry for outage #' . $outageid . ', event not found. Ignoring it...');
         } else {
             $event->delete();
         }

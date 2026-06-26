@@ -77,7 +77,7 @@ class snapshot_builder {
             $gucodes = $DB->get_records_list('enrol_gudatabase_codes', 'courseid', $courseids);
 
             foreach ($gucodes as $g) {
-                $gucodemap[$g->courseid][] = $g;
+                $gucodemap[$g->courseid][$g->code] = $g;
             }
             foreach ($gucodemap as $cid => $records) {
                 if (count($records) > 1) {

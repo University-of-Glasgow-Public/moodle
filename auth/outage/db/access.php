@@ -26,12 +26,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    'auth/outage:viewinfo' => array(
+    'auth/outage:viewinfo' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
+        'archetypes' => [
             'guest' => CAP_ALLOW,
             'user' => CAP_ALLOW,
-        )
-    ),
+        ],
+    ],
 ];

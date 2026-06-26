@@ -14,22 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * history_table class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <danielroperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\output\manage;
 
 use auth_outage\local\outage;
 
 defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->libdir.'/tablelib.php');
+require_once($CFG->libdir . '/tablelib.php');
 
 /**
  * history_table class.
@@ -46,7 +36,7 @@ class history_table extends base_table {
     public function __construct() {
         parent::__construct();
 
-        $this->define_columns(['warning', 'starts', 'durationplanned', 'durationactual', 'title', 'actions']);
+        $this->define_columns(['warning', 'starts', 'duration', 'durationactual', 'title', 'created', 'modified', 'actions']);
 
         $this->define_headers([
                 get_string('tableheaderwarnbefore', 'auth_outage'),
@@ -54,9 +44,10 @@ class history_table extends base_table {
                 get_string('tableheaderdurationplanned', 'auth_outage'),
                 get_string('tableheaderdurationactual', 'auth_outage'),
                 get_string('tableheadertitle', 'auth_outage'),
+                get_string('tableheadercreatedby', 'auth_outage'),
+                get_string('tableheadermodifiedby', 'auth_outage'),
                 get_string('actions'),
-            ]
-        );
+            ]);
 
         $this->setup();
     }
@@ -75,6 +66,8 @@ class history_table extends base_table {
                 format_time($outage->get_duration_planned()),
                 $finished,
                 $outage->get_title(),
+                $this->format_created($outage),
+                $this->format_modified($outage),
                 $this->create_data_buttons($outage, false),
             ]);
         }

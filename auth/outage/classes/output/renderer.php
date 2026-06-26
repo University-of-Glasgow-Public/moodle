@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * auth_outage_renderer class.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace auth_outage\output;
 
 use auth_outage\local\outage;
@@ -54,7 +45,7 @@ class renderer extends plugin_renderer_base {
         $viewbag['viewfile'] = $view;
         unset($view);
 
-        require($CFG->dirroot.'/auth/outage/views/'.$viewbag['viewfile']);
+        require($CFG->dirroot . '/auth/outage/views/' . $viewbag['viewfile']);
     }
 
     /**
@@ -97,8 +88,8 @@ class renderer extends plugin_renderer_base {
      * @return string HTML for the page.
      */
     public function renderdeleteconfirmation(outage $outage) {
-        return $this->rendersubtitle('outagedelete').
-               html_writer::tag('p', get_string('outagedeletewarning', 'auth_outage')).
+        return $this->rendersubtitle('outagedelete') .
+               html_writer::tag('p', get_string('outagedeletewarning', 'auth_outage')) .
                $this->renderoutage($outage, false);
     }
 
@@ -108,8 +99,8 @@ class renderer extends plugin_renderer_base {
      * @return string HTML for the page.
      */
     public function renderfinishconfirmation(outage $outage) {
-        return $this->rendersubtitle('outagefinish').
-               html_writer::tag('p', get_string('outagefinishwarning', 'auth_outage')).
+        return $this->rendersubtitle('outagefinish') .
+               html_writer::tag('p', get_string('outagefinishwarning', 'auth_outage')) .
                $this->renderoutage($outage, false);
     }
 
@@ -156,7 +147,7 @@ class renderer extends plugin_renderer_base {
             $created = core_user::get_user($outage->createdby, 'firstname,lastname', MUST_EXIST);
             $created = html_writer::link(
                 new moodle_url('/user/profile.php', ['id' => $outage->createdby]),
-                trim($created->firstname.' '.$created->lastname)
+                trim($created->firstname . ' ' . $created->lastname)
             );
         }
 
@@ -166,7 +157,7 @@ class renderer extends plugin_renderer_base {
             $modified = core_user::get_user($outage->modifiedby, 'firstname,lastname', MUST_EXIST);
             $modified = html_writer::link(
                 new moodle_url('/user/profile.php', ['id' => $outage->modifiedby]),
-                trim($modified->firstname.' '.$modified->lastname)
+                trim($modified->firstname . ' ' . $modified->lastname)
             );
         }
 
@@ -194,33 +185,35 @@ class renderer extends plugin_renderer_base {
         $start = outagelib::OUTAGE_START;
         $end = outagelib::OUTAGE_END;
         $outagehtml = html_writer::div(
-            html_writer::tag('blockquote',
-                             html_writer::div(html_writer::tag('b', $outage->get_title(), ['data-id' => $outage->id])).
-                             html_writer::div(html_writer::tag('i', $outage->get_description())).
+            html_writer::tag(
+                'blockquote',
+                html_writer::div(html_writer::tag('b', $outage->get_title(), ['data-id' => $outage->id])) .
+                             html_writer::div(html_writer::tag('i', $outage->get_description())) .
                              html_writer::div(
-                                 html_writer::tag('b', get_string('tableheaderwarnbefore', 'auth_outage').': ').
+                                 html_writer::tag('b', get_string('tableheaderwarnbefore', 'auth_outage') . ': ') .
                                  format_time($outage->get_warning_duration())
-                             ).
+                             ) .
                              html_writer::div(
-                                 html_writer::tag('b', get_string('tableheaderstarttime', 'auth_outage').': ').
+                                 html_writer::tag('b', get_string('tableheaderstarttime', 'auth_outage') . ': ') .
                                  userdate($outage->starttime, get_string('datetimeformat', 'auth_outage'))
-                             ).
+                             ) .
                              html_writer::div(
-                                 html_writer::tag('b', get_string('tableheaderdurationplanned', 'auth_outage').': ').
+                                 html_writer::tag('b', get_string('tableheaderdurationplanned', 'auth_outage') . ': ') .
                                  format_time($outage->get_duration_planned())
-                             ).
+                             ) .
                              html_writer::div(
-                                 html_writer::tag('b', get_string('tableheaderdurationactual', 'auth_outage').': ').
+                                 html_writer::tag('b', get_string('tableheaderdurationactual', 'auth_outage') . ': ') .
                                  $finished
-                             ).
+                             ) .
                              html_writer::div(
-                                 html_writer::tag('small',
-                                                  'Created by '.$created.
-                                                  ', modified by '.$modified.' on '.
+                                 html_writer::tag(
+                                     'small',
+                                     'Created by ' . $created .
+                                                  ', modified by ' . $modified . ' on ' .
                                                   userdate($outage->lastmodified, get_string('datetimeformat', 'auth_outage'))
                                  )
-                             ).
-                             ($buttons ? html_writer::div($linkedit.$linkdelete) : '')
+                             ) .
+                             ($buttons ? html_writer::div($linkedit . $linkdelete) : '')
             )
         );
         return $start . $outagehtml . $end;

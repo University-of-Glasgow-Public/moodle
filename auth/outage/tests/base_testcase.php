@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace auth_outage;
+
+use auth_outage\dml\outagedb;
+use auth_outage\local\outage;
+
 /**
  * Base testcase for auth outage tests.
  *
@@ -24,20 +29,6 @@
  * Moodle 32 (as of now) uses PHPUnit 5.4.8 which deprecated setExpectedException().
  * In PHPUnit 6 the setExpectedException() will be removed.
  * We are not not using the annotation expectException as it is not accepted by Moodle Checker.
- *
- * @package    auth_outage
- * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
- * @copyright  2016 Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace auth_outage;
-
-use auth_outage\dml\outagedb;
-use auth_outage\local\outage;
-
-/**
- * base_testcase class.
  *
  * @package    auth_outage
  * @author     Daniel Thee Roperto <daniel.roperto@catalyst-au.net>
@@ -72,7 +63,7 @@ abstract class base_testcase extends \advanced_testcase {
     protected function revoke_info_page_permissions() {
         global $DB;
 
-        $guestrole = $DB->get_record('role', array('shortname' => 'guest'));
+        $guestrole = $DB->get_record('role', ['shortname' => 'guest']);
         role_change_permission($guestrole->id, \context_system::instance(), 'auth/outage:viewinfo', CAP_PREVENT);
 
         $this->setGuestUser();
@@ -88,7 +79,6 @@ abstract class base_testcase extends \advanced_testcase {
 
         return new outage([
             'id' => 1,
-            'autostart' => false,
             'warntime' => $now - 100,
             'starttime' => $now + 100,
             'stoptime' => $now + 200,

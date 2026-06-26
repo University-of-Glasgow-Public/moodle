@@ -29,7 +29,7 @@ use auth_outage\dml\outagedb;
 use auth_outage\local\outage;
 
 defined('MOODLE_INTERNAL') || die();
-require_once(__DIR__.'/cli_testcase.php');
+require_once(__DIR__ . '/cli_testcase.php');
 
 /**
  * create_test test class.
@@ -40,11 +40,11 @@ require_once(__DIR__.'/cli_testcase.php');
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers      \auth_outage\local\cli\create
  */
-class create_test extends cli_testcase {
+final class create_test extends cli_testcase {
     /**
      * Tests without any arguments.
      */
-    public function test_noarguments() {
+    public function test_noarguments(): void {
         $cli = new create();
         $this->set_expected_cli_exception(cli_exception::ERROR_PARAMETER_MISSING);
         $this->execute($cli);
@@ -53,7 +53,7 @@ class create_test extends cli_testcase {
     /**
      * Tests when the start time is not a valid number.
      */
-    public function test_invalidparam_notanumber() {
+    public function test_invalidparam_notanumber(): void {
         $cli = new create(['start' => 'some day']);
         $cli->set_defaults([
             'warn' => 50,
@@ -69,7 +69,7 @@ class create_test extends cli_testcase {
     /**
      * Tests when providing a negative start time.
      */
-    public function test_invalidparam_negative() {
+    public function test_invalidparam_negative(): void {
         $cli = new create(['start' => -1]);
         $cli->set_defaults([
             'warn' => 50,
@@ -85,7 +85,7 @@ class create_test extends cli_testcase {
     /**
      * Tests providing an empty title.
      */
-    public function test_invalidparam_emptystring() {
+    public function test_invalidparam_emptystring(): void {
         $cli = new create(['start' => 0, 'title' => '']);
         $cli->set_defaults([
             'warn' => 50,
@@ -101,7 +101,7 @@ class create_test extends cli_testcase {
     /**
      * Tests if not providing the title (it will be send as true).
      */
-    public function test_invalidparam_notastring() {
+    public function test_invalidparam_notastring(): void {
         $cli = new create(['start' => 0, 'title' => true]);
         $cli->set_defaults([
             'warn' => 50,
@@ -117,7 +117,7 @@ class create_test extends cli_testcase {
     /**
      * Tests the help.
      */
-    public function test_help() {
+    public function test_help(): void {
         $this->set_parameters(['--help']);
         $cli = new create();
         $output = $this->execute($cli);
@@ -128,7 +128,7 @@ class create_test extends cli_testcase {
     /**
      * Tests the options and shortcuts.
      */
-    public function test_options() {
+    public function test_options(): void {
         $cli = new create();
 
         $options = $cli->generate_options();
@@ -145,9 +145,8 @@ class create_test extends cli_testcase {
     /**
      * Tests creating with all given options.
      */
-    public function test_create_withoptions() {
+    public function test_create_withoptions(): void {
         $this->set_parameters([
-            '--autostart=true',
             '--warn=10',
             '--start=0',
             '--duration=30',
@@ -174,10 +173,9 @@ class create_test extends cli_testcase {
     /**
      * Tests creating with the onlyid parameter.
      */
-    public function test_create_onlyid() {
+    public function test_create_onlyid(): void {
         $this->set_parameters([
             '--onlyid',
-            '--autostart=N',
             '--warn=10',
             '--start=0',
             '--duration=30',
@@ -188,8 +186,10 @@ class create_test extends cli_testcase {
         $cli = new create();
         $cli->set_referencetime($now);
         $id = $this->execute($cli);
-        // Check if the id contains is only a number (parameter onlyid).
-        $id = trim($id);
+        // Extracting only the id digits from the output.
+        preg_match('/(\d+)\s*$/', $id, $matches);
+        // Passing the proper id into the id variable.
+        $id = $matches ? $matches[1] : null;
         self::assertTrue(is_number($id));
         $id = (int)$id;
         // Check creted outage.
@@ -205,7 +205,7 @@ class create_test extends cli_testcase {
     /**
      * Tests creating using some default values.
      */
-    public function test_create_withdefaults() {
+    public function test_create_withdefaults(): void {
         $this->set_parameters([
             '--warn=100',
             '--start=50',
@@ -214,7 +214,6 @@ class create_test extends cli_testcase {
         $cli = new create();
         $cli->set_referencetime($now);
         $cli->set_defaults([
-            'autostart' => false,
             'warn' => 50,
             'start' => 200,
             'duration' => 300,
@@ -238,12 +237,11 @@ class create_test extends cli_testcase {
     /**
      * Tests creating with clone.
      */
-    public function test_create_withclone() {
+    public function test_create_withclone(): void {
         self::setAdminUser();
         $now = time();
         // Create the outage to clone.
         $original = new outage([
-            'autostart' => false,
             'warntime' => $now - 120,
             'starttime' => $now,
             'stoptime' => $now + 120,
@@ -255,14 +253,17 @@ class create_test extends cli_testcase {
         $this->set_parameters([
             '--onlyid',
             '--start=60',
-            '--clone='.$id,
+            '--clone=' . $id,
         ]);
         $cli = new create();
         $cli->set_referencetime($now);
-        $id = trim($this->execute($cli));
+        // Extracting only the id digits from the output.
+        preg_match('/(\d+)\s*$/', $id, $matches);
+        // Passing the proper id into the id variable.
+        $id = $matches ? (int)$matches[1] : null;
         // Check cloned data.
         $cloned = outagedb::get_by_id((int)$id);
-        self::assertSame($now + 60, $cloned->starttime);
+        self::assertSame($now, $cloned->starttime);
         self::assertSame($original->get_warning_duration(), $cloned->get_warning_duration());
         self::assertSame($original->get_duration_planned(), $cloned->get_duration_planned());
         self::assertSame($original->title, $cloned->title);
@@ -272,7 +273,7 @@ class create_test extends cli_testcase {
     /**
      * Tests creating with an invalid clone id.
      */
-    public function test_create_withclone_invalid() {
+    public function test_create_withclone_invalid(): void {
         $this->set_parameters([
             '--start=60',
             '--clone=-1',
@@ -285,10 +286,9 @@ class create_test extends cli_testcase {
     /**
      * Tests creating with the block flag.
      */
-    public function test_create_withblock() {
+    public function test_create_withblock(): void {
         // Not an extensive test in the blocking API, cliwaitforit tests should cover them deeper.
         $this->set_parameters([
-            '--autostart=N',
             '--block',
             '--warn=60',
             '--start=0',
@@ -307,26 +307,9 @@ class create_test extends cli_testcase {
     /**
      * Tests providing an invalid option as default.
      */
-    public function test_setdefaults_extra() {
+    public function test_setdefaults_extra(): void {
         $cli = new create([]);
         $this->set_expected_exception('coding_exception');
         $cli->set_defaults(['aninvalidparameter' => 'value']);
-    }
-
-    /**
-     * Tests with an invalud autostart bool value.
-     */
-    public function test_invalid_bool() {
-        $this->set_parameters([
-            '--autostart=maybe',
-            '--warn=60',
-            '--start=0',
-            '--duration=600',
-            '--title=Title',
-            '--description=Description',
-        ]);
-        $cli = new create();
-        $this->set_expected_cli_exception(cli_exception::ERROR_PARAMETER_INVALID);
-        $cli->execute();
     }
 }

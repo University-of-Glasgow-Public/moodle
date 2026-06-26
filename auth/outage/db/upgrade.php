@@ -47,5 +47,50 @@ function xmldb_auth_outage_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2016092200, 'auth', 'outage');
     }
 
+    if ($oldversion < 2024081900) {
+        // Define field accesskey to be added to auth_outage.
+        $table = new xmldb_table('auth_outage');
+        $field = new xmldb_field('accesskey', XMLDB_TYPE_CHAR, '16', null, null, null, null, 'finished');
+
+        // Conditionally launch add field accesskey.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Outage savepoint reached.
+        upgrade_plugin_savepoint(true, 2024081900, 'auth', 'outage');
+    }
+
+    if ($oldversion < 2024081901) {
+        // Define field metadata to be added to auth_outage.
+        $table = new xmldb_table('auth_outage');
+        $field = new xmldb_field('metadata', XMLDB_TYPE_TEXT, null, null, null, null, null, 'accesskey');
+
+        // Conditionally launch add field metadata.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Outage savepoint reached.
+        upgrade_plugin_savepoint(true, 2024081901, 'auth', 'outage');
+    }
+
+    if ($oldversion < 2024081902) {
+        // Getting the table auth_outage and target field to remove from the table.
+        $table = new xmldb_table('auth_outage');
+        $field = new xmldb_field('autostart');
+
+        // Conditionally launch drop field autostart.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Removing the default_autostart config as it is no longer used.
+        unset_config('default_autostart', 'auth_outage');
+
+        // Outage savepoint reached.
+        upgrade_plugin_savepoint(true, 2024081902, 'auth', 'outage');
+    }
+
     return true;
 }
