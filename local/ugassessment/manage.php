@@ -59,12 +59,19 @@ $params = [
 
 $multiplecodes = $DB->count_records_sql($sql, $params);
 
+$sql = "SELECT COUNT(DISTINCT coursefullname)
+          FROM {local_ugassessment_snapshot}
+         WHERE coursecode IS NULL OR coursecode = ''";
+
+$missingcodes = $DB->count_records_sql($sql);
+
 $title = html_writer::tag('h4', 'Current snapshot record');
 
 $list = html_writer::alist([
     '<i class="fa fa-database text-primary mr-2"></i> Total records: ' . $count,
     '<i class="fa fa-trash text-danger mr-2"></i> Deleted records: ' . $deletedcount,
-    '<i class="fa fa-clone text-warning mr-2"></i> Courses with multiple codes: ' . $multiplecodes
+    '<i class="fa fa-circle-plus text-warning mr-2"></i> Courses with multiple codes: ' . $multiplecodes,
+    '<i class="fa fa-circle-minus text-warning mr-2"></i> Courses with missing codes: ' . $missingcodes,
 ], ['class' => 'ml-4']);
 
 echo html_writer::div($title . $list, 'm-5');

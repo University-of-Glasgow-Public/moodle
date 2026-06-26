@@ -46,7 +46,7 @@ $confirm = optional_param('confirm', 0, PARAM_BOOL);
 if ($confirm) {
     \core\notification::add(get_string('resetsnapshot', 'local_ugassessment'), \core\output\notification::NOTIFY_INFO);
 
-    \local_ugassessment\snapshot_builder::delete_snapshot();
+    $count = \local_ugassessment\snapshot_builder::delete_snapshot();
 
     echo $OUTPUT->notification(get_string('resetsuccess', 'local_ugassessment'), 'notifysuccess');
 
@@ -57,6 +57,7 @@ if ($confirm) {
         'context' => \context_system::instance(),
         'other' => [
             'mode' => 'reset',
+            'deleted' => $count,
         ],
     ]);
     $event->trigger();

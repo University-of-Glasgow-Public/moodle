@@ -48,6 +48,8 @@ class snapshot_reset extends \core\event\base {
      */
     public function get_description() {
         $mode = isset($this->other['mode']) ? $this->other['mode'] : 'unknown action';
-        return "User with id '{$this->userid}' performed {$mode} on the UG Assessment snapshot.";
+        $deleted = isset($this->other['deleted']) ? $this->other['deleted'] : 'unknown';
+        return "User with id '{$this->userid}' performed {$mode} on the UG Assessment snapshot.
+        All snapshot data was deleted ({$deleted} records).";
     }
 }

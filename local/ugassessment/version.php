@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component    = 'local_ugassessment';
 $plugin->release      = '1.0';
-$plugin->version      = 2026062200;
+$plugin->version      = 2026062600;
 $plugin->requires     = 2024100700;
 $plugin->supported    = [405, 502];
 $plugin->maturity     = MATURITY_STABLE;

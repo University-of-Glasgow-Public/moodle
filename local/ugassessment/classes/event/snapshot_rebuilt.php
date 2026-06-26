@@ -48,6 +48,16 @@ class snapshot_rebuilt extends \core\event\base {
      */
     public function get_description() {
         $mode = isset($this->other['mode']) ? $this->other['mode'] : 'unknown action';
-        return "User with id '{$this->userid}' performed {$mode} on the UG Assessment snapshot.";
+        $processed = isset($this->other['processed']) ? $this->other['processed'] : 'unknown';
+        $inserted = isset($this->other['inserted']) ? $this->other['inserted'] : 'unknown';
+        $existed = isset($this->other['existed']) ? $this->other['existed'] : 'unknown';
+        $multiplecodecourses = isset($this->other['multiplecodecourses']) ? (empty($this->other['multiplecodecourses']) ? 'none' :
+            implode(', ', $this->other['multiplecodecourses'])) : 'unknown';
+        return "User with id '{$this->userid}' performed {$mode} on the UG Assessment snapshot:
+        {$existed} records already existed before the rebuild, they have been erased.
+        The new snapshot has been built with
+        processed={$processed},
+        inserted={$inserted},
+        course ids with multiple codes={$multiplecodecourses}.";
     }
 }

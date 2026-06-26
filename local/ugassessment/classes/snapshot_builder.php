@@ -30,7 +30,7 @@ class snapshot_builder {
      * This is a heavy operation and should be run via CLI or scheduled task, not on demand.
      * The snapshot is a denormalized cache of course and assessment metadata to speed up API responses.
      */
-    public static function rebuild_snapshot($reset = false) {
+    public static function rebuild_snapshot($reset = false): array {
         global $DB;
 
         mtrace('UGAssessment: rebuild_snapshot started (reset=' . ($reset ? 'true' : 'false') . ')');
@@ -39,11 +39,12 @@ class snapshot_builder {
         $updated = 0; // Counter for updated records.
         $unchanged = 0; // Counter for unchanged records.
         $deleted = 0; // Counter for deleted records.
+        $existed = 0; // Counter for activities that already existed in the snapshot.
         $multiplecodecourses = []; // List of courses with multiple MyCampus codes.
 
         // If reset is true, clear existing snapshot.
         if ($reset) {
-            self::delete_snapshot();
+            $existed = self::delete_snapshot();
         }
 
         $keyword = trim((string)get_config('local_ugassessment', 'gradecategorykeyword'));
@@ -65,7 +66,15 @@ class snapshot_builder {
 
         if (empty($courseids)) {
             // Nothing to process.
-            return;
+            return [
+                'processed' => 0,
+                'inserted' => 0,
+                'updated' => 0,
+                'unchanged' => 0,
+                'deleted' => 0,
+                'multiplecodecourses' => [],
+                'existed' => $existed,
+            ];
         }
 
         // Preload MyCampus enrolment codes to minimize DB queries in the loop.
@@ -371,6 +380,9 @@ class snapshot_builder {
             $DB->set_field_select('local_ugassessment_snapshot', 'deleted', 1, $condition, $params);
         }
         mtrace('UGAssessment: rebuild_snapshot completed');
+        if ($reset) {
+            mtrace('UGAssessment: snapshot reset, records deleted = ' . $existed);
+        }
         mtrace('UGAssessment: processed records = ' . $count
             . ' (inserted=' . $inserted
             . ', updated=' . $updated
@@ -379,6 +391,15 @@ class snapshot_builder {
         if (!empty($multiplecodecourses)) {
             mtrace('UGAssessment WARNING: courseids with multiple MyCampus codes = ' . implode(', ', $multiplecodecourses));
         }
+        return [
+            'processed' => $count,
+            'inserted' => $inserted,
+            'updated' => $updated,
+            'unchanged' => $unchanged,
+            'deleted' => $deleted,
+            'existed' => $existed,
+            'multiplecodecourses' => $multiplecodecourses,
+        ];
     }
 
     /**
@@ -469,11 +490,15 @@ class snapshot_builder {
     /**
      * Delete the entire snapshot table.
      */
-    public static function delete_snapshot() {
+    public static function delete_snapshot(): int {
         global $DB;
-
+        // Counter for logging how many records were deleted.
+        $count = $DB->count_records('local_ugassessment_snapshot');
+         mtrace('UGAssessment: Deleting snapshot, records to delete = ' . $count);
         // Clear existing snapshot.
         $DB->delete_records('local_ugassessment_snapshot');
+        mtrace('UGAssessment: Snapshot deleted');
+        return $count;
     }
 
     /**

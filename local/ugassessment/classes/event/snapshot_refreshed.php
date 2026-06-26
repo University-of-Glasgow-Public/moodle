@@ -53,6 +53,18 @@ class snapshot_refreshed extends \core\event\base {
      */
     public function get_description() {
         $mode = isset($this->other['mode']) ? $this->other['mode'] : 'unknown action';
-        return "User with id '{$this->userid}' performed {$mode} on the UG Assessment snapshot.";
+        $processed = isset($this->other['processed']) ? $this->other['processed'] : 'unknown';
+        $inserted = isset($this->other['inserted']) ? $this->other['inserted'] : 'unknown';
+        $updated = isset($this->other['updated']) ? $this->other['updated'] : 'unknown';
+        $unchanged = isset($this->other['unchanged']) ? $this->other['unchanged'] : 'unknown';
+        $deleted = isset($this->other['deleted']) ? $this->other['deleted'] : 'unknown';
+        $multiplecodecourses = isset($this->other['multiplecodecourses']) ? count($this->other['multiplecodecourses']) : 'unknown';
+        return "User with id '{$this->userid}' performed {$mode} on the UG Assessment snapshot:
+        processed={$processed},
+        inserted={$inserted},
+        updated={$updated},
+        unchanged={$unchanged},
+        deleted={$deleted},
+        courses with multiple codes={$multiplecodecourses}.";
     }
 }

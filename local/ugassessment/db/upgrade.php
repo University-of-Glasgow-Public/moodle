@@ -125,19 +125,5 @@ function xmldb_local_ugassessment_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026060300, 'local', 'ugassessment');
     }
 
-    if ($oldversion < 2026062200) {
-
-        $table = new xmldb_table('local_ugassessment_snapshot');
-        $field = new xmldb_field('semester', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'qualification');
-
-        // Conditionally change field length.
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->change_field_precision($table, $field);
-        }
-
-        // Savepoint.
-        upgrade_plugin_savepoint(true, 2026062200, 'local', 'ugassessment');
-    }
-
     return true;
 }

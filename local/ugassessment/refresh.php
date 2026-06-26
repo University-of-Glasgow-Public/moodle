@@ -48,7 +48,7 @@ if ($confirm) {
 
     $start = microtime(true);
 
-    \local_ugassessment\snapshot_builder::rebuild_snapshot(false);
+    $result = \local_ugassessment\snapshot_builder::rebuild_snapshot(false);
 
     $duration = microtime(true) - $start;
 
@@ -63,6 +63,12 @@ if ($confirm) {
         'context' => context_system::instance(),
         'other' => [
                 'mode' => 'incremental refresh',
+                'processed' => $result['processed'],
+                'inserted' => $result['inserted'],
+                'updated' => $result['updated'],
+                'unchanged' => $result['unchanged'],
+                'deleted' => $result['deleted'],
+                'multiplecodecourses' => $result['multiplecodecourses'],
             ],
     ]);
     $event->trigger();

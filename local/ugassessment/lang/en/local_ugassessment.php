@@ -40,6 +40,7 @@ $string['gradecategorykeyword'] = 'Grade category keyword';
 $string['gradecategorykeyword_desc'] = 'Only activities whose level-2 grade category contains this keyword will be included (case-insensitive).';
 $string['ignorestudentmygrades'] = 'Ignore StudentMyGrades';
 $string['ignorestudentmygrades_desc'] = 'If enabled, courses will be included in the snapshot regardless of the value of the StudentMyGrades course custom field.';
+$string['logs'] = 'Logs';
 $string['managepagename'] = 'Manage snapshot';
 $string['paginationlimit'] = 'Pagination limit';
 $string['paginationlimit_desc'] = 'Maximum number of records to return per page in the API.';

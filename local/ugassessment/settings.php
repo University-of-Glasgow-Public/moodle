@@ -207,4 +207,11 @@ if ($hassiteconfig) {
         new moodle_url('/local/ugassessment/manage.php'),
         'moodle/site:config'
     ));
+
+    $ADMIN->add('local_ugassessment_root', new admin_externalpage(
+        'local_ugassessment_logs',
+        get_string('logs', 'local_ugassessment'),
+        new moodle_url('/local/ugassessment/logs.php'),
+        'moodle/site:config'
+));
 }
