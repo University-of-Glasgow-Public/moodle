@@ -2291,6 +2291,7 @@ class enrol_gudatabase_plugin extends enrol_database_plugin {
         $enroltable = $this->get_config('remoteenroltable');
         $codestable = $this->get_config('codesenroltable');
         $classlisttable = $this->get_config('classlisttable');
+        $programtable = $this->get_config('programtable');
 
         if (empty($enroltable)) {
             echo $OUTPUT->notification('External enrolment table not specified.', 'notifyproblem');
@@ -2381,6 +2382,26 @@ class enrol_gudatabase_plugin extends enrol_database_plugin {
                 $columns = array_keys((array)$fieldsobj);
 
                 echo $OUTPUT->notification('Class list table contains following columns:<br />'.
+                    implode(', ', $columns), 'notifysuccess');
+                $rs->Close();
+            }
+        }
+
+        if (!empty($programtable)) {
+            $rs = $adodb->Execute("SELECT *
+                                     FROM $programtable");
+            if (!$rs) {
+                echo $OUTPUT->notification('Can not read program table.', 'notifyproblem');
+
+            } else if ($rs->EOF) {
+                echo $OUTPUT->notification('Program table is empty.', 'notifyproblem');
+                $rs->Close();
+
+            } else {
+                $fieldsobj = $rs->FetchObj();
+                $columns = array_keys((array)$fieldsobj);
+
+                echo $OUTPUT->notification('Program table contains following columns:<br />'.
                     implode(', ', $columns), 'notifysuccess');
                 $rs->Close();
             }
