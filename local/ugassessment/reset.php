@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * TODO describe file rebuild
+ * Reset the snapshot table by deleting all records. This is a destructive operation and should be used with caution.
  *
  * @package    local_ugassessment
  * @copyright  2026 Ferenc 'Frank' Fengyel, ferenc.lengyel@glasgow.ac.uk
