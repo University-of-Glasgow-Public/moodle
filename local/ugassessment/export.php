@@ -35,7 +35,7 @@ require_capability('moodle/site:config', $context);
 global $DB;
 
 // Create CSV writer.
-$csv = new csv_export_writer();
+$csv = new csv_export_writer('comma', '"', 'application/download', true);
 $csv->set_filename('ugassessment_snapshot');
 
 // Fetch records.
