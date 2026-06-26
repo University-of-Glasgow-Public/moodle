@@ -31,6 +31,15 @@ global $PAGE, $OUTPUT, $SITE;
 $context = context_system::instance();
 require_capability('moodle/site:config', $context);
 
+// Hard lock: ONLY real site admins.
+if (!is_siteadmin()) {
+    throw new required_capability_exception(
+        context_system::instance(),
+        'moodle/site:config',
+        'nopermissions',
+        ''
+    );
+}
 
 $url = new moodle_url('/local/ugassessment/manage.php', []);
 $PAGE->set_url($url);

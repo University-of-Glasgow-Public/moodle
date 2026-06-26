@@ -194,10 +194,12 @@ if ($hassiteconfig) {
         ]
     ));
 
-    $ADMIN->add('localplugins', new admin_category(
-        'local_ugassessment_root',
-        get_string('pluginname', 'local_ugassessment')
-    ));
+    if (!$ADMIN->locate('local_ugassessment_root')) {
+        $ADMIN->add('localplugins', new admin_category(
+            'local_ugassessment_root',
+            get_string('pluginname', 'local_ugassessment')
+        ));
+    }
 
     $ADMIN->add('local_ugassessment_root', $settings);
 
