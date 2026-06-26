@@ -17,7 +17,7 @@
 namespace local_ugassessment\event;
 
 /**
- * Event snapshot_reset
+ * Event class for when the UG Assessment snapshot is reset.
  *
  * @package    local_ugassessment
  * @copyright  2026 Ferenc 'Frank' Fengyel, ferenc.lengyel@glasgow.ac.uk
