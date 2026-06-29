@@ -27,10 +27,19 @@ and external system integration.
   - Activity-specific metadata (e.g. team submission)
 - Admin tools:
   - Full rebuild
-  - Incremental update
+  - Incremental update = Refresh
   - Reset snapshot
   - Export CSV
-  - Record counts (including deleted)
+  - Record counts (including deleted, multiple codes, missing codes)
+- Cron task to Refresh (update)
+- Detailed logs
+  - Core Moodle log entries
+    - Refreshed
+    - Rebuilt
+    - Reset
+  - Dedicated log page
+    - Action type can be filtered
+    - Download as CSV
 
 ---
 
