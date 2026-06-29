@@ -47,12 +47,24 @@ if ($confirm) {
     \core\notification::add(get_string('rebuildingsnapshot', 'local_ugassessment'), \core\output\notification::NOTIFY_INFO);
 
     $start = microtime(true);
+    $startmemory = memory_get_usage(true);
+    $peakstart = memory_get_peak_usage(true);
+    $startqueries = $DB->perf_get_queries();
 
     $result = \local_ugassessment\snapshot_builder::rebuild_snapshot(true);
 
     $duration = microtime(true) - $start;
+    $endmemory = memory_get_usage(true);
+    $peakend = memory_get_peak_usage(true);
+    $endqueries = $DB->perf_get_queries();
+
 
     mtrace('Snapshot rebuild completed in ' . round($duration, 2) . ' seconds.');
+    mtrace(' - Memory start: ' . round($startmemory / 1024 / 1024, 2) . ' MB');
+    mtrace(' - Memory end: ' . round($endmemory / 1024 / 1024, 2) . ' MB');
+    mtrace(' - Peak memory: ' . round($peakend / 1024 / 1024, 2) . ' MB');
+    mtrace(' - DB queries: ' . ($endqueries - $startqueries));
+
 
     echo $OUTPUT->notification(get_string('snapshotrebuildsuccess', 'local_ugassessment'), 'notifysuccess');
 
