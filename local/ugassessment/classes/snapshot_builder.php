@@ -17,6 +17,7 @@
 namespace local_ugassessment;
 use core_tag_tag;
 
+
 /**
  * Class snapshot_builder
  *
@@ -32,6 +33,9 @@ class snapshot_builder {
      */
     public static function rebuild_snapshot($reset = false): array {
         global $DB;
+
+        \core_php_time_limit::raise(300);
+        raise_memory_limit(MEMORY_EXTRA);
 
         mtrace('UGAssessment: rebuild_snapshot started (reset=' . ($reset ? 'true' : 'false') . ')');
         $count = 0; // Counter for processed activities in the cron task log.
@@ -150,7 +154,7 @@ class snapshot_builder {
 
         list($insql, $params) = $DB->get_in_or_equal($courseids);
 
-        $courses = $DB->get_records_select('course', "id $insql", $params);
+        $courses = $DB->get_recordset_select('course', "id $insql", $params);
 
         // Preload tags for course modules to minimize DB queries in the loop.
         $tagmap = [];
@@ -179,9 +183,15 @@ class snapshot_builder {
         // We will keep track of the course modules we see in this run. After processing all courses.
         // Any snapshot records with cmids not in this list can be marked as deleted.
         $currentcmids = [];
-
         foreach ($courses as $course) {
-            $data = $handler->get_instance_data($course->id);
+
+            static $customfieldcache = [];
+
+            if (!isset($customfieldcache[$course->id])) {
+                $customfieldcache[$course->id] = $handler->get_instance_data($course->id);
+            }
+
+            $data = $customfieldcache[$course->id];
 
             $fieldmap = [];
 
@@ -346,6 +356,7 @@ class snapshot_builder {
                 }
             }
         }
+        $courses->close();
         if (!$reset) {
             // If not a full rebuild, we want to flag deleted records for activities that no longer exist.
 
