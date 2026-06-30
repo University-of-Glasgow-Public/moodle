@@ -360,35 +360,23 @@ class snapshot_builder {
         if (!$reset) {
             // If not a full rebuild, we want to flag deleted records for activities that no longer exist.
 
-            $countcmids = count($currentcmids);
+            $existingcmids = array_keys($snapshotmap);
+            $currentset = array_flip($currentcmids);
+            $existingset = array_flip($existingcmids);
+            $cmidstodelete = array_diff_key($existingset, $currentset);
+            $cmidstodelete = array_keys($cmidstodelete);
+            $deleted = count($cmidstodelete);
 
-            if ($countcmids === 0) {
-                // No activities found, mark all as deleted.
-                $condition = "deleted = 0";
-                $params = [];
-            } else {
-                if ($countcmids === 1) {
-                    // Only one activity, we can use a simple condition.
-                    $single = reset($currentcmids);
-                    $condition = "cmid <> :singlecmid AND deleted = 0";
-                    $params = ['singlecmid' => $single];
-                } else {
-                    list($insql, $params) = $DB->get_in_or_equal(
-                        $currentcmids,
-                        SQL_PARAMS_NAMED,
-                        'cmid'
-                    );
-
-                    $condition = "cmid NOT $insql AND deleted = 0";
-                }
-            }
             $now = time();
 
-            $todelete = $DB->get_records_select('local_ugassessment_snapshot', $condition, $params, '', 'id');
-            $deleted += count($todelete);
-
-            $DB->set_field_select('local_ugassessment_snapshot', 'timeextracted', $now, $condition, $params);
-            $DB->set_field_select('local_ugassessment_snapshot', 'deleted', 1, $condition, $params);
+            if (!empty($cmidstodelete)) {
+                $chunksize = 100; // Process in chunks to avoid memory issues.
+                foreach (array_chunk($cmidstodelete, $chunksize) as $chunk) {
+                    list($insql, $params) = $DB->get_in_or_equal($chunk, SQL_PARAMS_NAMED, 'cmid', true);
+                    $DB->set_field_select('local_ugassessment_snapshot', 'deleted', 1, "cmid $insql", $params);
+                    $DB->set_field_select('local_ugassessment_snapshot', 'timeextracted', $now, "cmid $insql", $params);
+                }
+            }
         }
         mtrace('UGAssessment: rebuild_snapshot completed');
         if ($reset) {
