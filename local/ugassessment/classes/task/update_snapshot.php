@@ -39,10 +39,18 @@ class update_snapshot extends \core\task\scheduled_task {
      * Execute the task
      */
     public function execute() {
-        mtrace('UGAssessment: Scheduled snapshot update START');
+        $lockfactory = \core\lock\lock_config::get_lock_factory('local_ugassessment');
+        $lock = $lockfactory->get_lock('snapshot_rebuild', 1800);
 
-        \local_ugassessment\snapshot_builder::rebuild_snapshot(false);
+        if (!$lock) {
+            mtrace('UGAssessment: already running, skipping.');
+            return;
+        }
 
-        mtrace('UGAssessment: Scheduled snapshot update END');
+        try {
+            \local_ugassessment\snapshot_builder::rebuild_snapshot(false);
+        } finally {
+            $lock->release();
+        }
     }
 }

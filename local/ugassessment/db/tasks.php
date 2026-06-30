@@ -31,7 +31,7 @@ $tasks = [
     [
         'classname' => 'local_ugassessment\task\update_snapshot',
         'blocking' => 0,
-        'minute' => '*/15',
+        'minute' => '11',
         'hour' => '*',
         'day' => '*',
         'month' => '*',
