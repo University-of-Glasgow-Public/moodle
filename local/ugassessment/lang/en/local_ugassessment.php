@@ -46,18 +46,23 @@ $string['paginationlimit'] = 'Pagination limit';
 $string['paginationlimit_desc'] = 'Maximum number of records to return per page in the API.';
 $string['pluginname'] = 'UofG Assessment Extract';
 $string['privacy:metadata'] = 'The UofG Assessment Extract plugin doesn\'t store any personal data.';
-$string['rebuildconfirm'] = 'Are you sure you want to rebuild the snapshot? This will overwrite existing data.';
+$string['rebuildconfirm'] = 'Are you sure you want to rebuild the snapshot? This will overwrite existing data.
+ Do not use it on Production, the snapshot table is large and it will take a long time to complete. Use the Cron job instead.';
 $string['rebuildingsnapshot'] = 'Rebuilding snapshot...';
 $string['rebuildsnapshot'] = 'Rebuild snapshot';
-$string['rebuildwarning'] = 'WARNING: Rebuilding will overwrite the existing snapshot table.';
-$string['refreshconfirm'] = 'Are you sure you want to refresh the snapshot? This will apply changes to existing records and add new records, but it will not delete any records. If you want to do a full rebuild, please use the Rebuild Snapshot button instead.';
+$string['rebuildwarning'] = 'WARNING: Rebuilding will overwrite the existing snapshot table. Do not use it on Production, the snapshot table is large and it will take a long time to complete. Use the Cron job instead.';
+$string['refreshconfirm'] = 'Are you sure you want to refresh the snapshot? This will apply changes to existing records and add new records, but it will not delete any records.
+ If you want to do a full rebuild, please use the Rebuild Snapshot button instead.
+ Do not use it on Production, the snapshot table is large and it will take a long time to complete. Use the Cron job instead.';
 $string['refreshsnapshot'] = 'Refresh snapshot';
-$string['refreshwarning'] = 'This will refresh the snapshot table with any changes to existing activities and add any new activities,
-but it will not delete any records. If you want to do a full rebuild, please use the Rebuild Snapshot button instead.';
-$string['resetconfirm'] = 'Are you sure you want to continue? This will delete all records in the snapshot table.';
+$string['refreshwarning'] = 'This will refresh the snapshot table with any changes to existing activities and add any new activities, but it will not delete any records.
+ If you want to do a full rebuild, please use the Rebuild Snapshot button instead.
+ Do not use it on Production, the snapshot table is large and it will take a long time to complete. Use the Cron job instead.';
+$string['resetconfirm'] = 'Are you sure you want to continue? This will delete all records in the snapshot table. Only use this if you want to completely reset the snapshot and start over.';
 $string['resetsnapshot'] = 'Reset snapshot';
 $string['resetsuccess'] = 'Snapshot reset was successful.';
-$string['resetwarning'] = 'WARNING: This will delete the snapshot table and you will lose all existing data.';
+$string['resetwarning'] = 'WARNING: This will delete the snapshot table and you will lose all existing data. The Cron job will then rebuild the snapshot table from scratch.
+ Be very careful when using this option on Production, as you will lose all the soft deleted records.';
 $string['settingpagename'] = 'Extract settings';
 $string['snapshotrebuildsuccess'] = 'Snapshot rebuild was successful.';
 $string['snapshotrefreshsuccess'] = 'Snapshot refresh was successful.';

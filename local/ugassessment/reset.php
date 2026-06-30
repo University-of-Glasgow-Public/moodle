@@ -63,7 +63,7 @@ if ($confirm) {
     $event->trigger();
 } else {
     $confirmurl = new moodle_url('/local/ugassessment/reset.php', ['confirm' => 1]);
-    $cancelurl = new moodle_url('/local/ugassessment/reset.php', [
+    $cancelurl = new moodle_url('/local/ugassessment/manage.php', [
         'section' => 'local_ugassessment',
     ]);
 
