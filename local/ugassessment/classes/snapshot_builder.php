@@ -360,7 +360,11 @@ class snapshot_builder {
         if (!$reset) {
             // If not a full rebuild, we want to flag deleted records for activities that no longer exist.
 
-            $existingcmids = array_keys($snapshotmap);
+            $existingcmids = $DB->get_fieldset_select(
+                'local_ugassessment_snapshot',
+                'cmid',
+                'deleted = 0'
+            );
             $currentset = array_flip($currentcmids);
             $existingset = array_flip($existingcmids);
             $cmidstodelete = array_diff_key($existingset, $currentset);
