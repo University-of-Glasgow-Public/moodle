@@ -81,24 +81,6 @@ class snapshot_builder {
             ];
         }
 
-        // Preload MyCampus enrolment codes to minimize DB queries in the loop.
-        $dbman = $DB->get_manager();
-        $gucodemap = [];
-        $multiplecodecourses = [];
-
-        if ($dbman->table_exists('enrol_gudatabase_codes')) {
-            $gucodes = $DB->get_records_list('enrol_gudatabase_codes', 'courseid', $courseids);
-
-            foreach ($gucodes as $g) {
-                $gucodemap[$g->courseid][$g->code] = $g;
-            }
-            foreach ($gucodemap as $cid => $records) {
-                if (count($records) > 1) {
-                    $multiplecodecourses[] = $cid;
-                }
-            }
-        }
-
         // Preload grade items for all courses to minimize DB queries in the loop.
         $gradeitems = $DB->get_records_list('grade_items', 'courseid', $courseids);
 
@@ -156,6 +138,41 @@ class snapshot_builder {
 
         $courses = $DB->get_recordset_select('course', "id $insql", $params);
 
+        $currentshortnamecodes = [];
+
+        $coursemap = [];
+
+        foreach ($courses as $course) {
+            $currentshortnamecodes[$course->id] = self::shortname_code($course->shortname);
+            $coursemap[$course->id] = $course;
+        }
+
+        // Preload MyCampus enrolment codes to minimize DB queries in the loop.
+        $dbman = $DB->get_manager();
+        $gucodemap = [];
+        $multiplecodecourses = [];
+
+        if ($dbman->table_exists('enrol_gudatabase_codes')) {
+            $gucodes = $DB->get_records_list('enrol_gudatabase_codes', 'courseid', $courseids);
+
+            foreach ($gucodes as $g) {
+                // Ignore historical shortname-derived codes.
+                if ($g->location === 'shortname') {
+                    $currentcode = $currentshortnamecodes[$g->courseid] ?? null;
+
+                    if ($g->code !== $currentcode) {
+                        continue;
+                    }
+                }
+                $gucodemap[$g->courseid][$g->code] = $g;
+            }
+            foreach ($gucodemap as $cid => $records) {
+                if (count($records) > 1) {
+                    $multiplecodecourses[] = $cid;
+                }
+            }
+        }
+
         // Preload tags for course modules to minimize DB queries in the loop.
         $tagmap = [];
 
@@ -183,7 +200,7 @@ class snapshot_builder {
         // We will keep track of the course modules we see in this run. After processing all courses.
         // Any snapshot records with cmids not in this list can be marked as deleted.
         $currentcmids = [];
-        foreach ($courses as $course) {
+        foreach ($coursemap as $course) {
 
             static $customfieldcache = [];
 
@@ -535,5 +552,21 @@ class snapshot_builder {
         }
 
         return implode(';', array_values($tags));
+    }
+
+    /**
+     * Extract a course code from the course shortname.
+     * Uses only the leading letters and numbers, stopping at the first
+     * special character (e.g. space, underscore, hyphen).
+     * This is the exact replica of the enrol_gudatabase plugin's shortname parsing logic.
+     *
+     * @param string $shortname
+     * @return string|null
+     */
+    private static function shortname_code($shortname) {
+        if (preg_match('/^([[:alnum:]]+)/', $shortname, $matches)) {
+            return $matches[1];
+        }
+        return null;
     }
 }
