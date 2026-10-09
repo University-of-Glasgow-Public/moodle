@@ -164,7 +164,7 @@ class snapshot_builder {
                         continue;
                     }
                 }
-                $gucodemap[$g->courseid][$g->code] = $g;
+                $gucodemap[$g->courseid][strtoupper(trim($g->code))] = $g;
             }
             foreach ($gucodemap as $cid => $records) {
                 if (count($records) > 1) {
