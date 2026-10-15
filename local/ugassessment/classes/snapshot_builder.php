@@ -220,18 +220,6 @@ class snapshot_builder {
             // Get the MyCampus enrolment codes and subjects for this course.
             $gucodes = $gucodemap[$course->id] ?? [];
 
-            $codes = [];
-            $subjects = [];
-
-            foreach ($gucodes as $g) {
-                if (!empty($g->code)) {
-                    $codes[] = $g->code;
-                }
-                if (!empty($g->subject)) {
-                    $subjects[] = $g->subject;
-                }
-            }
-
             $modinfo = get_fast_modinfo($course);
 
             foreach ($modinfo->get_cms() as $cm) {
@@ -276,7 +264,7 @@ class snapshot_builder {
                 if (count($gucodes) === 1) {
                     // Only one code should be there.
                     $g = reset($gucodes);
-                    $record->coursecode = $g->code ?? null;
+                    $record->coursecode = strtoupper(trim($g->code)) ?? null;
                     $record->coursesubject = $g->subject ?? null;
                 } else if (count($gucodes) > 1) {
                     // Flag clearly.
