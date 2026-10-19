@@ -170,4 +170,12 @@ nav.navbar a.navbar-brand {
 .btn-icon.icons-collapse-expand, .btn.btn-icon.icons-collapse-expand {
   color: #fff;
   background-color: #344374;
+}
+
+nav.navbar button.navbar-toggler {
+  background-color: rgb(1.6219512195, 32.4390243902, 131.3780487805);
+}
+
+.navbar-light .navbar-toggler .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%230f6cbf' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }/*# sourceMappingURL=hillhead40.css.map */

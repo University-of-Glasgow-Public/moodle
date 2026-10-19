@@ -63,7 +63,7 @@ nav.navbar a.navbar-brand {
 }
 
 .primary-navigation>nav>ul>li>a.nav-link, .navbar-light .navbar-nav .nav-link, .navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:active, .input-group .mr-2 {
-  color: #fff !important;;
+  color: #fff !important;
 }
 
 #user-menu-toggle {
@@ -161,7 +161,7 @@ nav.navbar a.navbar-brand {
 }
 
 .drawer, .message-app {
-    background-color: #E6E7EE;
+  background-color: #E6E7EE;
 }
 
 .course-section .summarytext img {
@@ -175,6 +175,15 @@ nav.navbar a.navbar-brand {
 }
 
 .btn-icon.icons-collapse-expand, .btn.btn-icon.icons-collapse-expand {
-    color: $login-text;
-    background-color: $hillhead-blue-eighty-percent;
+  color: $login-text;
+  background-color: $hillhead-blue-eighty-percent;
+}
+
+nav.navbar button.navbar-toggler {
+  background-color: $hillhead-light;
+}
+
+$toggler-icon-hex: '0f6cbf';
+.navbar-light .navbar-toggler .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%23#{$toggler-icon-hex}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
