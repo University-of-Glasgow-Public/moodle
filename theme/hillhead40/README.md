@@ -12,3 +12,7 @@ Clone this project to your local machine, then copy to:
 
 Upgrade your Moodle installation by navigating to:
 * /your-moodle-installation/admin/index.php
+
+# Looking ahead
+__
+Rename this plugin back to hillhead - this was given the 40 addition to allow parallel plugin development, at the time.
